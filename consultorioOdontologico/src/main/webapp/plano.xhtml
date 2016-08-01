@@ -1,0 +1,210 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Adicionar Planos">
+				<h:form prependId="false" id="formCadastro">
+				<b:fetchBeanInfos />
+				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+				     	 O Formulário contém campos obrigatórios (*).
+				    </b:panel>
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="name" label="Digite o nome" required="true"
+								renderLabel="true" required-message="Digite o nome"
+								value="#{planoPaiController.plano.plp_descricao}" />
+							<h:message for="name" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="desconto" label="Valor de desconto" required="true" styleClass="dinheiro"
+								renderLabel="true" required-message="Digite o valor de desconto"
+								value="#{planoPaiController.plano.pla_desconto}">
+								<f:facet name="prepend">
+                <h:outputText value="R$" />
+            </f:facet>
+								<f:convertNumber pattern="#,##0.00" currencySymbol="$"/>
+							</b:inputText>
+							<h:message for="desconto" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:selectOneMenu label="Tipo de Desconto" id="tipoDesconto" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o tipo de Desconto"
+								value="#{planoPaiController.plano.plp_tipoDesconto}">
+								<f:selectItem itemLabel="Selecione o Tipo de Desconto"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Monetário" itemValue="M"/>
+								<f:selectItem itemLabel="Porcentagem" itemValue="P"/>
+							</b:selectOneMenu>
+							<h:message for="tipoDesconto" />
+						</b:column>
+					</b:row>
+					<b:row>
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4" offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{planoPaiController.limpar()}" update="@form"/>
+						<b:commandButton look="success" value="Salvar" id="salvar" icon="plus-sign" actionListener="#{planoPaiController.salvar()}" process="@form" update="@form"/>
+					</b:column>
+					</b:row>
+					
+				</h:form>
+			</b:tab>
+			<b:tab title="Consultar Plano de Saúde">
+				<h:form prependId="false" id="formPesquisa">
+				     <b:fetchBeanInfos />
+								<b:growl id="growlPesquisa" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	     				Utilize os campos abaixo para filtrar sua pesquisa. Para buscar todos os pacientes deve deixar em branco e pressionar o botão buscar
+	     			 </b:panel>
+					<b:row>
+						<b:column col-lg="8" col-md="8" col-sm="8" col-xs="8">
+							<b:inputText id="planoNomeFIltro" label="Digite o nome"
+								value="#{planoPaiController.planoFiltro.plp_descricao}" />
+							<h:message for="planoNomeFIltro" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:selectOneMenu label="Status" id="status" 
+								value="#{planoPaiController.plano.plp_status}">
+								<f:selectItem itemLabel="Status do Plano" noSelectionOption="true" />
+								<f:selectItem itemLabel="Ativo" itemValue="A"/>
+								<f:selectItem itemLabel="Inativo" itemValue="I"/>
+							</b:selectOneMenu>
+							<h:message for="status" />
+						</b:column>
+					</b:row>
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton look="success" value="Pesquisar" id="pesquisar" icon="search" actionListener="#{planoPaiController.pesquisaPorFiltro()}" update="listaPlanos"/>
+					</b:column>
+					</b:row>
+					<hr/>
+						<b:dataTable value="#{planoPaiController.listaPlanos}" var="p" id="listaPlanos" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Código" />
+						    </f:facet>
+						    <h:outputText value="#{p.plp_codigo}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nome" />
+						    </f:facet>
+						    <h:outputText value="#{p.plp_descricao}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Desconto" />
+						    </f:facet>
+						    <h:outputText value="#{p.pla_desconto}">
+								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$" type="currency"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Tipo de Desconto" />
+						    </f:facet>
+						    <h:outputText value="Monetário" rendered="#{p.plp_tipoDesconto eq 'M'}"/>
+						    <h:outputText value="Porcentagem" rendered="#{p.plp_tipoDesconto.equals('P')}"/>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton actionListener="#{planoPaiController.buscaEditarPorId(p.plp_codigo)}" pt:data-target="#alterar" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" update=":formEditar"/>
+						    	</center>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{planoPaiController.buscaEditarPorId(p.plp_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	</center>
+						  </h:column>
+						</b:dataTable>
+					
+					<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
+					    <p>Você realmente deseja excluir este registro?</p>
+					    
+					    <f:facet name="footer">
+					    	
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{planoPaiController.excluirRegistro()}" update="listaPlanos growlPesquisa" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					        <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>
+					        
+					    </f:facet>
+					</b:modal>
+											
+						</h:form>
+			</b:tab>
+		</b:tabView>
+		
+		<b:modal id="alterar" title="Alterando Registro" styleClass="modalAlterar" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formEditar">
+		  		<script>
+					mascara();
+		  		</script>
+				<b:growl id="growlAlterar" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	      O Formulário contém campos obrigatórios (*).
+	    </b:panel>
+					
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="nameEditar" label="Digite o nome" required="true"
+								renderLabel="true" required-message="Digite o nome"
+								value="#{planoPaiController.planoEditar.plp_descricao}" />
+							<h:message for="nameEditar" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="descontoEditar" label="Valor de desconto" required="true"
+								renderLabel="true" required-message="Digite o valor de desconto"  styleClass="dinheiro"
+								value="#{planoPaiController.planoEditar.pla_desconto}">
+								<f:convertNumber pattern="#,##0.00" currencySymbol="$"/>
+								<f:facet name="prepend">
+                <h:outputText value="R$" />
+            </f:facet>
+							</b:inputText>
+							<h:message for="descontoEditar" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:selectOneMenu label="Tipo de Desconto" id="tipoDescontoEditar" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o tipo de Desconto"
+								value="#{planoPaiController.planoEditar.plp_tipoDesconto}">
+								<f:selectItem itemLabel="Selecione o Tipo de Desconto"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Monetário" itemValue="M"/>
+								<f:selectItem itemLabel="Porcentagem" itemValue="P"/>
+							</b:selectOneMenu>
+							<h:message for="tipoDescontoEditar" />
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{planoPaiController.limpar()}" update="@form" immediate="true"/>
+						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{planoPaiController.editar()}" oncomplete="$('.modalAlterar').modal('hide');" process="@form" update="formPesquisa"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+				
+				</h:form>
+					    
+					</b:modal>
+	</ui:define>
+</ui:composition>

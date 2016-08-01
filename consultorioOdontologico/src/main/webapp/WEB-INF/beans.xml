@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<beans>
+    <interceptors>
+        <class>br.com.consultorio.tx.GerenciadorDeTransacao</class>
+    </interceptors>
+</beans>

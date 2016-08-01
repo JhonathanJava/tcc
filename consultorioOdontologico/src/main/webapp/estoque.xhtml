@@ -1,0 +1,620 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Meu Estoque">
+				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:row>
+					<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9"  style="text-align:left; margin-top:2%">
+						<p:commandButton value="Adicionar Novo Produto" id="salvar" pt:data-target="#produtoNovo" pt:data-toggle="modal" styleClass="btn btn-success" icon="fa fa-fw fa-plus-sign"/>
+						<p:commandButton value="Compra"  pt:data-target="#alterarProdutoEstoque" pt:data-toggle="modal" styleClass="btn btn-warning" icon="fa fa-fw fa-shopping-cart" style="margin-left:2%" />
+						<p:commandButton value="Venda"  pt:data-target="#retirar" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" style="margin-left:2%" />
+					</b:column>
+					</b:row>
+				
+				<b:panel title="Atenção" look="info" collapsible="false" style="margin-top:2%">
+						<b:icon name="warning-sign" size="lg" />
+						Você possui <strong>#{estoqueController.countNegativo}</strong> produtos com nível crítico no estoque, confira e compre para não ficar sem
+						<b:button look="success" value="Ver" icon="list" style="float:right; position:relative;bottom:10px" pt:data-target="#mostrarNegativo" pt:data-toggle="modal"/>
+			    </b:panel>
+
+				<hr/>
+						<b:dataTable value="#{estoqueController.listaEstoque}" var="e" id="listaEstoque" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						 
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Cód" />
+						    </f:facet>
+						    <h:outputText value="#{e.est_codigo}" />
+						  </h:column>
+						 
+						  <h:column>
+						    <f:facet name="header" >
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{e.est_produto}" />
+						  </h:column>
+						  
+						  <h:column>
+						  <f:facet name="header">
+						      <h:outputText value="Valor" />
+						    </f:facet>
+						    <h:outputText value="R$ #{e.est_valor}">
+						    	<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Total" />
+						    </f:facet>
+						    <h:outputText value="#{e.est_quantidade}"/>
+						  </h:column>
+						 
+						</b:dataTable>	
+						
+						<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
+					    <p>Você realmente deseja excluir este registro?</p>
+					    
+					    <f:facet name="footer">
+					    	<h:form prependId="false">
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{estoqueController.excluirRegistro()}" update="listaEstoque growlSpecific" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					        <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>
+					        </h:form>
+					    </f:facet>
+					</b:modal>	
+						
+									
+			</b:tab>
+			
+			<b:tab title="Histórico de Entrada">
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	     				Abaixo Lista de todos os produtos que foram Adicionado do Estoque.
+	     			 </b:panel>
+					
+					<hr/>
+						<b:dataTable value="#{estoqueController.listaEstoqueEntrada}" var="s" id="listaEntrada" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Fornecedor" />
+						    </f:facet>
+						    <h:outputText value="#{s.compra.fornecedor.fun_nome}" />
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nota Fiscal" />
+						    </f:facet>
+						    <h:outputText value="#{s.compra.com_nf}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Data de Entrada" />
+						    </f:facet>
+						    <h:outputText value="#{s.compra.com_data}">
+						    	<f:convertDateTime pattern="dd/MM/yyyy"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{s.estoque.est_produto}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Entrada" />
+						    </f:facet>
+						    <h:outputText value="#{s.ete_quantidade}" />
+						  </h:column>
+						  
+						<h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Visualizar" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{estoqueController.visualizarCompra(s)}"  pt:data-target="#alterarProdutoEstoque" pt:data-toggle="modal"  styleClass="btn btn-danger" icon="fa fa-fw fa-edit" update=":formAlterar" immediate="true"/>
+						    	</center>
+						  </h:column>
+						  
+						</b:dataTable>
+			</b:tab>
+			
+			<b:tab title="Histórico de Retirada">
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	     				Abaixo Lista de todos os produtos que foram retirados do Estoque.
+	     			 </b:panel>
+					
+					<hr/>
+						<b:dataTable value="#{estoqueController.listaEstoqueSaida}" var="s" id="listaSaida" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{s.estoque.est_produto}" />
+						  </h:column>
+						  
+						  <h:column>
+						  <f:facet name="header">
+						      <h:outputText value="Valor" />
+						    </f:facet>
+						    <h:outputText value="#{s.estoque.est_valor}">
+						    	<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Qtd retirada" />
+						    </f:facet>
+						    <h:outputText value="#{s.ets_quantidade}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						    <h:outputText value="Data" />
+						    </f:facet>
+						    <h:outputText value="#{s.ets_data}">
+						      	<f:convertDateTime pattern="dd/MM/yyyy"/>
+						      </h:outputText>
+						  </h:column>
+						  
+						</b:dataTable>
+			</b:tab>
+		</b:tabView>
+		
+		
+		<b:modal id="produtoNovo" title="Produto Novo" styleClass="produtoNovo" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formEditar">
+		       <b:fetchBeanInfos />
+		  	<script>
+				mascara();
+		  	</script>
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="produto" label="Nome do Produto" required="true"
+								renderLabel="true" required-message="Digite o Nome do Produto"
+								value="#{estoqueController.estoque.est_produto}"/>
+							<h:message for="produto" />
+						</b:column>
+						
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Valor de Custo" id="valorCusto" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Custo"
+								value="#{estoqueController.estoque.est_valor}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="valor" />
+						</b:column>
+						
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Valor de Venda" id="valor" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Venda"
+								value="#{estoqueController.estoque.est_valorVenda}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="valor" />
+						</b:column>
+					</b:row>
+					<b:row>	
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText id="quantidade" label="Quantidade" required="true"
+								renderLabel="true" required-message="Digite a Quantidade"
+								value="#{estoqueController.estoque.est_quantidade}" styleClass="numero">
+							</b:inputText>
+							<h:message for="quantidade" />
+						</b:column>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Digite Quantidade mínima" id="qtdMinimo" renderLabel="true"
+								required="true" requiredMessage="Digite a quantidade mínima de estoque"
+								value="#{estoqueController.estoque.est_quantidadeMinima}" styleClass="numero">
+							</b:inputText>
+							<h:message for="qtdMinimo" />
+						</b:column>
+						
+						<b:column col-lg="2" col-md="2" col-sm="2" col-xs="2">
+						<center>
+						    	 <p:commandButton actionListener="#{estoqueController.adicionaProdutoNovo}"  styleClass="btn btn-success" icon="fa fa-fw fa-plus-circle" update="@form"  oncomplete="if(!validationFailed) $('.produtoNovo').modal('show')"/>
+						    	</center>
+						</b:column>
+					</b:row>
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<h4>Lista de Produtos Adicionados</h4>
+						<hr/>
+					</b:column>
+					</b:row>
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<center>
+						<b:dataTable  value="#{estoqueController.listaAdicionaProduto}" var="s" id="listaProdutosAdicionados" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" responsive="true" >
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{s.est_produto}" />
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Valor de Custo" />
+						    </f:facet>
+						    <h:outputText value="#{s.est_valor}">
+						    	<f:convertNumber currencySymbol="R$" type="currency"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Valor de Venda" />
+						    </f:facet>
+						    <h:outputText value="#{s.est_valorVenda}">
+						    	<f:convertNumber currencySymbol="R$" type="currency"/>
+						    </h:outputText>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Quantidade" />
+						    </f:facet>
+						    <h:outputText value="#{s.est_quantidade}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Quantidade mínima" />
+						    </f:facet>
+						    <h:outputText value="#{s.est_quantidadeMinima}"/>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{estoqueController.removeListaProdutoNovo(s)}" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update="@form" immediate="true"/>
+						    	</center>
+						  </h:column>
+						  
+						</b:dataTable>
+						</center>
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{estoqueController.salvarProdutoNovo()}" oncomplete="$('.modalAlterar').modal('hide');" immediate="true"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+				
+				</h:form>
+					    
+					</b:modal>
+					
+					
+		<b:modal id="retirar" title="Baixa de Estoque" styleClass="retirar" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formRemoveEstoque">
+		  		       <b:fetchBeanInfos />
+		  	<script>
+				mascara();
+		  	</script>
+				<b:row>
+						<b:column col-lg="5" col-md="5" col-sm="5" col-xs="5">
+							<b:selectOneMenu label="Produto" id="produtoRemover" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o produto"
+								value="#{estoqueController.estoqueSaida.estoque}">
+								<f:selectItem itemLabel="Escolha o produto" noSelectionOption="true" />
+								<f:selectItems value="#{estoqueController.listaEstoque}" var="e" itemLabel="#{e.est_produto}" itemValue="#{e}"/>
+								<h:message for="produtoAlterar"/>
+							</b:selectOneMenu>
+						</b:column>
+						
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:selectOneMenu label="Destino Saída" id="saida" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o destino"
+								value="#{estoqueController.estoqueSaida.ets_destinoSaida}">
+								<f:selectItem itemLabel="Selecione o Destino do Produto"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Tratamento" itemValue="T"/>
+								<f:selectItem itemLabel="Vencido" itemValue="V"/>
+								<f:selectItem itemLabel="Quebrado" itemValue="Q"/>
+							</b:selectOneMenu>
+							<h:message for="editarSexo" />
+						</b:column>
+						
+						<b:column col-lg="2" col-md="2" col-sm="2" col-xs="2">
+							<b:inputText id="novaQuantidadeRemover" label="Quantidade" required="true"
+								renderLabel="true" required-message="Digite a Quantidade"
+								value="#{estoqueController.estoqueSaida.ets_quantidade}" styleClass="numero">
+							</b:inputText>
+							<h:message for="novaQuantidadeRemover" />
+						</b:column>
+						
+						<b:column col-lg="1" col-md="1" col-sm="1" col-xs="1">
+						    	 <p:commandButton actionListener="#{estoqueController.removeProduto}"  styleClass="btn btn-success" icon="fa fa-fw fa-plus-circle" update="@form" oncomplete="if(!validationFailed) $('.retirar').modal('show')"/>
+						</b:column>
+						
+					</b:row>					
+					<br/> <hr />
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<center>
+						<b:dataTable  value="#{estoqueController.listaEstoqueSaidaNovo}" var="s" id="listaProdutosRemover" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" responsive="true" >
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{s.estoque.est_produto}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Saída" />
+						    </f:facet>
+						    <h:outputText value="#{s.ets_quantidade}"  style="font-weight:bold"/>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Destino Produto" />
+						    </f:facet>
+						    <h:outputText value="Tratamento" style="color:green" rendered="#{s.ets_destinoSaida == 'T'}"/>
+						    <h:outputText value="Vencido" style="color:orange" rendered="#{s.ets_destinoSaida == 'V'}"/>
+						    <h:outputText value="Quebrado" style="color:red" rendered="#{s.ets_destinoSaida == 'Q'}"/>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{estoqueController.removeListaProdutoSaida(s)}" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update="@form" immediate="true"/>
+						    	</center>
+						  </h:column>
+						  
+						</b:dataTable>
+						</center>
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton look="success" value="Salvar" id="salvarRemover"  style="margin-right:3%"  icon="plus-sign" actionListener="#{estoqueController.removerEstoque()}" oncomplete="if(!validationFailed) $('.retirar').modal('show')" immediate="true"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>		   
+		  </h:form>
+		</b:modal>			
+					
+					
+		<b:modal id="alterarProdutoEstoque" title="Tela de Entrada de Compra" styleClass="alterarProdutoEstoque" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formAlterar">
+		   <b:fetchBeanInfos />
+		  	<script>
+				mascara();
+		  	</script>
+		  			<b:row>
+		  				<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9">
+							<b:selectOneMenu label="Fornecedor" id="fornecedor" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o Fornecedor"
+								value="#{estoqueController.fornecedor}">
+								<f:selectItem itemLabel="Escolha o Fornecedor"
+									noSelectionOption="true" />
+								<f:selectItems value="#{estoqueController.listaFornecedores}" var="f" itemLabel="#{f.fun_nome}" itemValue="#{f}"/>
+								<h:message for="fornecedor"/>
+							</b:selectOneMenu>
+						</b:column>
+		  				<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:inputText id="notaFiscal" label="Nota Fiscal" value="#{estoqueController.compra.com_nf}"/>
+						</b:column>
+		  			</b:row>
+		  			
+		  			<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+							<b:inputText id="dataCompra" styleClass="date"
+								label="Data da Compra"
+								required-message="Digite a data da Compra"
+								value="#{estoqueController.compra.com_dataCompra}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</b:inputText>
+							<h:message for="dataCompra" />
+						</b:column>	
+						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+							<b:inputText id="dataEntrada" styleClass="date"
+								label="Data da Entrada"
+								required-message="Digite a data da Compra"
+								value="#{estoqueController.compra.com_data}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</b:inputText>
+							<h:message for="dataEntrada" />
+						</b:column>						
+						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+							<b:inputText id="dataVencimento" styleClass="date"
+								label="Data de Vencimento"
+								required-message="Digite a data do Vencimento para Pagamento"
+								value="#{estoqueController.compra.com_dataVencimento}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</b:inputText>
+							<h:message for="dataVencimento" />
+						</b:column>						
+		  			</b:row>
+		  			
+		  			<b:row>
+		  				<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Digite o Valor de Frete" id="frete" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Frete"
+								value="#{estoqueController.compra.com_frete}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="frete" />
+						</b:column>
+						
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Digite o Valor de Desconto" id="desconto" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Desconto"
+								value="#{estoqueController.compra.com_desconto}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="desconto" />
+						</b:column>
+						
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<b:inputText label="Digite o Valor da Nota" id="valorNota" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Frete"
+								value="#{estoqueController.compra.com_valorTotal}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="valorNota" />
+						</b:column>
+		  			</b:row>
+		  			
+		  			<span class="divisao">ADICIONE OS PRODUTOS DA NOTA ABAIXO</span>
+		  	
+					<b:row>
+						<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9">
+							<b:selectOneMenu label="Produto" id="produtoAlterar" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o produto"
+								value="#{estoqueController.estoque}">
+								<f:selectItem itemLabel="Escolha o produto"
+									noSelectionOption="true" />
+								<f:selectItems value="#{estoqueController.listaEstoque}" var="e" itemLabel="#{e.est_produto}" itemValue="#{e}"/>
+								<h:message for="produtoAlterar"/>
+							</b:selectOneMenu>
+						</b:column>
+						<b:column col-lg="3" col-md="2" col-sm="2" col-xs="2">
+							<b:inputText id="novaQuantidade" label="Quantidade" required="true"
+								renderLabel="true" required-message="Digite a Quantidade"
+								value="#{estoqueController.estoqueEntrada.ete_quantidade}" styleClass="numero">
+							</b:inputText>
+							<h:message for="novaQuantidade" />
+						</b:column>
+					</b:row>	
+					<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText label="Digite o Valor de Custo" id="custoValor" renderLabel="true"
+								required="true" requiredMessage="Digite o valor de Frete"
+								value="#{estoqueController.estoqueEntrada.ete_valor}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="custoValor" />
+						</b:column>
+						
+						<b:column col-lg="5" col-md="5" col-sm="5" col-xs="5">
+							<b:inputText label="Digite o Valor de Venda" id="custoVenda" renderLabel="true"
+								required="true" requiredMessage="Digite o Valor de Venda"
+								value="#{estoqueController.estoqueEntrada.ete_valorVenda}" styleClass="dinheiro">
+								<f:facet name="prepend">
+					                <h:outputText value="R$" />
+					            </f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
+							</b:inputText>
+							<h:message for="custoVenda" />
+						</b:column>
+					
+						<b:column col-lg="1" col-md="1" col-sm="1" col-xs="1">
+						    	 <p:commandButton actionListener="#{estoqueController.adicionaProduto}"  styleClass="btn btn-success" icon="fa fa-fw fa-plus-circle" update="@form" />
+						</b:column>
+					</b:row>				
+					<br/> <hr />
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<center>
+						<b:dataTable  value="#{estoqueController.listaEstoqueEntradaNovo}" var="s" id="listaProdutosAlterar" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" responsive="true" >
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{s.estoque.est_produto}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Entrada" />
+						    </f:facet>
+						    <h:outputText value="#{s.ete_quantidade}"  style="font-weight:bold"/>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{estoqueController.removeListaProduto(s)}" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update="@form" immediate="true"/>
+						    	</center>
+						  </h:column>
+						  
+						</b:dataTable>
+						</center>
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton look="success" value="Salvar" id="salvarAlterar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{estoqueController.salvaEntrada()}"  oncomplete="if(!validationFailed) $('.modalAlterar').modal('show')" immediate="true"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+				
+				</h:form>
+					    
+					</b:modal>
+					
+					
+					<b:modal id="mostrarNegativo" title="Estoque Negativo" styleClass="mostrarNegativo" size="modal-lg" backdrop="false">
+					
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							Alguns produtos do seu estoque chegaram ao nível crítico, identificamos isso e montamos um pedido especial para você.
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<p:dataTable value="#{estoqueController.listaEstoqueNegativo}" var="s" responsive="true" >
+						    <p:column headerText="Produto">
+						    <h:outputText value="#{s.est_produto}" style="font-size:14px"/>
+						  </p:column>
+						    <p:column headerText="Quantidade">
+						    <h:outputText value="#{s.est_quantidade}" style="color:red;font-size:14px"/>
+						  </p:column>
+						</p:dataTable>
+						</b:column>
+					</b:row>
+					
+					</b:modal>
+					
+	</ui:define>
+</ui:composition>

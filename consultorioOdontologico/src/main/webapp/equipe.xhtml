@@ -1,0 +1,285 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Adicionar Membro na Equipe">
+				<h:form prependId="false" id="formCadastro">
+				 <b:fetchBeanInfos />
+				<script type="text/javascript">
+				  $('.date').mask('00/00/0000');
+				  $('.cpf').mask('000.000.000-00', {reverse: true});
+				  $('.telefone').mask('(00) 0000-0000');
+				  $('.prontuario').mask('000000000000000');
+				  $('.cep').mask('00000-000');
+				</script>
+				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+				     	 O Formulário contém campos obrigatórios (*).
+				    </b:panel>
+				    
+				    <b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+				    <b:tab title="Dados Cadastrais">
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText id="name" label="Digite o nome" required="true"
+										renderLabel="true" required-message="Digite o nome"
+										value="#{usuarioController.usuario.usu_nome}" />
+									<h:message for="name" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+									<b:inputText id="cpf" styleClass="cpf" label="CPF"
+										required="true" renderLabel="true" value="#{usuarioController.usuario.usu_cpf}"
+										required-message="Digite do seu CPF" />
+									<h:message for="cpf" />
+								</b:column>
+
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:switch off-text="Inativo" on-text="Ativo" on-color="success" off-color="danger" label="Status"
+										value="#{usuarioController.usuario.usu_ativo}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText id="cro" label="CRO" value="#{usuarioController.usuario.usu_cro}" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+									<b:inputText id="celular" styleClass="telefone" label="Celular" value="#{usuarioController.usuario.usu_celular}" />
+								</b:column>
+
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText id="telefone" styleClass="telefone" label="Telefone" value="#{usuarioController.usuario.usu_telefone}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="endereco" label="Endereço" value="#{usuarioController.usuario.usu_endereco}" />
+								</b:column>
+								
+								<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+									<b:inputText id="cidade" label="Cidade" value="#{usuarioController.usuario.usu_cidade}" />
+								</b:column>
+								
+								<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+									<b:inputText id="estado" label="endereco" value="#{usuarioController.usuario.usu_estado}" />
+								</b:column>
+							</b:row>
+							
+							
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="complemento" label="Complemento" value="#{usuarioController.usuario.usu_complemento}" />
+								</b:column>
+								
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="numeroEndereco" label="Número Endereço" value="#{usuarioController.usuario.usu_numeroEndereco}" />
+								</b:column>
+								
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="email" label="Email" value="#{usuarioController.usuario.usu_email}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="login" label="Login" value="#{usuarioController.usuario.usu_login}" 
+									required="true"
+										renderLabel="true" required-message="Informe o Login"/>
+																			<h:message for="login" />
+										
+								</b:column>
+								
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="senha" label="Senha" value="#{usuarioController.usuario.usu_senha}" 
+										required="true"
+										renderLabel="true" required-message="Informe a senha"/>
+									<h:message for="senha" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+							<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4" offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8" style="text-align:right; margin-top:2%">
+								<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{usuarioController.limparUsuario()}" update="@form"/>
+								<b:commandButton look="success" value="Salvar" id="salvar" icon="plus-sign" actionListener="#{usuarioController.gravar()}" process="@form" update="@form"/>
+							</b:column>
+							</b:row>
+							
+						</b:tab>
+				</b:tabView>
+				</h:form>
+			</b:tab>
+			<b:tab title="Consultar Equipe">
+				<h:form prependId="false" id="formPesquisa">
+				     <b:fetchBeanInfos />
+								<b:growl id="growlPesquisa" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	     				Utilize os campo pesquisa para filtrar.
+	     			 </b:panel>
+					<hr/>
+						<b:dataTable value="#{usuarioController.usuarios}" var="u" id="listaUsuarios" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Código" />
+						    </f:facet>
+						    <h:outputText value="#{u.usu_codigo}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nome" />
+						    </f:facet>
+						    <h:outputText value="#{u.usu_nome}" />
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Status" />
+						    </f:facet>
+						    <h:outputText value="#{u.usu_ativo}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton actionListener="#{usuarioController.buscaEditarPorId(u.usu_codigo)}" pt:data-target="#alterar" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" update=":formEditar"/>
+						    	</center>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{usuarioController.buscaEditarPorId(u.usu_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	</center>
+						  </h:column>
+						</b:dataTable>
+					
+					<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
+					    <p>Você realmente deseja excluir este registro?</p>
+					    
+					    <f:facet name="footer">
+							 <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>					    	
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{usuarioController.remover()}" update="listaUsuarios growlPesquisa" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					    </f:facet>
+					</b:modal>
+											
+						</h:form>
+			</b:tab>
+		</b:tabView>
+		
+		<b:modal id="alterar" title="Alterando Registro" styleClass="modalAlterar" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formEditar">
+		  		<script>
+					mascara();
+		  		</script>
+				<b:growl id="growlAlterar" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+			      O Formulário contém campos obrigatórios (*).
+			   	 </b:panel>
+					
+					<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText id="nameEditar" label="Digite o nome" required="true"
+										renderLabel="true" required-message="Digite o nome"
+										value="#{usuarioController.usuarioEditar.usu_nome}" />
+									<h:message for="nameEditar" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+									<b:inputText id="cpfEditar" styleClass="cpf" label="CPF"
+										required="true" renderLabel="true" value="#{usuarioController.usuarioEditar.usu_cpf}"
+										required-message="Digite do seu CPF" />
+									<h:message for="cpfEditar" />
+								</b:column>
+
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:switch off-text="Inativo" on-text="Ativo" on-color="success" off-color="danger" label="Status"
+										value="#{usuarioController.usuarioEditar.usu_ativo}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText label="CRO" value="#{usuarioController.usuarioEditar.usu_cro}" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+									<b:inputText styleClass="telefone" label="Celular" value="#{usuarioController.usuarioEditar.usu_celular}" />
+								</b:column>
+
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<b:inputText  styleClass="telefone" label="Telefone" value="#{usuarioController.usuarioEditar.usu_telefone}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText label="Endereço" value="#{usuarioController.usuarioEditar.usu_endereco}" />
+								</b:column>
+								
+								<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+									<b:inputText  label="Cidade" value="#{usuarioController.usuarioEditar.usu_cidade}" />
+								</b:column>
+								
+								<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+									<b:inputText label="endereco" value="#{usuarioController.usuarioEditar.usu_estado}" />
+								</b:column>
+							</b:row>
+							
+							
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText label="Complemento" value="#{usuarioController.usuarioEditar.usu_complemento}" />
+								</b:column>
+								
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText  label="Número Endereço" value="#{usuarioController.usuarioEditar.usu_numeroEndereco}" />
+								</b:column>
+								
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText  label="Email" value="#{usuarioController.usuarioEditar.usu_email}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="loginEditar" label="Login" value="#{usuarioController.usuarioEditar.usu_login}" 
+									required="true"
+										renderLabel="true" required-message="Informe o Login"/>
+																			<h:message for="loginEditar" />
+										
+								</b:column>
+								
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="senhaEditar" label="Senha" value="#{usuarioController.usuarioEditar.usu_senha}" 
+										required="true"
+										renderLabel="true" required-message="Informe a senha"/>
+									<h:message for="senhaEditar" />
+								</b:column>
+							</b:row>
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{usuarioController.limparUsuario()}" update="@form" immediate="true"/>
+						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{usuarioController.editar()}" oncomplete="if(validationFailed) $('.modalAlterar').modal('show'); else $('.modalAlterar').modal('hide')" process="@form" update="formPesquisa"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+				
+				</h:form>
+					    
+					</b:modal>
+	</ui:define>
+</ui:composition>

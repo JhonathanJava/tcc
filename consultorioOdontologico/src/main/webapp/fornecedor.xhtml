@@ -1,0 +1,390 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+
+		<b:tabView activeIndex="0" 
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Adicionar Fornecedor" >
+				<h:form prependId="false" id="formCadastro">
+				     <b:fetchBeanInfos />
+					<script type="text/javascript">
+				  $('.date').mask('00/00/0000');
+				  $('.cnpj').mask('00.000.000/0000-00', {reverse: true});
+				  $('.telefone').mask('(00) 0000-0000');
+				  $('.prontuario').mask('000000000000000');
+				  $('.cep').mask('00000-000');
+				</script>
+					
+					<b:growl id="growlSpecific" placementFrom="top"
+						allow-dismiss="true" animation-enter="animated bounceInDown"
+						animation-exit="animated flipOutX" escape="true" />
+					
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	      O Formulário contém campos obrigatórios (*).
+	    </b:panel>
+					<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText id="name" label="Digite a Razão Social"
+								required="true" renderLabel="true"
+								required-message="Digite Razão Social"
+								value="#{fornecedorController.fornecedor.fun_nome}" />
+							<h:message for="name" />
+						</b:column>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText id="nomeFantasia" label="Nome Fantasia"
+								value="#{fornecedorController.fornecedor.fun_nomeFantasia}" />
+							<h:message for="nomeFantasia" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="cnpj" label="CNPJ" required="true"
+								renderLabel="true" styleClass="cnpj"
+								value="#{fornecedorController.fornecedor.fun_cnpj}"
+								required-message="Digite o CNPJ" />
+							<h:message for="cnpj" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="ie" label="Inscrição Estadual" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_inscricaoEstadual}"
+								required-message="Digite a Inscrição Estadual" />
+							<h:message for="ie" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="telefone" styleClass="telefone" label="Telefone"
+								required="true" renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_telefone}"
+								required-message="Digite o número do Telefone" />
+							<h:message for="telefone" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="fax" styleClass="telefone" label="Fax"
+								value="#{fornecedorController.fornecedor.fun_fax}" />
+							<h:message for="fax" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+							<b:inputText id="cep" label="CEP" styleClass="cep"
+								required="true" renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_cep}"
+								required-message="Digite o CEP" />
+							<h:message for="cep" />
+						</b:column>
+
+						<b:column col-lg="8" col-md="8" col-sm="12" col-xs="12">
+							<b:inputText id="endereco" label="Endereco" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_endereco}"
+								required-message="Digite o Endereço" />
+							<h:message for="endereco" />
+						</b:column>
+						
+					</b:row>
+
+					<b:row>
+					
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="bairro" label="Bairro" required="true"
+								value="#{fornecedorController.fornecedor.fun_bairro}"
+								renderLabel="true" required-message="Digite o nome do Bairro" />
+							<h:message for="bairro" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="cidade" label="Cidade" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_cidade}"
+								required-message="Digite o nome da Cidade" />
+							<h:message for="cidade" />
+						</b:column>
+						
+					
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="estado" label="Estado" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedor.fun_estado}"
+								required-message="Digite o nome da Estado" />
+							<h:message for="estado" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="contato" label="Contato"
+								value="#{fornecedorController.fornecedor.fun_contato}" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+							<b:inputText id="site" label="Site"
+								value="#{fornecedorController.fornecedor.fun_site}" />
+						</b:column>
+
+						<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+							<b:inputText id="email" label="Email"
+								value="#{fornecedorController.fornecedor.fun_email}" />
+						</b:column>
+
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<b:inputTextarea rows="2" id="obs"
+								value="#{fornecedorController.fornecedor.fun_obs}"
+								label="Observação" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4"
+							offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8"
+							style="text-align:right; margin-top:2%">
+							<b:commandButton value="Limpar" icon="erase" look="danger"
+								type="reset" style="margin-right:3%"
+								actionListener="#{fornecedorController.limpar()}" update="@form" />
+							<b:commandButton look="success" value="Salvar" id="salvar"
+								icon="plus-sign"
+								actionListener="#{fornecedorController.gravar()}"
+								process="@form" update="@form :formPesquisa" />
+						</b:column>
+					</b:row>
+
+				</h:form>
+			</b:tab>
+
+			<b:tab title="Consultar Fornecedor">
+				<h:form prependId="false" id="formPesquisa">
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	     				Pode filtrar por qualquer campo da tabela, basta escrever no campo pesquisar o que procura.
+	     			 </b:panel>
+					<hr />
+					<b:dataTable value="#{fornecedorController.fornecedores}" var="f"
+						id="listarFornecedores"
+						customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+						styleClass="table table-striped table-bordered" style="width:100%"
+						fixedHeader="true" responsive="true">
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Código" />
+							</f:facet>
+							<h:outputText value="#{f.fun_codigo}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Razão Social" />
+							</f:facet>
+							<h:outputText value="#{f.fun_nome}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Nome Fantasia" />
+							</f:facet>
+							<h:outputText value="#{f.fun_nomeFantasia}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Editar" />
+							</f:facet>
+							<center>
+								<p:commandButton
+									actionListener="#{fornecedorController.buscaEditarPorId(f.fun_codigo)}"
+									pt:data-target="#alterar" pt:data-toggle="modal"
+									styleClass="btn btn-info" icon="fa fa-fw fa-edit"
+									update=":formEditar" />
+							</center>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Excluir" />
+							</f:facet>
+							<center>
+								<p:commandButton
+									actionListener="#{fornecedorController.buscaPorId(f.fun_codigo)}"
+									pt:data-target="#amodal" pt:data-toggle="modal"
+									styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+							</center>
+						</h:column>
+					</b:dataTable>
+
+					<b:modal id="amodal" title="Confirma Exclusão"
+						styleClass="modalExcluir" backdrop="false">
+						<p>Você realmente deseja excluir este registro?</p>
+						<f:facet name="footer">
+							<b:commandButton value="Confirmar" look="primary"
+								actionListener="#{fornecedorController.remover()}"
+								update="listarFornecedores"
+								oncomplete="$('.modalExcluir').modal('hide');" process="@this" />
+							<b:button value="close" dismiss="modal" onclick="return false;"
+								look="danger" />
+						</f:facet>
+					</b:modal>
+				</h:form>
+			</b:tab>
+		</b:tabView>
+
+		<b:modal id="alterar" title="Alterando Registro" styleClass="modalAlterar" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formEditar">
+		       <b:fetchBeanInfos />
+				<script type="text/javascript">
+				 $('.date').mask('00/00/0000');
+				  $('.cnpj').mask('00.000.000/0000-00', {reverse: true});
+				  $('.telefone').mask('(00) 0000-0000');
+				  $('.prontuario').mask('000000000000000');
+				  $('.cep').mask('00000-000');
+				</script>
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	      O Formulário contém campos obrigatórios (*).
+	    </b:panel>
+	    
+	    
+	    <b:row>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText id="nameEditar" label="Digite a Razão Social"
+								required="true" renderLabel="true"
+								required-message="Digite Razão Social"
+								value="#{fornecedorController.fornecedorEditar.fun_nome}" />
+							<h:message for="name" />
+						</b:column>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText id="nomeFantasiaEditar" label="Nome Fantasia"
+								value="#{fornecedorController.fornecedorEditar.fun_nomeFantasia}" />
+							<h:message for="nomeFantasia" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="cnpjEditar" label="CNPJ" required="true"
+								renderLabel="true" styleClass="cnpj"
+								value="#{fornecedorController.fornecedorEditar.fun_cnpj}"
+								required-message="Digite o CNPJ" />
+							<h:message for="cnpj" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="ieEditar" label="Inscrição Estadual" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_inscricaoEstadual}"
+								required-message="Digite a Inscrição Estadual" />
+							<h:message for="ie" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="telefoneEditar" styleClass="telefone" label="Telefone"
+								required="true" renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_telefone}"
+								required-message="Digite o número do Telefone" />
+							<h:message for="telefone" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="faxEditar" styleClass="telefone" label="Fax"
+								value="#{fornecedorController.fornecedorEditar.fun_fax}" />
+							<h:message for="fax" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+							<b:inputText id="cepEditar" label="CEP" styleClass="cep"
+								required="true" renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_cep}"
+								required-message="Digite o CEP" />
+							<h:message for="cep" />
+						</b:column>
+
+						<b:column col-lg="8" col-md="8" col-sm="12" col-xs="12">
+							<b:inputText id="enderecoEditar" label="Endereco" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_endereco}"
+								required-message="Digite o Endereço" />
+							<h:message for="endereco" />
+						</b:column>
+						
+					</b:row>
+
+					<b:row>
+					
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="bairroEditar" label="Bairro" required="true"
+								value="#{fornecedorController.fornecedorEditar.fun_bairro}"
+								renderLabel="true" required-message="Digite o nome do Bairro" />
+							<h:message for="bairro" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="cidadeEditar" label="Cidade" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_cidade}"
+								required-message="Digite o nome da Cidade" />
+							<h:message for="cidade" />
+						</b:column>
+						
+					
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="estadoEditar" label="Estado" required="true"
+								renderLabel="true"
+								value="#{fornecedorController.fornecedorEditar.fun_estado}"
+								required-message="Digite o nome da Estado" />
+							<h:message for="estado" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="6" col-xs="6">
+							<b:inputText id="contatoEditar" label="Contato"
+								value="#{fornecedorController.fornecedorEditar.fun_contato}" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+							<b:inputText id="siteEditar" label="Site"
+								value="#{fornecedorController.fornecedorEditar.fun_site}" />
+						</b:column>
+
+						<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+							<b:inputText id="emailEditar" label="Email"
+								value="#{fornecedorController.fornecedorEditar.fun_email}" />
+						</b:column>
+
+					</b:row>
+
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<b:inputTextarea rows="2" id="obsEditar"
+								value="#{fornecedorController.fornecedorEditar.fun_obs}"
+								label="Observação" />
+						</b:column>
+					</b:row>
+
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{fornecedorController.limpar()}" update="@form" immediate="true"/>
+						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{fornecedorController.editar()}" oncomplete="if(validationFailed) $('.modalAlterar').modal('show') else $('.modalAlterar').modal('hide')" process="@form" update="formPesquisa" />
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+	    
+	    </h:form>
+	    </b:modal>
+
+	</ui:define>
+</ui:composition>
