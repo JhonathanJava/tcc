@@ -46,5 +46,10 @@ public final class Candlestick {
 	public boolean isBaixo(){
 		return this.fechamento < this.abertura;
 	}
+	@Override
+	public String toString() {
+		return "Candlestick [abertura=" + abertura + ", fechamento=" + fechamento + ", maximo=" + maximo + ", minimo="
+				+ minimo + ", volume=" + volume + ", data=" + data + "]";
+	}
 	
 }

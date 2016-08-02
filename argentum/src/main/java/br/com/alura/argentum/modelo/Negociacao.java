@@ -15,7 +15,6 @@ public final class Negociacao {
 		this.quantidade = quantidade;
 		this.data = data;
 	}
-	
 
 	public double getPreco() {
 		return preco;
@@ -29,4 +28,7 @@ public final class Negociacao {
 		return data;
 	}
 
+	public double getVolume(){
+		return this.preco * this.quantidade;
+	}
 }
