@@ -2,13 +2,20 @@ package br.com.alura.argentum.modelo;
 
 import java.time.LocalDateTime;
 
-public class Negociacao {
+public final class Negociacao {
 
-	private double preco;
+	private final double preco;
 	
-	private int quantidade;
+	private final int quantidade;
 	
-	private LocalDateTime data;
+	private final LocalDateTime data;
+	
+	public Negociacao(double preco, int quantidade, LocalDateTime data) {
+		this.preco = preco;
+		this.quantidade = quantidade;
+		this.data = data;
+	}
+	
 
 	public double getPreco() {
 		return preco;
@@ -21,6 +28,5 @@ public class Negociacao {
 	public LocalDateTime getData() {
 		return data;
 	}
-	
-	
+
 }
