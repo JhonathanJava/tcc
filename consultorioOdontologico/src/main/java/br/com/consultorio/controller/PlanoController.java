@@ -23,8 +23,6 @@ public class PlanoController implements Serializable{
 	
 	private List<Plano> planos;
 
-	
-	
 	public Plano getPlano() {
 		return plano;
 	}

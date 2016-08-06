@@ -43,22 +43,6 @@
 						    <h:outputText value="#{e.est_produto}" />
 						  </h:column>
 						  
-						  <h:column>
-						  <f:facet name="header">
-						      <h:outputText value="Valor" />
-						    </f:facet>
-						    <h:outputText value="R$ #{e.est_valor}">
-						    	<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
-						    </h:outputText>
-						  </h:column>
-						  
-						   <h:column>
-						    <f:facet name="header">
-						      <h:outputText value="Total" />
-						    </f:facet>
-						    <h:outputText value="#{e.est_quantidade}"/>
-						  </h:column>
-						 
 						</b:dataTable>	
 						
 						<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
@@ -185,44 +169,12 @@
 				mascara();
 		  	</script>
 					<b:row>
-						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
 							<b:inputText id="produto" label="Nome do Produto" required="true"
 								renderLabel="true" required-message="Digite o Nome do Produto"
-								value="#{estoqueController.estoque.est_produto}"/>
+								value="#{estoqueController.estoque.est_produto}">
+							</b:inputText>
 							<h:message for="produto" />
-						</b:column>
-						
-						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-							<b:inputText label="Valor de Custo" id="valorCusto" renderLabel="true"
-								required="true" requiredMessage="Digite o valor de Custo"
-								value="#{estoqueController.estoque.est_valor}" styleClass="dinheiro">
-								<f:facet name="prepend">
-					                <h:outputText value="R$" />
-					            </f:facet>
-								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
-							</b:inputText>
-							<h:message for="valor" />
-						</b:column>
-						
-						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-							<b:inputText label="Valor de Venda" id="valor" renderLabel="true"
-								required="true" requiredMessage="Digite o valor de Venda"
-								value="#{estoqueController.estoque.est_valorVenda}" styleClass="dinheiro">
-								<f:facet name="prepend">
-					                <h:outputText value="R$" />
-					            </f:facet>
-								<f:convertNumber currencySymbol="R$" type="currency"  pattern="#,##0.00" locale="pt"/>
-							</b:inputText>
-							<h:message for="valor" />
-						</b:column>
-					</b:row>
-					<b:row>	
-						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-							<b:inputText id="quantidade" label="Quantidade" required="true"
-								renderLabel="true" required-message="Digite a Quantidade"
-								value="#{estoqueController.estoque.est_quantidade}" styleClass="numero">
-							</b:inputText>
-							<h:message for="quantidade" />
 						</b:column>
 						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
 							<b:inputText label="Digite Quantidade mínima" id="qtdMinimo" renderLabel="true"
@@ -231,11 +183,8 @@
 							</b:inputText>
 							<h:message for="qtdMinimo" />
 						</b:column>
-						
 						<b:column col-lg="2" col-md="2" col-sm="2" col-xs="2">
-						<center>
-						    	 <p:commandButton actionListener="#{estoqueController.adicionaProdutoNovo}"  styleClass="btn btn-success" icon="fa fa-fw fa-plus-circle" update="@form"  oncomplete="if(!validationFailed) $('.produtoNovo').modal('show')"/>
-						    	</center>
+						   	<p:commandButton actionListener="#{estoqueController.adicionaProdutoNovo}" value="Adicionar"  styleClass="btn btn-success" update="@form"  oncomplete="if(!validationFailed) $('.produtoNovo').modal('show')"/>
 						</b:column>
 					</b:row>
 					<b:row>
@@ -255,38 +204,6 @@
 						    <h:outputText value="#{s.est_produto}" />
 						  </h:column>
 						  
-						   <h:column>
-						    <f:facet name="header">
-						      <h:outputText value="Valor de Custo" />
-						    </f:facet>
-						    <h:outputText value="#{s.est_valor}">
-						    	<f:convertNumber currencySymbol="R$" type="currency"/>
-						    </h:outputText>
-						  </h:column>
-						  
-						   <h:column>
-						    <f:facet name="header">
-						      <h:outputText value="Valor de Venda" />
-						    </f:facet>
-						    <h:outputText value="#{s.est_valorVenda}">
-						    	<f:convertNumber currencySymbol="R$" type="currency"/>
-						    </h:outputText>
-						  </h:column>
-						  
-						  <h:column>
-						    <f:facet name="header">
-						      <h:outputText value="Quantidade" />
-						    </f:facet>
-						    <h:outputText value="#{s.est_quantidade}" />
-						  </h:column>
-						  
-						  <h:column>
-						    <f:facet name="header">
-						      <h:outputText value="Quantidade mínima" />
-						    </f:facet>
-						    <h:outputText value="#{s.est_quantidadeMinima}"/>
-						  </h:column>
-						  
 						  <h:column>
 						    <f:facet name="header">
 						      <h:outputText value="Excluir" />
@@ -303,7 +220,7 @@
 					
 					<b:row>
 					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
-						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{estoqueController.salvarProdutoNovo()}" oncomplete="$('.modalAlterar').modal('hide');" immediate="true"/>
+						<b:commandButton look="success" immediate="true" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{estoqueController.salvarProdutoNovo}" oncomplete="$('.modalAlterar').modal('hide');"/>
  						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
 					</b:column>
 					</b:row>
@@ -433,7 +350,7 @@
 		  			<b:row>
 						<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
 							<b:inputText id="dataCompra" styleClass="date"
-								label="Data da Compra"
+								label="Data da Compra" readonly="true"
 								required-message="Digite a data da Compra"
 								value="#{estoqueController.compra.com_dataCompra}">
 								<f:convertDateTime pattern="dd/MM/yyyy" />

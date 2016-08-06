@@ -89,25 +89,26 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>com.github.MaterialPrime</groupId>
-		    <artifactId>material-prime</artifactId>
-		    <version>develop-SNAPSHOT</version>
+			<groupId>com.github.MaterialPrime</groupId>
+			<artifactId>material-prime</artifactId>
+			<version>develop-SNAPSHOT</version>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/net.bootsfaces/bootsfaces -->
 		<dependency>
-		    <groupId>net.bootsfaces</groupId>
-		    <artifactId>bootsfaces</artifactId>
-		    <version>0.8.6</version>
-		    <scope>compile</scope>
+			<groupId>net.bootsfaces</groupId>
+			<artifactId>bootsfaces</artifactId>
+			<version>0.9.1</version>
 		</dependency>
-		
+
+
 		<!-- https://mvnrepository.com/artifact/org.primefaces.extensions/primefaces-extensions -->
 		<dependency>
-		    <groupId>org.primefaces.extensions</groupId>
-		    <artifactId>primefaces-extensions</artifactId>
-		    <version>6.0.0</version>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>6.0.0</version>
 		</dependency>
-				
+
 	</dependencies>
 
 	<repositories>

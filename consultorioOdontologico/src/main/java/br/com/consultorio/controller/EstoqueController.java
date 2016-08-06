@@ -93,17 +93,18 @@ public class EstoqueController implements Serializable{
 		this.listaEstoqueSaida =  new ArrayList<>();
 		this.listaEstoqueNegativo =  new ArrayList<>();
 		this.countNegativo = 0;
-		verificaEstoque();
+		//verificaEstoque();
 	}
 	
 	public void verificaEstoque(){
-		for (Estoque estoque : listaEstoque) {
-			if(estoque.getEst_quantidade() < estoque.getEst_quantidadeMinima()){
-				countNegativo++;
-				listaEstoqueNegativo.add(estoque);
+		if(listaEstoque != null && listaEstoque.size() > 0){
+			for (Estoque estoque : listaEstoque) {
+				if(estoque.getEst_quantidade() < estoque.getEst_quantidadeMinima()){
+					countNegativo++;
+					listaEstoqueNegativo.add(estoque);
+				}
 			}
 		}
-		
 	}
 	
 	public void limpar(){
@@ -113,8 +114,10 @@ public class EstoqueController implements Serializable{
 	@Transacional
 	public String salvarProdutoNovo(){
 		for (Estoque estoque : listaAdicionaProduto) {
+			System.out.println(estoque);
 			this.dao.adiciona(estoque);
 		}
+		System.out.println("Salvou");
 		FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		this.estoque = new Estoque();
 		init();
@@ -176,6 +179,7 @@ public class EstoqueController implements Serializable{
 	}
 	
 	public void adicionaProdutoNovo(){
+		System.out.println(estoque);
 		listaAdicionaProduto.add(estoque);
 		estoque = new Estoque();
 	}

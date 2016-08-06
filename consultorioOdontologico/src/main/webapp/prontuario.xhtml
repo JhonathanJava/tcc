@@ -8,21 +8,46 @@
 
 	<ui:define name="conteudo">
 		
-		<b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
-			<b:tab title="Adicionar Paciente">
-			</b:tab>
-			<b:tab title="Consultar Paciente">
-			</b:tab>
-			<b:tab title="Consultar Paciente">
-			</b:tab>
-			<b:tab title="Consultar Paciente">
-			</b:tab>
-		</b:tabView>
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Meu Estoque">
+				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+				<b:panel title="Atenção" look="info" collapsible="false" style="margin-top:2%">
+						Nesta tela podemos criar o prontuário do paciente
+			    </b:panel>
 
-		<b:row>
-		<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4" offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8" style="text-align:right; margin-top:2%">
-		</b:column>
-		</b:row>
+				<hr/>
+						<b:dataTable value="#{estoqueController.listaEstoque}" var="e" id="listaEstoque" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						 
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Cód" />
+						    </f:facet>
+						    <h:outputText value="#{e.est_codigo}" />
+						  </h:column>
+						 
+						  <h:column>
+						    <f:facet name="header" >
+						      <h:outputText value="Produto" />
+						    </f:facet>
+						    <h:outputText value="#{e.est_produto}" />
+						  </h:column>
+						  
+						</b:dataTable>	
+						
+						<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
+					    <p>Você realmente deseja excluir este registro?</p>
+					    
+					    <f:facet name="footer">
+					    	<h:form prependId="false">
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{estoqueController.excluirRegistro()}" update="listaEstoque growlSpecific" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					        <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>
+					        </h:form>
+					    </f:facet>
+					</b:modal>	
+						
+									
+			</b:tab>
 		
 		
 	</ui:define>
