@@ -8,47 +8,75 @@
 
 	<ui:define name="conteudo">
 		
-		<b:tabView activeIndex="0"
-			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
-			<b:tab title="Meu Estoque">
-				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+		<b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Pacientes">
+				<h:form prependId="false">
+				<b:fetchBeanInfos />
+					<b:messages line-break-tag="&lt;p&gt;&lt;hr /&gt;&lt;/p&gt;"
+						error-style="color:#FFF !important" />
 				<b:panel title="Atenção" look="info" collapsible="false" style="margin-top:2%">
 						Nesta tela podemos criar o prontuário do paciente
 			    </b:panel>
 
 				<hr/>
-						<b:dataTable value="#{estoqueController.listaEstoque}" var="e" id="listaEstoque" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						<b:dataTable value="#{prontuarioController.lstPaciente}" var="p" id="listaPaciente" 
+						customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" 
+						style="width:100%" fixedHeader="true" responsive="true">
 						 
 						  <h:column>
 						    <f:facet name="header">
 						      <h:outputText value="Cód" />
 						    </f:facet>
-						    <h:outputText value="#{e.est_codigo}" />
+						    <h:outputText value="#{p.pac_codigo}" />
 						  </h:column>
 						 
 						  <h:column>
 						    <f:facet name="header" >
-						      <h:outputText value="Produto" />
+						      <h:outputText value="Nome" />
 						    </f:facet>
-						    <h:outputText value="#{e.est_produto}" />
+						    <h:outputText value="#{p.pac_nome}" />
 						  </h:column>
+						  
+						  <h:column>
+							<f:facet name="header">
+								<h:outputText value="Editar" />
+							</f:facet>
+							<center>
+								<p:commandButton
+									actionListener="#{prontuarioController.carregaPeloId(p.pro_codigo)}"
+									pt:data-target="#alterar" pt:data-toggle="modal"
+									styleClass="btn btn-info" icon="fa fa-fw fa-edit"
+								 />
+							</center>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Excluir" />
+							</f:facet>
+							<center>
+								<p:commandButton
+									actionListener="#{prontuarioController.carregaPeloId(p.pro_codigo)}"
+									pt:data-target="#amodal" pt:data-toggle="modal"
+									styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+							</center>
+						</h:column>
 						  
 						</b:dataTable>	
 						
 						<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
 					    <p>Você realmente deseja excluir este registro?</p>
-					    
 					    <f:facet name="footer">
 					    	<h:form prependId="false">
-					        <b:commandButton value="Confirmar" look="primary" actionListener="#{estoqueController.excluirRegistro()}" update="listaEstoque growlSpecific" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{prontuarioController.remover}" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
 					        <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>
 					        </h:form>
 					    </f:facet>
 					</b:modal>	
 						
-									
+			</h:form>						
 			</b:tab>
-		
+		</b:tabView>
 		
 	</ui:define>
 </ui:composition>
