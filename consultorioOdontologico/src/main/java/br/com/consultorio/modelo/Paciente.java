@@ -68,7 +68,7 @@ public class Paciente implements Serializable{
 	private String pac_obs;
 	
 	@Column
-	private Character pac_sexo;
+	private String pac_sexo;
 	
 	@Column
 	private String pac_estado;
@@ -204,11 +204,11 @@ public class Paciente implements Serializable{
 		this.pac_obs = pac_obs;
 	}
 
-	public Character getPac_sexo() {
+	public String getPac_sexo() {
 		return pac_sexo;
 	}
 
-	public void setPac_sexo(Character pac_sexo) {
+	public void setPac_sexo(String pac_sexo) {
 		this.pac_sexo = pac_sexo;
 	}
 

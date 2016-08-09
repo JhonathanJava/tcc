@@ -39,33 +39,267 @@
 						  
 						  <h:column>
 							<f:facet name="header">
-								<h:outputText value="Editar" />
+								<h:outputText value="Telefone" />
 							</f:facet>
-							<center>
-								<p:commandButton
-									actionListener="#{prontuarioController.carregaPeloId(p.pro_codigo)}"
-									pt:data-target="#alterar" pt:data-toggle="modal"
-									styleClass="btn btn-info" icon="fa fa-fw fa-edit"
-								 />
-							</center>
+							<h:outputText value="#{p.pac_telefone}" />
 						</h:column>
+						
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Data Nascimento" />
+							</f:facet>
+							<h:outputText value="#{p.pac_dataNascimento}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</h:column>
+						  
 
 						<h:column>
 							<f:facet name="header">
-								<h:outputText value="Excluir" />
+								<h:outputText value="Prontuário" />
 							</f:facet>
 							<center>
 								<p:commandButton
-									actionListener="#{prontuarioController.carregaPeloId(p.pro_codigo)}"
-									pt:data-target="#amodal" pt:data-toggle="modal"
-									styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+									actionListener="#{prontuarioController.carregaPeloId(p.pac_codigo)}"
+									pt:data-target="#amodal" pt:data-toggle="modal" update=":prontuarioPaciente"
+									styleClass="btn btn-primary" icon="fa fa-fw fa-newspaper-o" />
 							</center>
 						</h:column>
 						  
 						</b:dataTable>	
-						
-						<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
-					    <p>Você realmente deseja excluir este registro?</p>
+			</h:form>						
+			</b:tab>
+		</b:tabView>
+		
+		<b:modal id="amodal" title="Prontuário do Paciente" backdrop="false" size="modal-lg">
+		<b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Pacientes">
+				<h:form  id="prontuarioPaciente">
+					<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:inputText id="name" label="Digite seu Nome" required="true"
+								renderLabel="true" required-message="Digite seu nome"
+								value="#{prontuarioController.paciente.pac_nome}" readonly="true"/>
+							<h:message for="name" />
+						</b:column>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+							<b:selectOneMenu label="Sexo" id="sexo" renderLabel="true"  disabled="true"
+								required="true" requiredMessage="Por Favor selecione o sexo"
+								value="#{prontuarioController.paciente.pac_sexo}"  readonly="true">
+								<f:selectItem itemLabel="Selecione o Sexo"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Masculino" itemValue="M"/>
+								<f:selectItem itemLabel="Feminino" itemValue="F"/>
+							</b:selectOneMenu>
+							<h:message for="sexo" />
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<b:inputText id="dataNascimento" styleClass="date"
+								label="Data de Nascimento"  readonly="true"
+								required-message="Digite a data de Nascimento"
+								value="#{prontuarioController.paciente.pac_dataNascimento}">
+								<f:ajax event="blur"
+									listener="#{prontuarioController.calculaIdade()}"
+									render="mostraIdade dadosResponsavel" execute="@this" />
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</b:inputText>
+							<p:outputLabel style="color:red;text-align:right;display:inherit"
+								value="O Paciente tem #{prontuarioController.diferencaAnos} anos"
+								id="mostraIdade" />
+							<h:message for="dataNascimento" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<b:inputText id="cpf" styleClass="cpf" label="CPF"  readonly="true"
+								required="true" renderLabel="true" value="#{prontuarioController.paciente.pac_cpf}"
+								required-message="Digite do seu CPF" />
+							<h:message for="cpf" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<b:inputText id="rg" label="RG" required="true" value="#{prontuarioController.paciente.pac_rg}"
+								renderLabel="true" required-message="Digite o número do seu RG"  readonly="true" />
+							<h:message for="rg" />
+						</b:column>
+
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<b:inputText id="celular" styleClass="telefone" label="Celular"
+								required="true" renderLabel="true" value="#{prontuarioController.paciente.pac_celular}"
+								required-message="Digite o número do Celular"  readonly="true"/>
+							<h:message for="celular" />
+						</b:column>
+					</b:row>
+
+					<h:panelGroup id="dadosResponsavel">
+						<h:panelGroup
+							rendered="#{prontuarioController.diferencaAnosBoolean}">
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="nomeResponsavel" label="Responsavel"
+										value="#{prontuarioController.paciente.pac_nomeResponsavel}" readonly="true" />
+									<h:message for="nomeResponsavel" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="dataNascResponsavel" styleClass="date"
+										label="Data de Nasc Responsavel"  readonly="true"
+										value="#{prontuarioController.paciente.pac_dataNascimentoResponsavel}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</b:inputText>
+								</b:column>
+
+								<b:column col-lg="4" col-md="4" col-sm="6" col-xs="6">
+									<b:inputText id="cpfResponsavel" styleClass="cpf"  readonly="true"
+										label="CPF do Responsável" value="#{prontuarioController.paciente.pac_cpfResponsavel}"/>
+									<h:message for="cpfResponsavel" />
+								</b:column>
+							</b:row>
+						</h:panelGroup>
+					</h:panelGroup>
+
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<b:inputTextarea rows="2" id="obs"  readonly="true"
+								value="#{prontuarioController.paciente.pac_obs}"
+								label="Observação" />
+						</b:column>
+					</b:row>
+
+					<b:tabView activeIndex="0"
+						contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+						<b:tab title="Informações Adicionais">
+
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="email" label="Digite seu Email"
+										required="true" renderLabel="true"  readonly="true"
+										required-message="Digite seu Email"
+										value="#{prontuarioController.paciente.pac_email}" />
+									<h:message for="email" />
+								</b:column>
+								<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+									<b:inputText id="telefone" styleClass="telefone" value="#{prontuarioController.paciente.pac_telefone}"
+										label="Telefone" required="true" renderLabel="true"  readonly="true"
+										required-message="Digite o número do Telefone" />
+									<h:message for="telefone" />
+								</b:column>
+							</b:row>
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="Como o paciente chegou na clínica" />
+									<b:selectOneMenu  readonly="true"  disabled="true"
+										value="#{prontuarioController.paciente.pac_indicacao}">
+										<f:selectItem itemLabel="Facebook" itemValue="F" />
+										<f:selectItem itemLabel="Google" itemValue="G" />
+										<f:selectItem itemLabel="Indicação de amigo" itemValue="I" />
+										<f:selectItem itemLabel="Indicação de outro dentista"
+											itemValue="D" />
+										<f:selectItem itemLabel="Jornal" itemValue="J" />
+										<f:selectItem itemLabel="Outdoor" itemValue="O" />
+										<f:selectItem itemLabel="Rádio" itemValue="R" />
+										<f:selectItem itemLabel="TV" itemValue="T" />
+										<f:selectItem itemLabel="Outro" itemValue="U" />
+									</b:selectOneMenu>
+								</b:column>
+
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="Número de prontuário" />
+									<b:inputText id="prontuario" styleClass="prontuario"  readonly="true"
+										value="#{prontuarioController.paciente.pac_prontuario}" />
+								</b:column>
+
+							</b:row>
+						</b:tab>
+						<b:tab title="Plano">
+							<b:row> 
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="Plano" />
+									<b:selectOneMenu value="#{prontuarioController.paciente.plano.planoPai}"  disabled="true" readonly="true">
+										<f:selectItems value="#{prontuarioController.listaPlanos}" var="p" itemValue="#{p}" itemLabel="#{p.plp_descricao}"/>
+									</b:selectOneMenu>
+								</b:column>
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="Número de carterinha" />
+									<b:inputText id="carterinha" styleClass="prontuario"  readonly="true"
+										value="#{prontuarioController.paciente.plano.pla_numeroCartera}" />
+								</b:column>
+							</b:row>
+
+							<b:row>
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="Titular do Plano" />
+									<b:inputText id="titularPlano"  readonly="true"
+										value="#{prontuarioController.paciente.plano.pla_responsavel}" />
+								</b:column>
+								<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+									<h:outputLabel value="CPF do Responsável" />
+									<b:inputText id="cpfPlanoResponsavel" styleClass="cpf"  readonly="true"
+										value="#{prontuarioController.paciente.plano.pla_cpfResponsavel}" />
+								</b:column>
+							</b:row>
+						</b:tab>
+						<b:tab title="Endereço">
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<h:outputLabel value="CEP" />
+									<b:inputText id="cep" styleClass="cep"  readonly="true"
+										value="#{prontuarioController.paciente.pac_cep}" />
+								</b:column>
+
+								<b:column col-lg="8" col-md="8" col-sm="8" col-xs="8">
+									<h:outputLabel value="Rua" />
+									<b:inputText id="rua"  readonly="true"
+										value="#{prontuarioController.paciente.pac_endereco}" />
+								</b:column>
+							</b:row>
+							
+							<b:row>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<h:outputLabel value="Bairro" />
+									<b:inputText id="bairro"  readonly="true"
+										value="#{prontuarioController.paciente.pac_bairro}" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<h:outputLabel value="Cidade" />
+									<b:inputText id="cidade"  readonly="true"
+										value="#{prontuarioController.paciente.pac_cidade}" />
+								</b:column>
+								<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+									<h:outputLabel value="Estado" />
+									<b:selectOneMenu  readonly="true" disabled="true"
+										value="#{prontuarioController.paciente.pac_estado}">
+										<f:selectItem itemLabel="Paraná" itemValue="Paraná" />
+										<f:selectItem itemLabel="São Paulo" itemValue="São Paulo" />
+									</b:selectOneMenu>
+								</b:column>
+							</b:row>
+							
+						</b:tab>
+					</b:tabView>					
+				</h:form>
+			</b:tab>
+			<b:tab title="Tratamento">
+				<h:form  id="prontuarioTratamento">
+				</h:form>
+			</b:tab>
+			<b:tab title="Anamnese">
+				<h:form  id="prontuarioAnamnese">
+				</h:form>
+			</b:tab>
+			<b:tab title="Orçamentos">
+				<h:form  id="prontuarioOrcamento">
+				</h:form>
+			</b:tab>
+			<b:tab title="Documentos">
+				<h:form  id="prontuarioDocumento">
+				</h:form>
+			</b:tab>
+			<b:tab title="Débitos">
+				<h:form  id="prontuarioDébito">
+				</h:form>
+			</b:tab>
+		</b:tabView>
 					    <f:facet name="footer">
 					    	<h:form prependId="false">
 					        <b:commandButton value="Confirmar" look="primary" actionListener="#{prontuarioController.remover}" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
@@ -73,10 +307,6 @@
 					        </h:form>
 					    </f:facet>
 					</b:modal>	
-						
-			</h:form>						
-			</b:tab>
-		</b:tabView>
 		
 	</ui:define>
 </ui:composition>

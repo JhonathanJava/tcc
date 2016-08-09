@@ -49,7 +49,7 @@ public class TratamentoController implements Serializable{
 	
 	public void buscaEditarPorId(Long id){
 		tratamentoEditar = dao.buscaPorId(id);
-		System.out.println(id+"-"+tratamentoEditar);
+		System.out.println(tratamentoEditar);
 	}
 	
 	
