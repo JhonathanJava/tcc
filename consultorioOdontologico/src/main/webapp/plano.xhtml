@@ -106,9 +106,10 @@
 						    <f:facet name="header">
 						      <h:outputText value="Desconto" />
 						    </f:facet>
-						    <h:outputText value="#{p.pla_desconto}">
-								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$" type="currency"/>
+						    <h:outputText value="#{p.pla_desconto}" rendered="#{p.plp_tipoDesconto eq 'M'}">
+								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$" type="currency" />
 						    </h:outputText>
+						    <h:outputText value="#{p.pla_desconto}" rendered="#{p.plp_tipoDesconto eq 'P'}"/>
 						  </h:column>
 						  
 						  <h:column>
@@ -116,7 +117,7 @@
 						      <h:outputText value="Tipo de Desconto" />
 						    </f:facet>
 						    <h:outputText value="Monetário" rendered="#{p.plp_tipoDesconto eq 'M'}"/>
-						    <h:outputText value="Porcentagem" rendered="#{p.plp_tipoDesconto.equals('P')}"/>
+						    <h:outputText value="Porcentagem" rendered="#{p.plp_tipoDesconto.eq 'P'}"/>
 						  </h:column>
 						  
 						  <h:column>

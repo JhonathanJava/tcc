@@ -1,0 +1,201 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Criar Modelo Anamnese">
+				<h:form prependId="false" id="formCadastro">
+					<b:messages line-break-tag="&lt;p&gt;&lt;hr /&gt;&lt;/p&gt;"
+						error-style="color:#FFF !important" globalOnly="true"/>
+					<b:fetchBeanInfos id="valida" />
+					<script>
+						mascara();
+					</script>
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+				     	 O Formulário contém campos obrigatórios (*).
+				    </b:panel>
+					<b:row>
+						<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9">
+							<b:inputText id="name" label="Digite o nome" required="true"
+								renderLabel="true" required-message="Digite o nome"
+								value="#{anamneseController.modelo.moa_descricao}" />
+							<b:message for="name" />
+						</b:column>
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3" style="margin-top:20px">
+							<b:commandButton value="Limpar" icon="erase" look="danger"
+								type="reset" style="margin-right:3%"
+								actionListener="#{anamneseController.limparModelo}"
+								update="@form" />
+							<b:commandButton look="success" value="Salvar" id="salvar"
+								icon="plus-sign" actionListener="#{anamneseController.gravarModelo}"
+								process="@form" update="@form " />
+						</b:column>
+					</b:row>
+				</h:form>
+			</b:tab>
+			<b:tab title="Anamneses">
+				<b:dataTable value="#{anamneseController.modeloAnamneses}" var="p" id="modeloAnamneses" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Código" />
+						    </f:facet>
+						    <h:outputText value="#{p.moa_codigo}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nome" />
+						    </f:facet>
+						    <h:outputText value="#{p.moa_descricao}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton actionListener="#{anamneseController.buscarModelo(p.moa_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+						    	</center>
+						  </h:column>
+						</b:dataTable>
+						
+			</b:tab>
+			
+			
+		</b:tabView>
+		
+		<b:modal id="amodal" title="Modelo de Anamnese" styleClass="modalExcluir" backdrop="false" size="modal-lg">
+		<h:form>
+				<b:messages line-break-tag="&lt;p&gt;&lt;hr /&gt;&lt;/p&gt;"
+						error-style="color:#FFF !important" globalOnly="true"/>
+				<b:panel title="Atenção" look="info" collapsible="false">
+					<b:icon name="warning-sign" size="lg" />
+			     	 Deve ser escolhido o modelo de Anamnese e criar as perguntas para o respectivo modelo selecionado.
+			    </b:panel>
+				<b:row>
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<h:outputLabel value="Pergunta" />
+						<b:inputText value="#{anamneseController.anamnese.anm_descricao}" />
+					</b:column>
+					
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<h:outputLabel value="Tipo de Pergunta" />
+						<b:selectOneMenu
+							value="#{anamneseController.anamnese.anm_tipoPergunta}">
+							<f:selectItem itemLabel="Sim/Não/Não Sei" itemValue="S" />
+							<f:selectItem itemLabel="Sim/Não/Não Sei e Texto" itemValue="E" />
+							<f:selectItem itemLabel="Somente Texto" itemValue="T" />
+							<f:selectItem itemLabel="Esquerda/Direita/Não Sei" itemValue="D" />
+						</b:selectOneMenu>
+					</b:column>
+					
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<h:outputLabel value="Texto da Pergunta auxiliar" />
+						<b:inputText  value="#{anamneseController.anamnese.anm_descricaoAuxiliar}" />
+					</b:column>
+				</b:row>
+				
+				<b:row>
+				<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+					<b:selectBooleanCheckbox value="#{anamneseController.anamnese.anm_alerta}" render-label="true" label="É um alerta?" update="teste"
+					onchange="ajax:anamneseController.onChangeAlerta()" process="@this"/>
+				</b:column>
+				</b:row>
+				
+				<h:panelGroup layout="block" id="teste">
+				<b:row>
+					<ui:fragment rendered="#{anamneseController.anamnese.anm_alerta}">
+					<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+						<h:outputLabel value="Tipo de Pergunta" />
+						<b:selectOneMenu
+							value="#{anamneseController.anamnese.anm_tipoAlerta}">
+							<f:selectItem itemLabel="É um alerta quando responder SIM" itemValue="S" />
+							<f:selectItem itemLabel="É um alerta quando responder NÃO" itemValue="N" />
+						</b:selectOneMenu>
+					</b:column>
+					<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+						<h:outputLabel value="Nome do Alerta" />
+						<b:inputText  value="#{anamneseController.anamnese.anm_descricaoAlerta}" />
+					</b:column>
+					</ui:fragment>
+				</b:row>
+				</h:panelGroup>
+				
+				<b:row>
+				<b:column offset-lg="9" offset-md="9" col-lg="2" col-md="2" col-sm="12" col-xs="12">
+						   	<p:commandButton actionListener="#{anamneseController.adicionaAnamnese}" value="Adicionar"  styleClass="btn btn-success" 
+						   	update="@form" />
+				</b:column>
+				</b:row>
+				
+				<hr/>
+				<b:dataTable value="#{anamneseController.anamneses}" var="p" id="modeloAnamneses2" 
+				customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" 
+				styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nome" />
+						    </f:facet>
+						    <h:outputText value="#{p.anm_descricao}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Tipo Pergunta" />
+						    </f:facet>
+						    <h:outputText value="#{p.anm_tipoPergunta}" />
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Pergunta Auxiliar" />
+						    </f:facet>
+						    <h:outputText value="#{p.anm_descricaoAuxiliar}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Alerta" />
+						    </f:facet>
+						    <h:outputText value="#{p.anm_alerta}" />
+						  </h:column>
+						  
+						    <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Alerta Descrição" />
+						    </f:facet>
+						    <h:outputText value="#{p.anm_descricaoAlerta}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton  styleClass="btn btn-info" icon="fa fa-fw fa-edit" actionListener="#{anamneseController.carregaPeloId(p)}" update="@form" process="@this"/>
+						    	</center>
+						  </h:column>
+						  
+						   <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{anamneseController.removeAnamnese(p)}" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	</center>
+						  </h:column>
+						</b:dataTable>
+						
+				</h:form>
+		</b:modal>
+		
+	</ui:define>
+</ui:composition>

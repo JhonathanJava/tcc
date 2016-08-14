@@ -72,7 +72,7 @@
 		</b:tabView>
 		
 		<b:modal id="amodal" title="Prontuário do Paciente" backdrop="false" size="modal-lg">
-		<b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+		<b:tabView activeIndex="0" contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px" >
 			<b:tab title="Pacientes">
 				<h:form  id="prontuarioPaciente">
 					<b:row>
@@ -280,7 +280,186 @@
 				</h:form>
 			</b:tab>
 			<b:tab title="Tratamento">
-				<h:form  id="prontuarioTratamento">
+				<h:form  id="prontuarioTratamento" prependId="false">
+					<b:messages line-break-tag="&lt;p&gt;&lt;hr /&gt;&lt;/p&gt;"
+						error-style="color:#FFF !important"  />
+					<b:fetchBeanInfos id="valida" />
+					<script>
+						mascara();
+					</script>
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+				     	 O Formulário contém campos obrigatórios (*).
+				    </b:panel>
+					<b:row> 
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:selectOneMenu  label="Escolha o Tratamento" buttonClass="multiselect dropdown-toggle btn btn-default col-md-12 col-lg-12 col-sm-12"
+								value="#{prontuarioController.prontuarioTratamento.tratamento}">
+								<f:selectItems value="#{prontuarioController.lstTratamento}"
+									var="t" itemValue="#{t}" itemLabel="#{t.tra_descricao}" />
+								<f:ajax event="change" execute="@this" render="valor desconto plano tipoDesconto desconto2" listener="#{prontuarioController.descontoMaximo}"
+								/>
+							</b:selectOneMenu>
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<h:outputLabel value="Plano de Saúde" />
+							<b:inputText id="plano" value="#{prontuarioController.paciente.plano.planoPai.plp_descricao}" readonly="true"/>
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:selectOneMenu label="Tipo de Desconto" id="tipoDesconto" renderLabel="true"
+								required="true" requiredMessage="Por Favor selecione o tipo de Desconto" disabled="true"
+								value="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto}">
+								<f:selectItem itemLabel="Selecione o Tipo de Desconto"
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Monetário" itemValue="M"/>
+								<f:selectItem itemLabel="Porcentagem" itemValue="P"/>
+							</b:selectOneMenu>
+							<h:message for="tipoDesconto" />
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:inputText id="desconto" name="desconto" label="Desconto Máximo" required="true"
+								styleClass="dinheiro" renderLabel="true"  readonly="true" immediate="true"
+								value="#{prontuarioController.textDesconto}" rendered="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto eq 'M'}">
+								<f:facet name="prepend">
+									<h:outputText value="R$" />
+								</f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"
+									pattern="#,##0.00" locale="pt" />
+							</b:inputText>
+							<b:inputText id="desconto2" name="desconto" label="Desconto Máximo" required="true"
+								styleClass="dinheiro" renderLabel="true"  readonly="true" immediate="true"
+								value="#{prontuarioController.textDesconto}" rendered="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto eq 'P'}">
+								<f:facet name="prepend">
+									<h:outputText value="%" />
+								</f:facet>
+								<f:convertNumber type="number" />
+							</b:inputText>
+							<b:message for="valor" />
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:inputText  label="Desconto" required="true"
+								styleClass="dinheiro" renderLabel="true" 
+								value="#{prontuarioController.prontuarioTratamento.prt_desconto}">
+								<f:facet name="prepend">
+									<h:outputText value="R$" />
+								</f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"
+									pattern="#,##0.00" locale="pt" />
+							</b:inputText>
+							<b:message for="valor" />
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:inputText id="valor" name="valor" label="Preço" required="true"
+								styleClass="dinheiro" renderLabel="true" 
+								required-message="Digite o valor"  readonly="true"
+								value="#{prontuarioController.prontuarioTratamento.tratamento.tra_valor}">
+								<f:facet name="prepend" >
+									<h:outputText value="R$" />
+								</f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"
+									pattern="#,##0.00" locale="pt" />
+							</b:inputText>
+							<b:message for="valor" />
+						</b:column>
+						
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<h:outputLabel value="Dentes/Região" />
+							<b:selectOneMenu  readonly="true"
+								value="#{prontuarioController.prontuarioTratamento.tratamento.tra_denteRegiao}">
+								<f:selectItem itemValue="11" itemLabel="11" />
+								<f:selectItem itemValue="Face" itemLabel="Face" />
+							</b:selectOneMenu>
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4"
+							offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8"
+							style="text-align:right; margin-top:2%">
+							<b:commandButton look="success" value="Adicionr" id="salvar"
+								icon="plus-sign" actionListener="#{prontuarioController.adicionarTratamento}"
+								process=":prontuarioTratamento" update=":prontuarioTratamento" />
+						</b:column>
+					</b:row>
+					
+					<b:dataTable value="#{prontuarioController.listaProntuarioTratamento}" var="t"
+						id="listaTratamento" 
+						customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json"
+						styleClass="table table-striped table-bordered" style="width:100%"
+						fixedHeader="true" responsive="true">
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Código" />
+							</f:facet>
+							<h:outputText value="#{t.tratamento.tra_codigo}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Nome" />
+							</f:facet>
+							<h:outputText value="#{t.tratamento.tra_descricao}" />
+						</h:column>
+	
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Desconto" />
+							</f:facet>
+							<h:outputText value="#{t.prt_desconto}"  rendered="#{t.planoPai.plp_tipoDesconto eq 'M'}">
+								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+									type="currency" />
+							</h:outputText>
+							<h:outputText value="#{t.prt_desconto}%"  rendered="#{t.planoPai.plp_tipoDesconto eq 'P'}">
+								<f:convertNumber type="number" />
+							</h:outputText>
+						</h:column>
+						
+						<h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Tipo de Desconto" />
+						    </f:facet>
+						    <h:outputText value="Monetário" rendered="#{t.planoPai.plp_tipoDesconto eq 'M'}"/>
+						    <h:outputText value="Porcentagem" rendered="#{t.planoPai.plp_tipoDesconto eq 'P'}"/>
+						  </h:column>
+					
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Valor" />
+							</f:facet>
+							<h:outputText value="#{t.tratamento.tra_valor}">
+								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+									type="currency" />
+							</h:outputText>
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Valor Total" />
+							</f:facet>
+							
+							<h:outputText value="#{t.prt_valor - t.prt_valor * t.prt_desconto / 100}">
+								<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+									type="currency" />
+							</h:outputText>
+							
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<h:outputText value="Excluir" />
+							</f:facet>
+							<center>
+								<p:commandButton
+									actionListener="#{prontuarioController.removerTratamento(t)}"
+									styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update=":prontuarioTratamento"/>
+							</center>
+						</h:column>
+					</b:dataTable>
+					
 				</h:form>
 			</b:tab>
 			<b:tab title="Anamnese">

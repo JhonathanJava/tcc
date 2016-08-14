@@ -3,6 +3,7 @@ package br.com.consultorio.dao;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 
 public class GenericDAO<T> {
@@ -25,6 +26,12 @@ public class GenericDAO<T> {
 
 	public void atualiza(T t) {
 		em.merge(t);
+	}
+	
+	public List<T> createQuery(String hql){
+		Query query = em.createQuery(hql);
+		List<T> results = query.getResultList();
+		return results;
 	}
 
 	public List<T> listaTodos() {

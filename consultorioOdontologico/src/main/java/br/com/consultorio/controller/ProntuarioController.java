@@ -1,6 +1,7 @@
 package br.com.consultorio.controller;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -15,9 +16,12 @@ import javax.inject.Named;
 import br.com.consultorio.dao.PacienteDAO;
 import br.com.consultorio.dao.PlanoPaiDAO;
 import br.com.consultorio.dao.ProntuarioDAO;
+import br.com.consultorio.dao.TratamentoDAO;
 import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 import br.com.consultorio.modelo.Prontuario;
+import br.com.consultorio.modelo.ProntuarioTratamento;
+import br.com.consultorio.modelo.Tratamento;
 import br.com.consultorio.tx.Transacional;
 import br.com.consultorio.util.jsf.FacesUtil;
 
@@ -31,7 +35,11 @@ public class ProntuarioController implements Serializable{
 	
 	private Paciente paciente;
 	
+	private Tratamento tratamento;
+	
 	private Prontuario prontuarioEditar;
+	
+	private ProntuarioTratamento prontuarioTratamento;
 	
 	@Inject
 	private ProntuarioDAO dao;
@@ -40,17 +48,26 @@ public class ProntuarioController implements Serializable{
 	private PacienteDAO pacienteDAO;
 	
 	@Inject
+	private TratamentoDAO tratamentoDAO;
+	
+	@Inject
 	private PlanoPaiDAO planoDAO;
 	
 	private List<Prontuario> prontuarios;
 	
 	private List<Prontuario> filterProntuarios;
 	
-	private List<PlanoPai> listaPlanos;
+	private List<PlanoPai> listaPlanos = new ArrayList<PlanoPai>();
 	
 	private List<Paciente> lstPaciente = new ArrayList<Paciente>();
 	
+	private List<Tratamento> lstTratamento = new ArrayList<Tratamento>();
+	
+	private List<ProntuarioTratamento> listaProntuarioTratamento = new ArrayList<ProntuarioTratamento>();
+	
 	private boolean diferencaAnosBoolean = false;
+	
+	private BigDecimal textDesconto = BigDecimal.ONE;
 	
 	private long diferencaAnos;
 	
@@ -58,8 +75,13 @@ public class ProntuarioController implements Serializable{
 	 void init() {
 		this.prontuario = new Prontuario();
 		this.paciente = new Paciente();
+		this.prontuarioTratamento = new ProntuarioTratamento();
 	}
 	
+	public void descontoMaximo(){
+		prontuarioTratamento.setPlanoPai(paciente.getPlano().getPlanoPai());
+		setTextDesconto(paciente.getPlano().getPlanoPai().getPla_desconto());
+	}
 
 	public void calculaIdade(){
 		LocalDate hoje = LocalDate.now();
@@ -77,7 +99,13 @@ public class ProntuarioController implements Serializable{
 	
 	public void carregaPeloId(Long id){
 		this.paciente = this.pacienteDAO.buscaPorId(id);
+		listaProntuarioTratamento.clear();
+		prontuarioTratamento = new ProntuarioTratamento();
 		calculaIdade();
+	}
+	
+	public void buscarTratatamentoPorId(Long id){
+		this.tratamento = this.tratamentoDAO.buscaPorId(id);
 	}
 	
 	@Transacional
@@ -110,6 +138,33 @@ public class ProntuarioController implements Serializable{
 		this.dao.remove(prontuario);
 		init();
 		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+	}
+	
+	public void adicionarTratamento(){
+		prontuarioTratamento.setPlanoPai(paciente.getPlano().getPlanoPai());
+		prontuarioTratamento.setPrt_valor(prontuarioTratamento.getTratamento().getTra_valor());
+		for (ProntuarioTratamento prontuario : listaProntuarioTratamento) {
+			if(prontuario.equals(prontuarioTratamento)){
+				FacesUtil.addErrorMessage("Tratamento Já Adicionado!!");
+				return;
+			}
+		}
+		listaProntuarioTratamento.add(prontuarioTratamento);
+		prontuarioTratamento = new ProntuarioTratamento();
+		prontuarioTratamento.setTratamento(new Tratamento());
+	}
+	
+	public BigDecimal getTextDesconto() {
+		return textDesconto;
+	}
+	
+	public void setTextDesconto(BigDecimal textDesconto) {
+		this.textDesconto = textDesconto;
+	}
+	
+	public void removerTratamento(ProntuarioTratamento t){
+		listaProntuarioTratamento.remove(t);
+		tratamento = new Tratamento();
 	}
 	
 	public void limparProntuario(){
@@ -194,6 +249,38 @@ public class ProntuarioController implements Serializable{
 	
 	public long getDiferencaAnos() {
 		return diferencaAnos;
+	}
+	
+	public List<ProntuarioTratamento> getListaProntuarioTratamento() {
+		return listaProntuarioTratamento;
+	}
+	
+	public void setListaProntuarioTratamento(List<ProntuarioTratamento> listaProntuarioTratamento) {
+		this.listaProntuarioTratamento = listaProntuarioTratamento;
+	}
+	
+	public Tratamento getTratamento() {
+		return tratamento;
+	}
+	
+	public void setTratamento(Tratamento tratamento) {
+		this.tratamento = tratamento;
+	}
+	
+	public List<Tratamento> getLstTratamento() {
+		return tratamentoDAO.listaTodos();
+	}
+	
+	public void setLstTratamento(List<Tratamento> lstTratamento) {
+		this.lstTratamento = lstTratamento;
+	}
+	
+	public ProntuarioTratamento getProntuarioTratamento() {
+		return prontuarioTratamento;
+	}
+	
+	public void setProntuarioTratamento(ProntuarioTratamento prontuarioTratamento) {
+		this.prontuarioTratamento = prontuarioTratamento;
 	}
 	
 }	

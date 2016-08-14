@@ -1,7 +1,6 @@
 package br.com.consultorio.dao;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 
 public class PlanoPaiDAO implements Serializable{

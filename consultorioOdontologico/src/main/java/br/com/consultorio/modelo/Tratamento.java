@@ -100,7 +100,7 @@ public class Tratamento implements Serializable{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((planoPai == null) ? 0 : planoPai.hashCode());
+		result = prime * result + ((tra_codigo == null) ? 0 : tra_codigo.hashCode());
 		return result;
 	}
 
@@ -113,12 +113,14 @@ public class Tratamento implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Tratamento other = (Tratamento) obj;
-		if (planoPai == null) {
-			if (other.planoPai != null)
+		if (tra_codigo == null) {
+			if (other.tra_codigo != null)
 				return false;
-		} else if (!planoPai.equals(other.planoPai))
+		} else if (!tra_codigo.equals(other.tra_codigo))
 			return false;
 		return true;
 	}
+
+	
 	
 }
