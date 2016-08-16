@@ -28,6 +28,10 @@ public class Prontuario implements Serializable{
 	private Tratamento tra_codigo;
 	
 	@ManyToOne
+	@JoinColumn(name="pra_codigo")
+	private ProntuarioAnamnese prontuarioAnamnese;
+	
+	@ManyToOne
 	@JoinColumn(name="pac_codigo")
 	private Paciente pac_codigo;
 	
@@ -115,6 +119,14 @@ public class Prontuario implements Serializable{
 		this.pro_status = pro_status;
 	}
 
+	public ProntuarioAnamnese getProntuarioAnamnese() {
+		return prontuarioAnamnese;
+	}
+	
+	public void setProntuarioAnamnese(ProntuarioAnamnese prontuarioAnamnese) {
+		this.prontuarioAnamnese = prontuarioAnamnese;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

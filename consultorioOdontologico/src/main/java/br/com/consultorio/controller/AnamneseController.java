@@ -49,6 +49,11 @@ public class AnamneseController implements Serializable{
 	
 	public void buscarModelo(Long codigo){
 		this.modelo = this.modeloDAO.buscaPorId(codigo);
+		this.anamneses = this.dao.listaAnamnesePorModelo(modelo.getMoa_codigo());
+		for (Anamnese anamnese : anamneses) {
+			System.out.println(this.anamnese);
+		}
+		System.out.println(modelo.getMoa_codigo());
 	}
 	
 	public void carregaPeloId(Anamnese anamnese){

@@ -13,13 +13,19 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.consultorio.dao.AnamneseDAO;
+import br.com.consultorio.dao.ModeloAnamneseDAO;
 import br.com.consultorio.dao.PacienteDAO;
 import br.com.consultorio.dao.PlanoPaiDAO;
+import br.com.consultorio.dao.ProntuarioAnamneseDAO;
 import br.com.consultorio.dao.ProntuarioDAO;
 import br.com.consultorio.dao.TratamentoDAO;
+import br.com.consultorio.modelo.Anamnese;
+import br.com.consultorio.modelo.ModeloAnamnese;
 import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 import br.com.consultorio.modelo.Prontuario;
+import br.com.consultorio.modelo.ProntuarioAnamnese;
 import br.com.consultorio.modelo.ProntuarioTratamento;
 import br.com.consultorio.modelo.Tratamento;
 import br.com.consultorio.tx.Transacional;
@@ -41,8 +47,15 @@ public class ProntuarioController implements Serializable{
 	
 	private ProntuarioTratamento prontuarioTratamento;
 	
+	private ProntuarioAnamnese prontuarioAnamnese;
+	
+	private ModeloAnamnese modeloAnamnese;
+	
 	@Inject
 	private ProntuarioDAO dao;
+	
+	@Inject
+	private AnamneseDAO anamneseDAO;
 	
 	@Inject
 	private PacienteDAO pacienteDAO;
@@ -51,9 +64,17 @@ public class ProntuarioController implements Serializable{
 	private TratamentoDAO tratamentoDAO;
 	
 	@Inject
+	private ModeloAnamneseDAO modeloDAO;
+	
+	@Inject
+	private ProntuarioAnamneseDAO prontuarioAnamneseDAO;
+	
+	@Inject
 	private PlanoPaiDAO planoDAO;
 	
 	private List<Prontuario> prontuarios;
+	
+	private List<Anamnese> anamneses;
 	
 	private List<Prontuario> filterProntuarios;
 	
@@ -62,6 +83,8 @@ public class ProntuarioController implements Serializable{
 	private List<Paciente> lstPaciente = new ArrayList<Paciente>();
 	
 	private List<Tratamento> lstTratamento = new ArrayList<Tratamento>();
+	
+	private List<ModeloAnamnese> lstModeloAnamneses = new ArrayList<ModeloAnamnese>();
 	
 	private List<ProntuarioTratamento> listaProntuarioTratamento = new ArrayList<ProntuarioTratamento>();
 	
@@ -76,6 +99,13 @@ public class ProntuarioController implements Serializable{
 		this.prontuario = new Prontuario();
 		this.paciente = new Paciente();
 		this.prontuarioTratamento = new ProntuarioTratamento();
+		this.lstModeloAnamneses = modeloDAO.listaTodos();
+		this.modeloAnamnese = new ModeloAnamnese();
+		this.prontuarioAnamnese = new ProntuarioAnamnese();
+	}
+	
+	public void buscarAnamnese(){
+		this.anamneses = anamneseDAO.listaAnamnesePorModelo(modeloAnamnese.getMoa_codigo());
 	}
 	
 	public void descontoMaximo(){
@@ -95,6 +125,12 @@ public class ProntuarioController implements Serializable{
 		}else{
 			diferencaAnosBoolean = false;
 		}
+	}
+	
+	public void testeSalvar(Anamnese a){
+		System.out.println(a);
+		System.out.println(prontuarioAnamnese.getPra_resp1());
+		this.prontuarioAnamnese = new ProntuarioAnamnese();
 	}
 	
 	public void carregaPeloId(Long id){
@@ -154,6 +190,14 @@ public class ProntuarioController implements Serializable{
 		prontuarioTratamento.setTratamento(new Tratamento());
 	}
 	
+	public List<ModeloAnamnese> getLstModeloAnamneses() {
+		return lstModeloAnamneses;
+	}
+	
+	public void setLstModeloAnamneses(List<ModeloAnamnese> lstModeloAnamneses) {
+		this.lstModeloAnamneses = lstModeloAnamneses;
+	}
+	
 	public BigDecimal getTextDesconto() {
 		return textDesconto;
 	}
@@ -170,6 +214,14 @@ public class ProntuarioController implements Serializable{
 	public void limparProntuario(){
 		this.prontuario = new Prontuario();
 	}
+	
+	public ModeloAnamnese getModeloAnamnese() {
+		return modeloAnamnese;
+	}
+	
+	public void setModeloAnamnese(ModeloAnamnese modeloAnamnese) {
+		this.modeloAnamnese = modeloAnamnese;
+	}
 
 	public Prontuario getProntuario() {
 		return prontuario;
@@ -179,6 +231,14 @@ public class ProntuarioController implements Serializable{
 		this.prontuario = prontuario;
 	}
 
+	public List<Anamnese> getAnamneses() {
+		return anamneses;
+	}
+	
+	public void setAnamneses(List<Anamnese> anamneses) {
+		this.anamneses = anamneses;
+	}
+	
 	public Prontuario getProntuarioEditar() {
 		return prontuarioEditar;
 	}
@@ -187,6 +247,14 @@ public class ProntuarioController implements Serializable{
 		this.prontuarioEditar = prontuarioEditar;
 	}
 
+	public ProntuarioAnamnese getProntuarioAnamnese() {
+		return prontuarioAnamnese;
+	}
+	
+	public void setProntuarioAnamnese(ProntuarioAnamnese prontuarioAnamnese) {
+		this.prontuarioAnamnese = prontuarioAnamnese;
+	}
+	
 	public ProntuarioDAO getDao() {
 		return dao;
 	}

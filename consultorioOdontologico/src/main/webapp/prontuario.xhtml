@@ -464,6 +464,66 @@
 			</b:tab>
 			<b:tab title="Anamnese">
 				<h:form  id="prontuarioAnamnese">
+				<b:row> 
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+						<h:outputLabel value="Modelo de Anamnese" />
+						<b:selectOneMenu value="#{prontuarioController.modeloAnamnese}">
+							<f:selectItems value="#{prontuarioController.lstModeloAnamneses}" var="p" itemValue="#{p}" itemLabel="#{p.moa_descricao}"/>
+							<f:ajax event="change" listener="#{prontuarioController.buscarAnamnese}" execute="@this" />
+						</b:selectOneMenu>
+					</b:column>
+					
+					 <p:dataList value="#{prontuarioController.anamneses}" var="a" type="ordered" emptyMessage="Escola o modelo acima para carregar as perguntas"
+					 	itemStyleClass="margin-left-10 margin-top-15" >
+				        <f:facet name="header">
+				            PERGUNTAS
+				        </f:facet>
+				    	
+				    	<ui:fragment rendered="#{a.anm_tipoPergunta eq 'S'}">
+				    		<h:outputText value="#{a.anm_descricao.toUpperCase()}" style="font-size:12px; font-weight:700; color:f7f7f7f"/>
+				       		<p:selectOneRadio  layout="grid" columns="1" value="#{prontuarioController.prontuarioAnamnese.pra_resp1}">
+				       			<f:selectItem itemLabel="Sim" itemValue="S"/>
+				       			<f:selectItem itemLabel="Não" itemValue="N"/>
+				       			<f:selectItem itemLabel="Não Sei" itemValue="O"/>
+				       			<f:ajax event="click" listener="#{prontuarioController.testeSalvar(a)}" execute="@this" render="@none"/>
+				       		</p:selectOneRadio>
+				   		 </ui:fragment>
+				   		 
+				   		 <ui:fragment rendered="#{a.anm_tipoPergunta eq 'E'}">
+				   		 	  <h:outputText value="#{a.anm_descricao.toUpperCase()}" style="font-size:12px; font-weight:700; color:f7f7f7f"/>
+				   		 	  <p:selectOneRadio  layout="grid" columns="1"  value="#{prontuarioController.prontuarioAnamnese.pra_resp1}">
+				       			<f:selectItem itemLabel="Sim" itemValue="S"/>
+				       			<f:selectItem itemLabel="Não" itemValue="N"/>
+				       			<f:selectItem itemLabel="Não Sei" itemValue="O"/>
+				       			<p:ajax event="click" listener="#{prontuarioController.testeSalvar(a)}" process="@this" update="@none"/>
+				       		  </p:selectOneRadio>
+				       		
+							<h:outputLabel value="#{a.anm_descricaoAuxiliar}"/>
+				       		<b:inputText  value="#{prontuarioController.prontuarioAnamnese.pra_resp2}">
+				       			<f:ajax event="blur" listener="#{prontuarioController.testeSalvar(a)}" execute="@this" render="@none"/>
+				       		</b:inputText> 	
+				   		
+				   		 </ui:fragment>
+				    
+				    	<ui:fragment rendered="#{a.anm_tipoPergunta eq 'T'}">
+				   		 <h:outputText value="#{a.anm_descricao.toUpperCase()}" style="font-size:12px; font-weight:700; color:f7f7f7f"/>
+				       		<b:inputText  value="#{prontuarioController.prontuarioAnamnese.pra_resp1}">
+				       						       		<f:ajax event="blur" listener="#{prontuarioController.testeSalvar(a)}" execute="@this" render="@none"/>
+				       		</b:inputText> 	
+				   		 </ui:fragment>
+				   		 
+				   		 <ui:fragment rendered="#{a.anm_tipoPergunta eq 'D'}">
+				    		<h:outputText value="#{a.anm_descricao.toUpperCase()}" style="font-size:12px; font-weight:700; color:f7f7f7f"/>
+				       		<p:selectOneRadio  layout="grid" columns="1"  value="#{prontuarioController.prontuarioAnamnese.pra_resp1}">
+				       			<f:selectItem itemLabel="Direita"/>
+				       			<f:selectItem itemLabel="Esquerda"/>
+				       			<f:selectItem itemLabel="Não Sei"/>
+				       			<p:ajax event="click" listener="#{prontuarioController.testeSalvar(a)}" process="@this" update="@none"/>
+				       		</p:selectOneRadio>
+				   		 </ui:fragment>
+				   		 
+				    </p:dataList>
+					</b:row>
 				</h:form>
 			</b:tab>
 			<b:tab title="Orçamentos">

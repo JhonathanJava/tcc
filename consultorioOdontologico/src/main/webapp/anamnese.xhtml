@@ -62,7 +62,7 @@
 						      <h:outputText value="Editar" />
 						    </f:facet>
 					    		<center>
-						    	 <p:commandButton actionListener="#{anamneseController.buscarModelo(p.moa_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+						    	 <p:commandButton actionListener="#{anamneseController.buscarModelo(p.moa_codigo)}" update=":modeloAnamneses2" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
 						    	</center>
 						  </h:column>
 						</b:dataTable>
@@ -73,7 +73,7 @@
 		</b:tabView>
 		
 		<b:modal id="amodal" title="Modelo de Anamnese" styleClass="modalExcluir" backdrop="false" size="modal-lg">
-		<h:form>
+		<h:form prependId="false">
 				<b:messages line-break-tag="&lt;p&gt;&lt;hr /&gt;&lt;/p&gt;"
 						error-style="color:#FFF !important" globalOnly="true"/>
 				<b:panel title="Atenção" look="info" collapsible="false">
@@ -94,13 +94,18 @@
 							<f:selectItem itemLabel="Sim/Não/Não Sei e Texto" itemValue="E" />
 							<f:selectItem itemLabel="Somente Texto" itemValue="T" />
 							<f:selectItem itemLabel="Esquerda/Direita/Não Sei" itemValue="D" />
+							<p:ajax update="divPerguntaAuxiliar" process="@this" event="change"/>
 						</b:selectOneMenu>
 					</b:column>
 					
-					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-						<h:outputLabel value="Texto da Pergunta auxiliar" />
-						<b:inputText  value="#{anamneseController.anamnese.anm_descricaoAuxiliar}" />
-					</b:column>
+					<h:panelGroup id="divPerguntaAuxiliar">
+					<ui:fragment rendered="#{anamneseController.anamnese.anm_tipoPergunta eq 'E'}">
+						<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+							<h:outputLabel value="Texto da Pergunta auxiliar" />
+							<b:inputText  value="#{anamneseController.anamnese.anm_descricaoAuxiliar}" />
+						</b:column>
+					</ui:fragment>
+					</h:panelGroup>
 				</b:row>
 				
 				<b:row>
@@ -165,7 +170,8 @@
 						    <f:facet name="header">
 						      <h:outputText value="Alerta" />
 						    </f:facet>
-						    <h:outputText value="#{p.anm_alerta}" />
+						    <h:outputText rendered="#{p.anm_alerta}" value="Sim"/>
+						    <h:outputText rendered="#{!p.anm_alerta}" value="Não"/>
 						  </h:column>
 						  
 						    <h:column>
@@ -189,7 +195,7 @@
 						      <h:outputText value="Excluir" />
 						    </f:facet>
 						    	<center>
-						    	 <p:commandButton actionListener="#{anamneseController.removeAnamnese(p)}" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	 <p:commandButton actionListener="#{anamneseController.removeAnamnese(p)}" update="@form" process="@this" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
 						    	</center>
 						  </h:column>
 						</b:dataTable>
