@@ -15,6 +15,7 @@ import javax.inject.Named;
 
 import br.com.consultorio.dao.AnamneseDAO;
 import br.com.consultorio.dao.ModeloAnamneseDAO;
+import br.com.consultorio.dao.OrcamentoDAO;
 import br.com.consultorio.dao.PacienteDAO;
 import br.com.consultorio.dao.PlanoPaiDAO;
 import br.com.consultorio.dao.ProntuarioAnamneseDAO;
@@ -22,6 +23,8 @@ import br.com.consultorio.dao.ProntuarioDAO;
 import br.com.consultorio.dao.TratamentoDAO;
 import br.com.consultorio.modelo.Anamnese;
 import br.com.consultorio.modelo.ModeloAnamnese;
+import br.com.consultorio.modelo.Orcamento;
+import br.com.consultorio.modelo.OrcamentoItem;
 import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 import br.com.consultorio.modelo.Prontuario;
@@ -51,8 +54,18 @@ public class ProntuarioController implements Serializable{
 	
 	private ModeloAnamnese modeloAnamnese;
 	
+	private Orcamento orcamento;
+	
+	private OrcamentoItem orcamentoItem;
+	
 	@Inject
 	private ProntuarioDAO dao;
+
+	@Inject
+	private OrcamentoDAO prontuarioOrcamentoDAO;
+	
+	@Inject
+	private OrcamentoDAO orcamentoItemDAO;
 	
 	@Inject
 	private AnamneseDAO anamneseDAO;
@@ -349,6 +362,22 @@ public class ProntuarioController implements Serializable{
 	
 	public void setProntuarioTratamento(ProntuarioTratamento prontuarioTratamento) {
 		this.prontuarioTratamento = prontuarioTratamento;
+	}
+	
+	public Orcamento getOrcamento() {
+		return orcamento;
+	}
+	
+	public void setOrcamento(Orcamento orcamento) {
+		this.orcamento = orcamento;
+	}
+	
+	public OrcamentoItem getOrcamentoItem() {
+		return orcamentoItem;
+	}
+	
+	public void setOrcamentoItem(OrcamentoItem orcamentoItem) {
+		this.orcamentoItem = orcamentoItem;
 	}
 	
 }	

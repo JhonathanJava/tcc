@@ -528,6 +528,17 @@
 			</b:tab>
 			<b:tab title="Orçamentos">
 				<h:form  id="prontuarioOrcamento">
+					<b:row>
+						<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9">
+							<b:inputText id="orcamento" label="Descrição do Orçamento" value="#{prontuarioController.orcamento.orc_descricao}"/>
+							<h:message for="orcamento" />
+						</b:column>
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+							<b:inputText label="Data" value="#{prontuarioController.orcamento.orc_data}">
+								<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</b:inputText>
+						</b:column>
+					</b:row>
 				</h:form>
 			</b:tab>
 			<b:tab title="Documentos">

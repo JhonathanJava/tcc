@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:b="http://bootsfaces.net/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		
+		<b:tabView activeIndex="0"
+			contentStyle="border: 1px solid #ddd;padding:10px; border-top:0px">
+			<b:tab title="Adicionar Forma de Pagamento">
+				<h:form prependId="false" id="formCadastro">
+				<b:fetchBeanInfos />
+				<b:growl id="growlSpecific" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+				     	 O Formulário contém campos obrigatórios (*).
+				    </b:panel>
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<b:inputText id="nome" label="Digite a Descrição" required="true"
+								renderLabel="true" required-message="Digite o nome"
+								value="#{formaPagamentoController.formaPagamento.for_descricao}" />
+							<h:message for="name" />
+						</b:column>
+					</b:row>
+					<b:row>
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4" offset-lg="8" offset-md="8" offset-xs="8" offset-sm="8" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{formaPagamentoController.limpar}" update="@form"/>
+						<b:commandButton look="success" value="Salvar" id="salvar" icon="plus-sign" actionListener="#{formaPagamentoController.gravar}" process="@form" update="@form formPesquisa"/>
+					</b:column>
+					</b:row>
+					
+				</h:form>
+			</b:tab>
+			<b:tab title="Consultar Formas de Pagamentos">
+				<h:form prependId="false" id="formPesquisa">
+					<hr/>
+						<b:dataTable value="#{formaPagamentoController.formaPagamentos}" var="p" id="listaPlanos" customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" style="width:100%" fixedHeader="true" responsive="true">
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Código" />
+						    </f:facet>
+						    <h:outputText value="#{p.for_codigo}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Nome" />
+						    </f:facet>
+						    <h:outputText value="#{p.for_descricao}" />
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton actionListener="#{formaPagamentoController.buscaEditarPorId(p.for_codigo)}" pt:data-target="#alterar" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" update=":formEditar"/>
+						    	</center>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{formaPagamentoController.buscaEditarPorId(p.for_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	</center>
+						  </h:column>
+						</b:dataTable>
+					
+					<b:modal id="amodal" title="Confirma Exclusão" styleClass="modalExcluir" backdrop="false">
+					    <p>Você realmente deseja excluir este registro?</p>
+					    
+					    <f:facet name="footer">
+					    	
+					        <b:commandButton value="Confirmar" look="primary" actionListener="#{formaPagamentoController.remover}" update="listaPlanos" oncomplete="$('.modalExcluir').modal('hide');" process="@this"/>
+					        <b:button value="close" dismiss="modal" onclick="return false;" look="danger"/>
+					        
+					    </f:facet>
+					</b:modal>
+											
+						</h:form>
+			</b:tab>
+		</b:tabView>
+		
+		<b:modal id="alterar" title="Alterando Registro" styleClass="modalAlterar" size="modal-lg" backdrop="false">
+		  <h:form prependId="false" id="formEditar">
+		  		<script>
+					mascara();
+		  		</script>
+				<b:growl id="growlAlterar" placementFrom="top" allow-dismiss="true" animation-enter="animated bounceInDown" animation-exit="animated flipOutX" escape="true" />
+					<b:panel title="Atenção" look="info" collapsible="false">
+						<b:icon name="warning-sign" size="lg" />
+	      O Formulário contém campos obrigatórios (*).
+	    </b:panel>
+					
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<b:inputText id="nameEditar" label="Digite o nome" required="true"
+								renderLabel="true" required-message="Digite o nome"
+								value="#{formaPagamentoController.formaPagamentoEditar.for_descricao}" />
+							<h:message for="nameEditar" />
+						</b:column>
+					</b:row>
+					
+					<b:row>
+					<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right; margin-top:2%">
+						<b:commandButton value="Limpar" icon="erase" look="danger" type="reset"  style="margin-right:3%" actionListener="#{formaPagamentoController.limpar}" update="@form" immediate="true"/>
+						<b:commandButton look="success" value="Salvar" id="salvarEditar"  style="margin-right:3%"  icon="plus-sign" actionListener="#{formaPagamentoController.editar}" oncomplete="$('.modalAlterar').modal('hide');" process="@form" update="formPesquisa @form"/>
+ 						<b:button value="Voltar" dismiss="modal" onclick="return false;" look="info"/>
+					</b:column>
+					</b:row>
+				
+				</h:form>
+					    
+					</b:modal>
+	</ui:define>
+</ui:composition>
