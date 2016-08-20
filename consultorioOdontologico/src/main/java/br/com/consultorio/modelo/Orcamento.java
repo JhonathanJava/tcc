@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Orcamento implements Serializable{
@@ -39,6 +41,14 @@ public class Orcamento implements Serializable{
 	
 	@Column 
 	private BigDecimal orc_total;
+	
+	@ManyToOne
+	@JoinColumn(name="cax_codigo")
+	private Caixa caixa;
+	
+	@ManyToOne
+	@JoinColumn(name="usu_codigo")
+	private Usuario usuario; // Profissional do Atendimento
 
 	public Long getOrc_codigo() {
 		return orc_codigo;
@@ -103,7 +113,23 @@ public class Orcamento implements Serializable{
 	public void setOrc_total(BigDecimal orc_total) {
 		this.orc_total = orc_total;
 	}
+	
+	public Caixa getCaixa() {
+		return caixa;
+	}
+	
+	public void setCaixa(Caixa caixa) {
+		this.caixa = caixa;
+	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
 	@Override
 	public String toString() {
 		return "Orcamento [orc_codigo=" + orc_codigo + ", orc_descricao=" + orc_descricao + ", orc_data=" + orc_data

@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.consultorio.dao.AnamneseDAO;
+import br.com.consultorio.dao.CaixaDAO;
 import br.com.consultorio.dao.ModeloAnamneseDAO;
 import br.com.consultorio.dao.OrcamentoDAO;
 import br.com.consultorio.dao.PacienteDAO;
@@ -21,7 +23,9 @@ import br.com.consultorio.dao.PlanoPaiDAO;
 import br.com.consultorio.dao.ProntuarioAnamneseDAO;
 import br.com.consultorio.dao.ProntuarioDAO;
 import br.com.consultorio.dao.TratamentoDAO;
+import br.com.consultorio.dao.UsuarioDAO;
 import br.com.consultorio.modelo.Anamnese;
+import br.com.consultorio.modelo.Caixa;
 import br.com.consultorio.modelo.ModeloAnamnese;
 import br.com.consultorio.modelo.Orcamento;
 import br.com.consultorio.modelo.OrcamentoItem;
@@ -31,6 +35,7 @@ import br.com.consultorio.modelo.Prontuario;
 import br.com.consultorio.modelo.ProntuarioAnamnese;
 import br.com.consultorio.modelo.ProntuarioTratamento;
 import br.com.consultorio.modelo.Tratamento;
+import br.com.consultorio.modelo.Usuario;
 import br.com.consultorio.tx.Transacional;
 import br.com.consultorio.util.jsf.FacesUtil;
 
@@ -71,6 +76,9 @@ public class ProntuarioController implements Serializable{
 	private AnamneseDAO anamneseDAO;
 	
 	@Inject
+	private UsuarioDAO usuarioDAO;
+	
+	@Inject
 	private PacienteDAO pacienteDAO;
 	
 	@Inject
@@ -85,7 +93,12 @@ public class ProntuarioController implements Serializable{
 	@Inject
 	private PlanoPaiDAO planoDAO;
 	
+	@Inject
+	private CaixaDAO caixaDAO;
+	
 	private List<Prontuario> prontuarios;
+	
+	private List<Usuario> listaUsuario;
 	
 	private List<Anamnese> anamneses;
 	
@@ -101,11 +114,15 @@ public class ProntuarioController implements Serializable{
 	
 	private List<ProntuarioTratamento> listaProntuarioTratamento = new ArrayList<ProntuarioTratamento>();
 	
+	private List<Caixa> listaCaixa = new ArrayList<Caixa>();
+	
 	private boolean diferencaAnosBoolean = false;
 	
 	private BigDecimal textDesconto = BigDecimal.ONE;
 	
 	private long diferencaAnos;
+	
+	private Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	
 	@PostConstruct
 	 void init() {
@@ -115,6 +132,8 @@ public class ProntuarioController implements Serializable{
 		this.lstModeloAnamneses = modeloDAO.listaTodos();
 		this.modeloAnamnese = new ModeloAnamnese();
 		this.prontuarioAnamnese = new ProntuarioAnamnese();
+		this.listaCaixa = caixaDAO.listaTodos();
+		this.listaUsuario = usuarioDAO.listaTodos();
 	}
 	
 	public void buscarAnamnese(){
@@ -201,6 +220,14 @@ public class ProntuarioController implements Serializable{
 		listaProntuarioTratamento.add(prontuarioTratamento);
 		prontuarioTratamento = new ProntuarioTratamento();
 		prontuarioTratamento.setTratamento(new Tratamento());
+	}
+	
+	public List<Caixa> getListaCaixa() {
+		return listaCaixa;
+	}
+	
+	public void setListaCaixa(List<Caixa> listaCaixa) {
+		this.listaCaixa = listaCaixa;
 	}
 	
 	public List<ModeloAnamnese> getLstModeloAnamneses() {
@@ -380,4 +407,11 @@ public class ProntuarioController implements Serializable{
 		this.orcamentoItem = orcamentoItem;
 	}
 	
+	public List<Usuario> getListaUsuario() {
+		return listaUsuario;
+	}
+	
+	public void setListaUsuario(List<Usuario> listaUsuario) {
+		this.listaUsuario = listaUsuario;
+	}
 }	

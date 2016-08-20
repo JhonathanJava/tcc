@@ -539,6 +539,20 @@
 							</b:inputText>
 						</b:column>
 					</b:row>
+					<b:row>
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<h:outputLabel value="Caixa" />
+						<b:selectOneMenu value="#{prontuarioController.orcamento.caixa}">
+							<f:selectItems value="#{prontuarioController.listaCaixa}" var="p" itemValue="#{p}" itemLabel="#{p.cai_descricao}"/>
+						</b:selectOneMenu>
+					</b:column>
+					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
+						<h:outputLabel value="Profissional" />
+						<b:selectOneMenu value="#{prontuarioController.orcamento.usuario}">
+							<f:selectItems value="#{prontuarioController.listaUsuario}" var="p" itemValue="#{p}" itemLabel="#{p.usu_nome}"/>
+						</b:selectOneMenu>
+					</b:column>
+					</b:row>
 				</h:form>
 			</b:tab>
 			<b:tab title="Documentos">
