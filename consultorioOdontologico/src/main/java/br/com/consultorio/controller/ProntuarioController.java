@@ -114,6 +114,8 @@ public class ProntuarioController implements Serializable{
 	
 	private List<ProntuarioTratamento> listaProntuarioTratamento = new ArrayList<ProntuarioTratamento>();
 	
+	private List<ProntuarioTratamento> listaProntuarioOrcamentoTratamento = new ArrayList<ProntuarioTratamento>();
+	
 	private List<Caixa> listaCaixa = new ArrayList<Caixa>();
 	
 	private boolean diferencaAnosBoolean = false;
@@ -134,6 +136,8 @@ public class ProntuarioController implements Serializable{
 		this.prontuarioAnamnese = new ProntuarioAnamnese();
 		this.listaCaixa = caixaDAO.listaTodos();
 		this.listaUsuario = usuarioDAO.listaTodos();
+		this.orcamento = new Orcamento();
+		this.orcamentoItem = new OrcamentoItem();
 	}
 	
 	public void buscarAnamnese(){
@@ -413,5 +417,13 @@ public class ProntuarioController implements Serializable{
 	
 	public void setListaUsuario(List<Usuario> listaUsuario) {
 		this.listaUsuario = listaUsuario;
+	}
+	
+	public List<ProntuarioTratamento> getListaProntuarioOrcamentoTratamento() {
+		return listaProntuarioOrcamentoTratamento;
+	}
+	
+	public void setListaProntuarioOrcamentoTratamento(List<ProntuarioTratamento> listaProntuarioOrcamentoTratamento) {
+		this.listaProntuarioOrcamentoTratamento = listaProntuarioOrcamentoTratamento;
 	}
 }	

@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	mascara();
-	
+	  $.blockUI.defaults.overlayCSS.opacity=0;
+	  $.blockUI.defaults.message='Aguarde um pouco';
 	PrimeFaces.locales['pt'] = {
 	            closeText: 'Fechar',
 	            prevText: 'Anterior',

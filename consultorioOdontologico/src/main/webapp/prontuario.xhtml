@@ -292,7 +292,7 @@
 				     	 O Formulário contém campos obrigatórios (*).
 				    </b:panel>
 					<b:row> 
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<b:selectOneMenu  label="Escolha o Tratamento" buttonClass="multiselect dropdown-toggle btn btn-default col-md-12 col-lg-12 col-sm-12"
 								value="#{prontuarioController.prontuarioTratamento.tratamento}">
 								<f:selectItems value="#{prontuarioController.lstTratamento}"
@@ -302,12 +302,12 @@
 							</b:selectOneMenu>
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<h:outputLabel value="Plano de Saúde" />
 							<b:inputText id="plano" value="#{prontuarioController.paciente.plano.planoPai.plp_descricao}" readonly="true"/>
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<b:selectOneMenu label="Tipo de Desconto" id="tipoDesconto" renderLabel="true"
 								required="true" requiredMessage="Por Favor selecione o tipo de Desconto" disabled="true"
 								value="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto}">
@@ -319,7 +319,7 @@
 							<h:message for="tipoDesconto" />
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<b:inputText id="desconto" name="desconto" label="Desconto Máximo" required="true"
 								styleClass="dinheiro" renderLabel="true"  readonly="true" immediate="true"
 								value="#{prontuarioController.textDesconto}" rendered="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto eq 'M'}">
@@ -340,7 +340,7 @@
 							<b:message for="valor" />
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<b:inputText  label="Desconto" required="true"
 								styleClass="dinheiro" renderLabel="true" 
 								value="#{prontuarioController.prontuarioTratamento.prt_desconto}">
@@ -353,7 +353,7 @@
 							<b:message for="valor" />
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<b:inputText id="valor" name="valor" label="Preço" required="true"
 								styleClass="dinheiro" renderLabel="true" 
 								required-message="Digite o valor"  readonly="true"
@@ -367,7 +367,7 @@
 							<b:message for="valor" />
 						</b:column>
 						
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
 							<h:outputLabel value="Dentes/Região" />
 							<b:selectOneMenu  readonly="true"
 								value="#{prontuarioController.prontuarioTratamento.tratamento.tra_denteRegiao}">
@@ -528,31 +528,169 @@
 			</b:tab>
 			<b:tab title="Orçamentos">
 				<h:form  id="prontuarioOrcamento">
+				<b:panel title="Dados do Orçamento" collapsible="false">
 					<b:row>
-						<b:column col-lg="9" col-md="9" col-sm="9" col-xs="9">
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
 							<b:inputText id="orcamento" label="Descrição do Orçamento" value="#{prontuarioController.orcamento.orc_descricao}"/>
 							<h:message for="orcamento" />
 						</b:column>
-						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3">
+					</b:row>
+					<b:row>
+					<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+						<h:outputLabel value="Caixa" />
+						<b:selectOneMenu value="#{prontuarioController.orcamento.caixa}">
+							<f:selectItems value="#{prontuarioController.listaCaixa}" var="p" itemValue="#{p}" itemLabel="#{p.cai_descricao}"/>
+						</b:selectOneMenu>
+					</b:column>
+					<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
+						<h:outputLabel value="Profissional" />
+						<b:selectOneMenu value="#{prontuarioController.orcamento.usuario}">
+							<f:selectItems value="#{prontuarioController.listaUsuario}" var="p" itemValue="#{p}" itemLabel="#{p.usu_nome}"/>
+						</b:selectOneMenu>
+					</b:column>
+					<b:column col-lg="4" col-md="4" col-sm="12" col-xs="12">
 							<b:inputText label="Data" value="#{prontuarioController.orcamento.orc_data}">
 								<f:convertDateTime pattern="dd/MM/yyyy"/>
 							</b:inputText>
 						</b:column>
 					</b:row>
 					<b:row>
-					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-						<h:outputLabel value="Caixa" />
-						<b:selectOneMenu value="#{prontuarioController.orcamento.caixa}">
-							<f:selectItems value="#{prontuarioController.listaCaixa}" var="p" itemValue="#{p}" itemLabel="#{p.cai_descricao}"/>
-						</b:selectOneMenu>
-					</b:column>
-					<b:column col-lg="4" col-md="4" col-sm="4" col-xs="4">
-						<h:outputLabel value="Profissional" />
-						<b:selectOneMenu value="#{prontuarioController.orcamento.usuario}">
-							<f:selectItems value="#{prontuarioController.listaUsuario}" var="p" itemValue="#{p}" itemLabel="#{p.usu_nome}"/>
-						</b:selectOneMenu>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12">
+							<h:outputLabel value="Observação" />
+							<b:inputTextarea rows="2" value="#{prontuarioController.orcamento.orc_observacao}"/>
+						</b:column>
+					</b:row>
+				</b:panel>
+					<b:panel title="Adicionar Tratamentos" collapsible="false">
+					<b:row>
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<h:outputLabel value="Plano" />
+							<b:selectOneMenu value="#{prontuarioController.orcamentoItem.planoPai}">
+								<f:selectItems value="#{prontuarioController.listaPlanos}" var="p" itemValue="#{p}" itemLabel="#{p.plp_descricao}"/>
+							</b:selectOneMenu>
+						</b:column>
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<b:selectOneMenu  label="Escolha o Tratamento" buttonClass="multiselect dropdown-toggle btn btn-default col-md-12 col-lg-12 col-sm-12"
+								value="#{prontuarioController.orcamentoItem.tratamento}">
+								<f:selectItems value="#{prontuarioController.lstTratamento}" var="t" itemValue="#{t}" itemLabel="#{t.tra_descricao}" />
+								<f:ajax event="change" execute="@this" render="precoOrcamento" />
+							</b:selectOneMenu>
+						</b:column>	 
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+							<h:outputLabel value="Dentes/Região" />
+							<b:selectOneMenu  readonly="true"
+								value="#{prontuarioController.orcamentoItem.tratamento.tra_denteRegiao}">
+								<f:selectItem itemValue="11" itemLabel="11" />
+								<f:selectItem itemValue="Face" itemLabel="Face" />
+							</b:selectOneMenu>
+						</b:column>
+						<b:column col-lg="3" col-md="3" col-sm="12" col-xs="12">
+						<b:inputText id="precoOrcamento" label="Preço" required="true"
+								styleClass="dinheiro" renderLabel="true" 
+								required-message="Digite o valor"  readonly="true"
+								value="#{prontuarioController.orcamentoItem.tratamento.tra_valor}">
+								<f:facet name="prepend">
+									<h:outputText value="R$" />
+								</f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"
+									pattern="#,##0.00" locale="pt" />
+							</b:inputText>		
+						</b:column>
+					</b:row>
+					<b:row>
+						<b:column col-lg="12" col-md="12" col-sm="12" col-xs="12" style="text-align:right">
+							<b:commandButton value="Adicionar" look="success" icon="plus-sign" ajax="true"/>
+						</b:column>
+					</b:row>
+					</b:panel>
+					<b:panel title="Tratamentos Adicionados" collapsible="false">
+					<b:dataTable value="#{prontuarioController.listaProntuarioOrcamentoTratamento}" var="p" id="listaItemOrcamento" 
+						customLangUrl="//cdn.datatables.net/plug-ins/1.10.12/i18n/Portuguese-Brasil.json" styleClass="table table-striped table-bordered" 
+						style="width:100%" fixedHeader="true" responsive="true">
+						 
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Cód" />
+						    </f:facet>
+						    <h:outputText value="#{p.prt_codigo}" />
+						  </h:column>
+						 
+						  <h:column>
+						    <f:facet name="header" >
+						      <h:outputText value="Tratamento" />
+						    </f:facet>
+						    <h:outputText value="#{p.tratamento.tra_descricao}" />
+						  </h:column>
+						  
+						  <h:column>
+							<f:facet name="header">
+								<h:outputText value="Preço" />
+							</f:facet>
+							<h:outputText value="#{p.tratamento.tra_valor}" />
+						</h:column>
+						
+						 <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Editar" />
+						    </f:facet>
+					    		<center>
+						    	 <p:commandButton actionListener="#{pacienteController.buscaEditarPorId(p.pac_codigo)}" pt:data-target="#alterar" pt:data-toggle="modal" styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+						    	</center>
+						  </h:column>
+						  
+						  <h:column>
+						    <f:facet name="header">
+						      <h:outputText value="Excluir" />
+						    </f:facet>
+						    	<center>
+						    	 <p:commandButton actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}" pt:data-target="#amodal" pt:data-toggle="modal" styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"/>
+						    	</center>
+						  </h:column>
+						  
+						</b:dataTable>
+					</b:panel>
+					
+					<b:panel title="Valores do Orçamento" collapsible="false">
+						<b:row>
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6">
+						<b:column col-lg="6" col-md="6" col-sm="3" col-xs="3" style="position:absolute; margin-left:42%">
+							<b:inputText id="valor" label="Desconto" required="true"
+								styleClass="dinheiro" renderLabel="true"
+								required-message="Digite o valor"
+								value="#{tratamentoController.tratamento.tra_valor}">
+								<f:facet name="prepend">
+									<h:outputText value="R$" />
+								</f:facet>
+								<f:convertNumber currencySymbol="R$" type="currency"
+									pattern="#,##0.00" locale="pt" />
+							</b:inputText>
+						</b:column>
+						<b:column col-lg="3" col-md="3" col-sm="3" col-xs="3" offset="3">
+						
+							<b:selectOneMenu label="Tipo desconto" renderLabel="true"
+								value="#{prontuarioController.prontuarioTratamento.planoPai.plp_tipoDesconto}">
+								<f:selectItem itemLabel="R$" itemValue="M"/>
+								<f:selectItem itemLabel="%" itemValue="P"/>
+							</b:selectOneMenu>
+						</b:column>
+						</b:column>						
+						<b:column col-lg="6" col-md="6" col-sm="6" col-xs="6" style="text-align:right">
+						<b:column col-lg="10" col-md="10" col-sm="9" col-xs="9">
+							<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+								<h:outputText value="Subtotal"/><br/>
+								<h:outputText value="Desconto"/><br/>
+								<h:outputText value="Total"/>
+							</b:column>
+							<b:column col-lg="6" col-md="6" col-sm="12" col-xs="12">
+								<h:outputText value="R$0,00"/><br/>
+								<h:outputText value="R$0,00"/><br/>
+								<h:outputText value="R$0,00"/>
+							</b:column>
+						</b:column>
 					</b:column>
 					</b:row>
+					</b:panel>
+					
 				</h:form>
 			</b:tab>
 			<b:tab title="Documentos">
