@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
@@ -30,6 +31,7 @@ public class Paciente implements Serializable{
 	private String pac_telefone;
 	
 	@Column
+	@NotEmpty(message = "O Telefone Não pode ser vazio")
 	private String pac_celular;
 	
 	@Column
@@ -37,6 +39,7 @@ public class Paciente implements Serializable{
 	
 	@Column
 	@CPF(message = "CPF Inválido: Informe novamente")
+	@NotEmpty(message = "O Campo Não pode ser vazio")
 	private String pac_cpf;
 	
 	@Column

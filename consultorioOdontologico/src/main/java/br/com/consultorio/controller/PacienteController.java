@@ -8,13 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.primefaces.context.RequestContext;
+
 import br.com.consultorio.dao.PacienteDAO;
 import br.com.consultorio.dao.PlanoDAO;
 import br.com.consultorio.dao.PlanoPaiDAO;
+import br.com.consultorio.lazy.PacienteLazy;
 import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 import br.com.consultorio.tx.Transacional;
@@ -29,7 +35,7 @@ public class PacienteController implements Serializable{
 	private Paciente paciente;
 	
 	private Paciente pacienteEditar;
-	
+	//oncomplete="PF('carDialog').show()"
 	@Inject
 	private Paciente pacienteFiltro;
 	
@@ -50,6 +56,8 @@ public class PacienteController implements Serializable{
 	
 	private List<Paciente> listaPacientes;
 	
+	private PacienteLazy pacienteLazy;
+	
 	private List<PlanoPai> listaPlanos;
 	
 	@PostConstruct
@@ -59,20 +67,27 @@ public class PacienteController implements Serializable{
 		this.pacienteEditar = new Paciente();
 		this.listaPacientes =  new ArrayList<>();
 		this.paciente.setPac_indicacao("-1");
+		this.listaPacientes = dao.listaTodos();
+		//this.pacienteLazy = new PacienteLazy(listaPacientes);
 	}
 	
 	public void limpar(){
-		init();
+		System.out.println("deu certo Salvando !!");
 	}
 	
-	public void teste(){
-		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
+	public void novoPaciente(){
+		this.paciente = new Paciente();
+		this.pacienteEditar = new Paciente();
+		this.listaPacientes =  new ArrayList<>();
+		this.paciente.setPac_indicacao("-1");
+		this.listaPacientes = dao.listaTodos();
 	}
-
+	
 	@Transacional
 	public String salvar(){
 		System.out.println("ToString = "+ this.paciente.toString());
 		this.planosDAO.adiciona(this.paciente.getPlano());
+
 		this.dao.adiciona(this.paciente);
 		FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		this.paciente = new Paciente();
@@ -81,15 +96,12 @@ public class PacienteController implements Serializable{
 	}
 	
 	@Transacional
-	public String editar(){
-		System.out.println("ToString = "+ this.pacienteEditar.toString());
-		this.planosDAO.atualiza(this.pacienteEditar.getPlano());
-		this.dao.atualiza(this.pacienteEditar);
+	public void editar(){
+		System.out.println("Chamou Metodo");
+		this.dao.atualiza(this.paciente);
 		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		this.pacienteEditar = new Paciente();
+		this.paciente = new Paciente();
 		init();
-		this.listaPacientes = dao.listaTodos();
-		return null;
 	}
 	
 	@Transacional
@@ -116,16 +128,14 @@ public class PacienteController implements Serializable{
 			LocalDate hoje = LocalDate.now();
 			LocalDate dataNascimento;
 			if(this.paciente.getPac_dataNascimento() != null && !this.paciente.getPac_dataNascimento().equals("")){
-				 dataNascimento = this.paciente.getPac_dataNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			}else{
-				 dataNascimento = this.pacienteEditar.getPac_dataNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			}
-			System.out.println("diferenca "+ChronoUnit.YEARS.between(dataNascimento,hoje));
-			setDiferencaAnos(ChronoUnit.YEARS.between(dataNascimento,hoje));
-			if(getDiferencaAnos() < 18){
-				diferencaAnosBoolean = true;
-			}else{
-				diferencaAnosBoolean = false;
+				dataNascimento = this.paciente.getPac_dataNascimento().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				System.out.println("diferenca "+ChronoUnit.YEARS.between(dataNascimento,hoje));
+				setDiferencaAnos(ChronoUnit.YEARS.between(dataNascimento,hoje));
+				if(getDiferencaAnos() < 18){
+					diferencaAnosBoolean = true;
+				}else{
+					diferencaAnosBoolean = false;
+				}
 			}
 		System.out.println("Idade -> "+getDiferencaAnos());
 		System.out.println("verifica = "+ diferencaAnosBoolean);
@@ -165,9 +175,6 @@ public class PacienteController implements Serializable{
 	
 	public void listaTodos(){
 		this.listaPacientes = dao.listaTodos();
-		for (Paciente paciente : listaPacientes) {
-			System.out.println(paciente);
-		}
 	}
 	
 	public void pesquisaPorFiltro(){
@@ -206,5 +213,13 @@ public class PacienteController implements Serializable{
 	
 	public void setPacienteFiltro(Paciente pacienteFiltro) {
 		this.pacienteFiltro = pacienteFiltro;
+	}
+	
+	public PacienteLazy getPacienteLazy() {
+		return pacienteLazy;
+	}
+	
+	public void setPacienteLazy(PacienteLazy pacienteLazy) {
+		this.pacienteLazy = pacienteLazy;
 	}
 }

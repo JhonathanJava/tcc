@@ -46,6 +46,7 @@ public class PlanoPaiDAO implements Serializable{
 	}
 
 	public PlanoPai buscaPorId(Long id) {
+		System.out.println("Codigo -> "+id);
 		return dao.buscaPorId(id);
 	}
 

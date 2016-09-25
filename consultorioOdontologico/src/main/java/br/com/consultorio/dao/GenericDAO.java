@@ -2,6 +2,9 @@ package br.com.consultorio.dao;
 
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Disposes;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -9,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 public class GenericDAO<T> {
 
 	private final Class<T> classe;
+	@Produces @RequestScoped
 	private EntityManager em;
 
 	public GenericDAO(EntityManager manager,Class<T> classe) {
@@ -64,5 +68,8 @@ public class GenericDAO<T> {
 
 		return lista;
 	}
-
+	
+	 public void finaliza(@Disposes EntityManager manager) {
+	      manager.close();
+	   }
 }

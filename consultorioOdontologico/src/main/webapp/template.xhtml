@@ -1,181 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:mp="http://primefaces.org/ui/material"
-	xmlns:b="http://bootsfaces.net/ui">
-
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="keywords" content="Sistema" />
-	<title>Página Inicial - Painel Administrativo</title>
-	<link rel="stylesheet" type="text/css" href="resources/css/estilo.css"/>
-	<script type="text/javascript" src="resources/js/jquery.mask.min.js" />
-	<script type="text/javascript" src="resources/js/jquery.dataTables.min.js" />
-	<script type="text/javascript" src="resources/js/utils.js" />
+	<!-- Meta, title, CSS, favicons, etc. -->
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Consultorio Odontologico</title>
+	<f:facet name="first">
+		<script type="text/javascript" src="resources/js/jquery.min.js"/>
+		<script type="text/javascript" src="resources/js/bootstrap.min.js"/>
+	</f:facet>
+	<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+	<h:outputScript library="primefaces" name="jquery/jquery-plugins.js" target="head" />
+	<h:outputScript library="js" name="modal.js" target="head" />
+	<h:outputScript library="js" name="jquery-ui.min.js" />
+	<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
+	<h:outputStylesheet library="css" name="font-awesome.min.css" />
+	<link rel="stylesheet" href="resources/css/custom.min.css" />
+	<h:outputStylesheet library="css" name="ajuste.css" />
+<style>
+.ui-datatable .ui-datatable-data .even-row td{
+			background-color:#FFF;
+		}
+		.ui-datatable .ui-datatable-data .odd-row td{
+			background-color:#F9F9F9;
+		}
+	</style>
 </h:head>
-<h:body style="padding-top: 60px">
-	
-	<ui:include src="/topo.xhtml" />
 
-	<b:container fluid="true">
-		<b:row>
+<h:body class="nav-md">
+	<div class="container body">
+		<div class="main_container">
+
 			<ui:include src="/menu.xhtml" />
-			<b:column col-sm="9" offset-sm="3" col-md="10" offset="2" styleClass="main">
+
+			<!-- top navigation -->
+			<ui:include src="/topo.xhtml" />
+			<!-- /top navigation -->
+
+			<!-- page content -->
 			<ui:insert name="conteudo">
-					
-				<h1>Dashboard</h1>
-					<hr />
-					<b:row styleClass="placeholders">
-						<b:column col-xs="6" col-sm="3" styleClass="placeholder">
-							<img data-src="holder.js/200x200/sky" class="img-responsive"
-								alt="Generic placeholder thumbnail" />
-							<h4>Label</h4>
-							<span class="text-muted">Something else</span>
-						</b:column>
-						<b:column col-xs="6" col-sm="3" styleClass="placeholder">
-							<img data-src="holder.js/200x200/vine" class="img-responsive"
-								alt="Generic placeholder thumbnail" />
-							<h4>Label</h4>
-							<span class="text-muted">Something else</span>
-						</b:column>
-						<b:column col-xs="6" col-sm="3" styleClass="placeholder">
-							<img data-src="holder.js/200x200/sky" class="img-responsive"
-								alt="Generic placeholder thumbnail" />
-							<h4>Label</h4>
-							<span class="text-muted">Something else</span>
-						</b:column>
-						<b:column col-xs="6" col-sm="3" styleClass="placeholder">
-							<img data-src="holder.js/200x200/vine" class="img-responsive"
-								alt="Generic placeholder thumbnail" />
-							<h4>Label</h4>
-							<span class="text-muted">Something else</span>
-						</b:column>
-					</b:row>
-					<h1>Section title</h1>
-					<hr />
-					<b:row styleClass="table-responsive">
-						<h:dataTable styleClass="table table-striped"
-							value="#{loremIpsumBean.items}" var="item" rows="15">
-							<h:column>
-								<f:facet name="header">
-									<h:outputText value="#" />
-								</f:facet>
-								<h:outputText value="xx" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">
-									<h:outputText value="Header" />
-								</f:facet>
-								<h:outputText value="cc" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">
-									<h:outputText value="Header" />
-								</f:facet>
-								<h:outputText value="s" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">
-									<h:outputText value="Header" />
-								</f:facet>
-								<h:outputText value="#gr" />
-							</h:column>
-							<h:column>
-								<f:facet name="header">
-									<h:outputText value="Header" />
-								</f:facet>
-								<h:outputText value="xx" />
-							</h:column>
-						</h:dataTable>
-					</b:row>
+
+
+				<div class="right_col" role="main">
+					<div class="">
+						<div class="page-title">
+							<div class="title_left">
+								<h3>Plain Page</h3>
+							</div>
+
+						</div>
+
+						<div class="clearfix"></div>
+
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h2>Plain Page</h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i
+													class="fa fa-chevron-up"></i></a></li>
+											<li class="dropdown"><a href="#" class="dropdown-toggle"
+												data-toggle="dropdown" role="button" aria-expanded="false"><i
+													class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Settings 1</a></li>
+													<li><a href="#">Settings 2</a></li>
+												</ul></li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">sdsdd</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</ui:insert>
-			</b:column>
-		</b:row>
-	</b:container>
-	<!-- <ui:include src="/footer.xhtml" /> -->
-	<style type="text/css">
-.sub-header {
-	border-bottom: 1px solid #eee;
-	padding-bottom: 10px;
-}
+			<!-- /page content -->
 
-.navbar-fixed-top {
-	border: 0 none;
-}
-
-.sidebar {
-	display: none;
-}
-
-@media ( min-width : 768px) {
-	.sidebar {
-		background-color: #f5f5f5;
-		border-right: 1px solid #eee;
-		bottom: 0;
-		display: block;
-		left: 0;
-		overflow-x: hidden;
-		overflow-y: auto;
-		padding: 20px;
-		position: fixed;
-		top: 51px;
-		z-index: 1000;
-	}
-}
-
-.nav-list {
-	margin-bottom: 20px;
-	margin-left: -20px;
-	margin-right: -21px;
-}
-
-.nav-list>li>a {
-	padding-left: 20px;
-	padding-right: 20px;
-}
-
-.nav-list>.active>a, .nav-sidebar>.active>a:hover, .nav-sidebar>.active>a:focus
-	{
-	background-color: #428bca;
-	color: #fff;
-}
-
-.main {
-	padding: 20px;
-}
-
-@media ( min-width : 768px) {
-	.main {
-		padding-left: 40px;
-		padding-right: 40px;
-	}
-}
-
-.main .page-header {
-	margin-top: 0;
-}
-
-.placeholders {
-	margin-bottom: 30px;
-	text-align: center;
-}
-
-.placeholders h4 {
-	margin-bottom: 0;
-}
-
-.placeholder {
-	margin-bottom: 20px;
-}
-
-.placeholder img {
-	border-radius: 50%;
-	display: inline-block;
-}
-</style>
-	
+			<ui:include src="/footer.xhtml" />
+		</div>
+	</div>
+	<h:outputScript library="js" name="jquery.dataTables.min.js" />
+	<h:outputScript library="js" name="dataTables.bootstrap.min.js" />
+	<h:outputScript library="js" name="dataTables.buttons.min.js" />
+	<h:outputScript library="js" name="buttons.bootstrap.min.js" />
+	<h:outputScript library="js" name="dataTables.fixedHeader.min.js" />
+	<h:outputScript library="js" name="dataTables.responsive.min.js" />
+	<h:outputScript library="js" name="responsive.bootstrap.js" />
+	<h:outputScript library="js" name="custom.min.js" />
+	<script type="text/javascript">
+    	function handleDialogSubmit(xhr, status, args) {
+        if (!args.validationFailed) {
+        	$("#fechar").click();
+        	$('.modal-backdrop').remove();
+        }
+    }
+</script>
 </h:body>
 </html>

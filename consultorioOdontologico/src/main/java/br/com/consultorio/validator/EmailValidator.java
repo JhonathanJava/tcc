@@ -8,13 +8,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
-import org.primefaces.validate.ClientValidator;
  
 /**
  * Custom JSF Validator for Email input
  */
 @FacesValidator("emailValidator")
-public class EmailValidator implements Validator, ClientValidator {
+public class EmailValidator implements Validator {
  
     private Pattern pattern;
   
