@@ -93,7 +93,7 @@ public class PacienteController implements Serializable{
 		this.paciente = new Paciente();
 		init();
 		return null;
-	}
+	} 
 	
 	@Transacional
 	public void editar(){
