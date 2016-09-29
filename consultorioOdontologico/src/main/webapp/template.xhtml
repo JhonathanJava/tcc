@@ -21,6 +21,7 @@
 	<h:outputScript library="js" name="jquery-ui.min.js" />
 	<link rel="stylesheet" href="resources/css/bootstrap.min.css" />
 	<h:outputStylesheet library="css" name="font-awesome.min.css" />
+	<link rel="stylesheet" href="resources/css/jquery.mCustomScrollbar.min.css" />
 	<link rel="stylesheet" href="resources/css/custom.min.css" />
 	<h:outputStylesheet library="css" name="ajuste.css" />
 <style>
@@ -97,11 +98,12 @@
 	<h:outputScript library="js" name="dataTables.fixedHeader.min.js" />
 	<h:outputScript library="js" name="dataTables.responsive.min.js" />
 	<h:outputScript library="js" name="responsive.bootstrap.js" />
+	<h:outputScript library="js" name="jquery.mCustomScrollbar.concat.min.js" />
 	<h:outputScript library="js" name="custom.min.js" />
 	<script type="text/javascript">
-    	function handleDialogSubmit(xhr, status, args) {
+    	function handleDialogSubmit(xhr, status, args,id) {
         if (!args.validationFailed) {
-        	$("#fechar").click();
+        	$("#"+id).click();
         	$('.modal-backdrop').remove();
         }
     }

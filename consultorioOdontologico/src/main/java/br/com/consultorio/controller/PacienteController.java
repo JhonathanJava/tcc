@@ -86,10 +86,13 @@ public class PacienteController implements Serializable{
 	@Transacional
 	public String salvar(){
 		System.out.println("ToString = "+ this.paciente.toString());
-		this.planosDAO.adiciona(this.paciente.getPlano());
-
-		this.dao.adiciona(this.paciente);
-		FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+		if(this.paciente.getPlano() == null){
+			this.planosDAO.adiciona(this.paciente.getPlano());
+		}else{
+			this.planosDAO.atualiza(this.paciente.getPlano());
+		}
+		this.dao.atualiza(this.paciente);
+		FacesUtil.addSuccessMessage("Ação Efetuada Com Sucesso!!");
 		this.paciente = new Paciente();
 		init();
 		return null;
@@ -115,13 +118,8 @@ public class PacienteController implements Serializable{
 	
 	public void buscaPorId(Long id){
 		paciente = dao.buscaPorId(id);
-		System.out.println("ID = "+paciente.toString());
-	}
-	
-	public void buscaEditarPorId(Long id){
-		pacienteEditar = dao.buscaPorId(id);
-		System.out.println("ID = "+pacienteEditar.toString());
 		calculaIdade();
+		System.out.println("Editar Paciente ->"+paciente);
 	}
 	
 	public void calculaIdade(){

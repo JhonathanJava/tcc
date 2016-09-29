@@ -70,16 +70,6 @@ public class UsuarioController implements Serializable{
 		this.usuario = this.dao.buscaPorId(usuario.getUsu_codigo());
 	}
 	
-	public void buscaEditarPorId(Long id){
-		usuarioEditar = dao.buscaPorId(id);
-		if(this.usuarioEditar.getUsu_ativo().equals("Inativo")){
-			this.usuarioEditar.setUsu_ativo("false");
-		}else{
-			this.usuarioEditar.setUsu_ativo("true");
-		}
-		System.out.println("ID = "+usuarioEditar.toString());
-	}
-
 	@Transacional
 	public String editar(){
 		System.out.println("ToString = "+ this.usuarioEditar.toString());
@@ -143,7 +133,7 @@ public class UsuarioController implements Serializable{
 	@Transacional
 	public void remover(){
 		System.out.println("Chamando Remover()");
-		this.dao.remove(usuarioEditar);
+		this.dao.remove(usuario);
 		init();
 		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
 	}

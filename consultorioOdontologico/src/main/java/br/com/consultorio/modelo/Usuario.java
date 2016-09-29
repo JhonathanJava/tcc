@@ -87,6 +87,8 @@ public class Usuario implements Serializable{
 	@Column
 	private String usu_numeroEndereco;
 	
+	@Column String usu_bairro;
+	
 	@JoinColumn(name = "per_codigo")
 	@ManyToOne
 	private Perfil perfil;
@@ -261,6 +263,14 @@ public class Usuario implements Serializable{
 	
 	public void setUsu_cro(String usu_cro) {
 		this.usu_cro = usu_cro;
+	}
+	
+	public String getUsu_bairro() {
+		return usu_bairro;
+	}
+	
+	public void setUsu_bairro(String usu_bairro) {
+		this.usu_bairro = usu_bairro;
 	}
 
 	@Override

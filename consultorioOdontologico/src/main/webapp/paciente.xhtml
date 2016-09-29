@@ -66,7 +66,7 @@
 							</div>
 							<div class="x_content">
 
-								<h:form>
+								<h:form prependId="false">
 
 									<p:dataTable value="#{pacienteController.listaPacientes}"
 										id="listaPacientes" rowIndexVar="rowIx"
@@ -101,8 +101,8 @@
 										<p:column headerText="Editar" styleClass="col-md-1 col-sm-1">
 											<center>
 												<p:commandButton
-													actionListener="#{pacienteController.buscaEditarPorId(p.pac_codigo)}"
-													pt:data-target="#alterar" pt:data-toggle="modal"
+													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
+													pt:data-toggle="modal" pt:data-target="#myModal" update="formCadastro"
 													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
 											</center>
 										</p:column>
@@ -111,11 +111,12 @@
 											<center>
 												<p:commandButton
 													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#amodal" pt:data-toggle="modal"
+													pt:data-target="#excluir" pt:data-toggle="modal"
 													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
 											</center>
 										</p:column>
 									</p:dataTable>
+									
 								</h:form>
 							</div>
 						</div>
@@ -126,6 +127,36 @@
 		</div>
 		<!-- Button trigger modal -->
 
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">X</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Excluir Paciente</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir" styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">Você realmente deseja excluir este registro?</p>
+						</div>
+						
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar" pt:data-dismiss="modal" styleClass="btn btn-primary"/>
+							<p:commandButton value="Excluir"  oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{pacienteController.excluirRegistro()}"
+								styleClass="btn btn-danger" update="@form listaPacientes"/>
+						</div>
+						
+					</h:form>
+				</div>
+			</div>
+		</div>
+
 		<!-- Modal -->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel">
@@ -133,12 +164,12 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close" data-backdrop="false" id="fechar">
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
 							<span aria-hidden="true">X</span>
 						</button>
 						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
 					</div>
-					<h:form prependId="false">
+					<h:form prependId="false" id="formCadastro" styleClass="form-horizontal form-label-left">
 						<p:growl showDetail="false" redisplay="true" />
 						<p:tooltip />
 						<div class="modal-body">
@@ -338,7 +369,7 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<p:outputLabel styleClass="control-label" value="Plano" />
+															<p:outputLabel styleClass="control-label" value="Plano de Saúde" />
 															<h:selectOneMenu styleClass="form-control" converter="omnifaces.SelectItemsConverter"
 																value="#{pacienteController.paciente.plano.planoPai}">
 																<f:selectItems value="#{pacienteController.listaPlanos}" 
@@ -421,11 +452,11 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">Close</button>
-							<p:commandButton value="Salvar"  oncomplete="handleDialogSubmit(xhr, status, args)"
-								actionListener="#{pacienteController.salvar}"
-								styleClass="btn btn-primary" update="@form"/>
+							<button type="button" class="btn btn-danger"
+								data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"  oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								actionListener="#{pacienteController.salvar()}"
+								styleClass="btn btn-primary" update="@form listaPacientes"/>
 						</div>
 					</h:form>
 				</div>

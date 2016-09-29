@@ -28,21 +28,15 @@ public class CargoController implements Serializable{
 	
 	private List<Cargo> cargos;
 	
-	private List<Cargo> filterCargos;
-	
-	private List<Cargo> cargosSelecionados = new ArrayList<>();
-	
-	private Long cargoId;
-	
 	@PostConstruct
 	 void init() {
-		System.out.println("sokosko");
-		//this.cargos = dao.listaTodos();
 		this.cargo = new Cargo();
-		//this.cargo.setCar_status("A");
+		this.cargos = dao.listaTodos();
 	}
 	
-
+	public void limpar(){
+		this.cargo = new Cargo();
+	}
 	
 	public void carregaPeloId(Cargo cargo){
 		System.out.println(cargo.getCar_codigo());
@@ -66,6 +60,8 @@ public class CargoController implements Serializable{
 	public String gravar() {
 		System.out.println("Gravando Cargo " + this.cargo.getCar_descricao());
 		System.out.println("ToString = "+ this.cargo.toString());
+		this.cargo.setCar_status("A");
+		this.cargo.setCar_dtCadastro(Calendar.getInstance());
 		if(this.cargo.getCar_codigo() != null){
 			System.out.println("Salvando");
 			this.dao.atualiza(this.cargo);
@@ -75,22 +71,13 @@ public class CargoController implements Serializable{
 			this.dao.adiciona(this.cargo);
 			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		}
+		this.cargo = new Cargo();
 		init();
 		return null;
 	}
 	
 	@Transacional
-	public void excluirSelecionados(){
-		for (Cargo cargo : cargosSelecionados) {
-			this.dao.remove(cargo);
-			cargo = null;
-		}
-		init();
-		FacesUtil.addSuccessMessage("Registros Excluidos Com Sucesso!!");
-	}
-	
-	@Transacional
-	public void remover(Cargo cargo){
+	public void remover(){
 		System.out.println("Chamando Remover()");
 		this.dao.remove(cargo);
 		init();
@@ -100,15 +87,6 @@ public class CargoController implements Serializable{
 	public void limparCargo(){
 		this.cargo = new Cargo();
 	}
-	
-	public Long getCargoId() {
-		return cargoId;
-	}
-	
-	public void setCargoId(Long cargoId) {
-		this.cargoId = cargoId;
-	}
-	
 	
 	public Cargo getCargo() {
 		return cargo;
@@ -124,22 +102,6 @@ public class CargoController implements Serializable{
 	
 	public void setCargos(List<Cargo> cargos) {
 		this.cargos = cargos;
-	}
-	
-	public List<Cargo> getCargosSelecionados() {
-		return cargosSelecionados;
-	}
-	
-	public void setCargosSelecionados(List<Cargo> cargosSelecionados) {
-		this.cargosSelecionados = cargosSelecionados;
-	}
-	
-	public List<Cargo> getFilterCargos() {
-		return filterCargos;
-	}
-	
-	public void setFilterCargos(List<Cargo> filterCargos) {
-		this.filterCargos = filterCargos;
 	}
 	
 }
