@@ -1,0 +1,240 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Cadastro de Tratamentos</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<h:form>
+
+									<p:commandButton class="btn btn-primary"
+										actionListener="#{tratamentoController.limparTratamento}"
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-backdrop="static" value="Adicionar Novo" />
+
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Listagem de Tratamentos</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+
+								<h:form prependId="false">
+
+									<p:dataTable value="#{tratamentoController.listaTratamentos}"
+										id="lista" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.tra_codigo}"
+											sortBy="#{p.tra_codigo}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.tra_codigo}" />
+										</p:column>
+
+										<p:column headerText="Nome" filterBy="#{p.tra_descricao}"
+											sortBy="#{p.tra_descricao}" style="width:50%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.tra_descricao}" />
+										</p:column>
+
+										<p:column headerText="Valor" sortBy="#{p.tra_valor}"
+											style="width:20%">
+											<h:outputText value="#{p.tra_valor}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Editar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{tratamentoController.buscarPorId(p.tra_codigo)}"
+													pt:data-target="#myModal" pt:data-toggle="modal"
+													update="formIncluir" styleClass="btn btn-info"
+													icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+										<p:column headerText="Excluir" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{tratamentoController.buscarPorId(p.tra_codigo)}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Button trigger modal -->
+
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Excluir Tratamento</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">Você realmente deseja excluir este
+								registro?</p>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Excluir"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{tratamentoController.remover}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-md " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Adicionar
+							Tratamento</h4>
+					</div>
+					<h:form prependId="false" id="formIncluir">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+
+							<div class="row">
+								<div class="col-md-6 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Nome Tratamento" />
+										<p:inputText styleClass="form-control"
+											pt:data-tooltip="Digite o nome do Tratamento"
+											value="#{tratamentoController.tratamento.tra_descricao}"
+											required="true" requiredMessage="Digite o nome do Tratamento" />
+									</div>
+								</div>
+								<div class="col-md-6 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Valor do Tratamento" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
+												pt:data-tooltip="Valor do Tratamento"
+												value="#{tratamentoController.tratamento.tra_valor}"
+												required="true" requiredMessage="Valor do Tratamento">
+											</p:inputNumber>
+									</div>
+								</div>
+							</div>
+								<div class="row">
+									<div class="col-md-6 col-sm-12 col-xs-12">
+										<p:outputLabel styleClass="control-label"
+											value="Plano de Saúde" />
+										<h:selectOneMenu styleClass="form-control"
+											converter="omnifaces.SelectItemsConverter"
+											value="#{tratamentoController.tratamento.planoPai}">
+											<f:selectItems value="#{tratamentoController.listaPlanos}"
+												var="p" itemValue="#{p}" itemLabel="#{p.plp_descricao}" />
+										</h:selectOneMenu>
+									</div>
+
+									<div class="col-md-6 col-sm-12 col-xs-12">
+										<p:outputLabel styleClass="control-label"
+											value="Dentes/Região" />
+										<h:selectOneMenu styleClass="form-control"
+											value="#{tratamentoController.tratamento.tra_denteRegiao}">
+											<f:selectItem itemValue="11" itemLabel="11" />
+											<f:selectItem itemValue="Face" itemLabel="Face" />
+										</h:selectOneMenu>
+									</div>
+								</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{tratamentoController.gravar}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -21,30 +21,19 @@ public class FornecedorController implements Serializable{
 	
 	private Fornecedor fornecedor;
 	
-	private Fornecedor fornecedorEditar;
-	
 	@Inject
 	private FornecedorDAO dao;
 	
 	private List<Fornecedor> fornecedores;
 	
-	private Long FuncionarioId;
-	
 	@PostConstruct
 	 void init() {
 		this.fornecedor = new Fornecedor();
-		this.fornecedorEditar = new Fornecedor();
 		this.fornecedores = dao.listaTodos();
 	}
 	
 	public void buscaPorId(Long id){
 		fornecedor = dao.buscaPorId(id);
-		System.out.println("ID = "+fornecedor.toString());
-	}
-	
-	public void buscaEditarPorId(Long id){
-		fornecedorEditar = dao.buscaPorId(id);
-		System.out.println("ID = "+fornecedorEditar.toString());
 	}
 	
 	@Transacional
@@ -61,29 +50,14 @@ public class FornecedorController implements Serializable{
 	
 	@Transacional
 	public String gravar() {
-		System.out.println("Gravando Funcionario " + this.fornecedor.getFun_nome());
-		System.out.println("ToString = "+ this.fornecedor.toString());
 		if(this.fornecedor.getFun_codigo() != null){
-			System.out.println("Salvando");
 			this.dao.atualiza(this.fornecedor);
 			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
 		}else{
-			System.out.println("Alterando");
 			this.dao.adiciona(this.fornecedor);
 			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		}
 		init();
-		return null;
-	}
-	
-	@Transacional
-	public String editar(){
-		System.out.println("ToString = "+ this.fornecedorEditar.toString());
-		this.dao.atualiza(this.fornecedorEditar);
-		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		this.fornecedorEditar = new Fornecedor();
-		init();
-		this.fornecedores = dao.listaTodos();
 		return null;
 	}
 	
@@ -115,20 +89,4 @@ public class FornecedorController implements Serializable{
 		this.fornecedores = fornecedores;
 	}
 
-	public Long getFuncionarioId() {
-		return FuncionarioId;
-	}
-
-	public void setFuncionarioId(Long funcionarioId) {
-		FuncionarioId = funcionarioId;
-	}
-	
-	public Fornecedor getFornecedorEditar() {
-		return fornecedorEditar;
-	}
-	
-	public void setFornecedorEditar(Fornecedor fornecedorEditar) {
-		this.fornecedorEditar = fornecedorEditar;
-	}
-	
 }

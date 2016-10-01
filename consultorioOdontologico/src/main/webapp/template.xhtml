@@ -99,8 +99,12 @@
 	<h:outputScript library="js" name="dataTables.responsive.min.js" />
 	<h:outputScript library="js" name="responsive.bootstrap.js" />
 	<h:outputScript library="js" name="jquery.mCustomScrollbar.concat.min.js" />
+	<h:outputScript library="js" name="jquery.inputmask.js" />
 	<h:outputScript library="js" name="custom.min.js" />
 	<script type="text/javascript">
+	$(document).ready(function(){
+		  $('.money').mask('000.000.000.000.000,00', {reverse: true});
+	});
     	function handleDialogSubmit(xhr, status, args,id) {
         if (!args.validationFailed) {
         	$("#"+id).click();

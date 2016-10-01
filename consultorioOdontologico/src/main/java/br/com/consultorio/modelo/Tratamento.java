@@ -36,7 +36,7 @@ public class Tratamento implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="plp_codigo")
-	private PlanoPai planoPai;// = new PlanoPai();
+	private PlanoPai planoPai = new PlanoPai();
 	
 	public Tratamento() {
 		

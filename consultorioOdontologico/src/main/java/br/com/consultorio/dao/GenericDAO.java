@@ -6,8 +6,11 @@ import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
+
+import br.com.consultorio.util.jsf.FacesUtil;
 
 public class GenericDAO<T> {
 
@@ -25,7 +28,11 @@ public class GenericDAO<T> {
 	}
 
 	public void remove(T t) {
-		em.remove(em.merge(t));
+		try{
+			em.remove(em.merge(t));
+		}catch(PersistenceException e){
+			FacesUtil.addErrorMessage("Erro: Não foi Feito alteração no Registro");
+		}
 	}
 
 	public void atualiza(T t) {

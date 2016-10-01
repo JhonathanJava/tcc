@@ -14,7 +14,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Cadastro de Paciente</h2>
+								<h2>Cadastro de Perfil</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -66,7 +66,7 @@
 								
 								<h:form  prependId="false">
 
-									<p:dataTable value="#{pacienteController.listaPacientes}" id="lista" 
+									<p:dataTable value="#{pacienteController.listaPacientes}" id="listaPacientes" 
 										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
 										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
@@ -74,7 +74,7 @@
 										styleClass="table table-striped table-bordered"
 										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
 
-										<p:column headerText="Código" filterBy="#{p.pac_codigo}" sortBy="#{p.pac_codigo}" style="width:10%" filterStyle="width:95%">
+										<p:column headerText="Código" filterBy="#{p.pac_codigo}" sortBy="#{p.pac_codigo}" style="width:10%">
 											<h:outputText value="#{p.pac_codigo}" />
 										</p:column>
 
@@ -91,8 +91,8 @@
 										<p:column headerText="Editar" style="width:10%">
 											<center>
 												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#myModal" pt:data-toggle="modal" update="formIncluir"
+													actionListener="#{pacienteController.buscaEditarPorId(p.pac_codigo)}"
+													pt:data-target="#alterar" pt:data-toggle="modal"
 													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
 											</center>
 										</p:column>
@@ -101,7 +101,7 @@
 											<center>
 												<p:commandButton
 													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#excluir" pt:data-toggle="modal"
+													pt:data-target="#amodal" pt:data-toggle="modal"
 													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
 											</center>
 										</p:column>
@@ -115,41 +115,7 @@
 			</div>
 		</div>
 		<!-- Button trigger modal -->
-		
-		<div class="modal" id="excluir" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-sm " role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close" data-backdrop="false" id="fechar">
-							<span aria-hidden="true">x</span>
-						</button>
-						<h4 class="modal-title" id="myModalLabel">Excluir Paciente</h4>
-					</div>
-					<h:form prependId="false" id="formExcluir"
-						styleClass="form-horizontal form-label-left">
-						<p:growl showDetail="false" redisplay="true" />
-						<p:tooltip />
-						<div class="modal-body">
-							<p align="center">Você realmente deseja excluir este
-								registro?</p>
-						</div>
 
-						<div class="modal-footer">
-							<p:commandButton type="button" value="Cancelar"
-								pt:data-dismiss="modal" styleClass="btn btn-primary" />
-							<p:commandButton value="Excluir"
-								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{usuarioController.remover}"
-								styleClass="btn btn-danger" update="@form lista" />
-						</div>
-
-					</h:form>
-				</div>
-			</div>
-		</div>
-		
 		<!-- Modal -->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel">
@@ -158,17 +124,17 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close" data-backdrop="false" id="fecharInserir">
-							<span aria-hidden="true">x</span>
+							<span aria-hidden="true">X</span>
 						</button>
 						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
 					</div>
-					<h:form prependId="false"  id="formIncluir">
+					<h:form prependId="false">
 						<p:growl showDetail="false" redisplay="true"/>
 						<p:tooltip/>
 						<div class="modal-body">
 						
 						<div class="row">
-							<div class="col-md-6 col-sm-12 col-xs-12">
+							<div class="col-md-6">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="Nome"/>
 									<p:inputText styleClass="form-control" pt:data-tooltip="Tooltip for an input"
@@ -176,7 +142,7 @@
 									requiredMessage="Digite Seu Nome" />
 								</div>
 							</div>
-							<div class="col-md-6 col-sm-12 col-xs-12">
+							<div class="col-md-6">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="Sexo"/>
 									<h:selectOneMenu label="Sexo" id="editarSexo" styleClass="form-control"
@@ -189,7 +155,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-md-3 col-sm-12 col-xs-12">
+							<div class="col-md-3">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="Data Nascimento"/>
 									<p:inputMask id="editarDataNascimento" styleClass="form-control"
@@ -206,7 +172,7 @@
 								</div>
 							</div>
 							
-							<div class="col-md-3 col-sm-12 col-xs-12">
+							<div class="col-md-3">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="CPF"/>
 									<p:inputMask id="editarCpf" styleClass="form-control " required="true"  value="#{pacienteController.paciente.pac_cpf}"
@@ -214,7 +180,7 @@
 								</div>
 							</div>
 	
-							<div class="col-md-3 col-sm-12 col-xs-12">
+							<div class="col-md-3">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="RG"/>
 									<h:inputText id="editarRG" required="true" value="#{pacienteController.paciente.pac_rg}" requiredMessage="Digite o número do seu RG" 
@@ -222,7 +188,7 @@
 								</div>
 							</div>
 	
-							<div class="col-md-3 col-sm-12 col-xs-12">
+							<div class="col-md-3">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="Celular"/>
 										<h:inputText id="editarCelular" styleClass="form-control" value="#{pacienteController.paciente.pac_celular}"
@@ -238,7 +204,7 @@
 								data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
 								actionListener="#{pacienteController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="@form lista" />
+								styleClass="btn btn-primary" update="@form" />
 						</div>
 					</h:form>
 				</div>

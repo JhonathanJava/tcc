@@ -24,34 +24,23 @@ public class TratamentoController implements Serializable{
 	
 	private Tratamento tratamento;
 	
-	private Tratamento tratamentoEditar;
-	
 	@Inject
 	private TratamentoDAO dao;
 
 	@Inject
 	private PlanoPaiDAO planoDAO;
 	
-	private Tratamento filterTratamento;
-	
 	private List<Tratamento> listaTratamentos;
 	
 	private List<PlanoPai> listaPlanos;
-
+	
 	
 	@PostConstruct
 	 void init() {
 		this.tratamento = new Tratamento();
-		this.tratamentoEditar = new Tratamento();
-		this.filterTratamento = new Tratamento();
 		this.listaTratamentos = dao.listaTodos();
+		this.listaPlanos = planoDAO.listaTodos();
 	}
-	
-	public void buscaEditarPorId(Long id){
-		tratamentoEditar = dao.buscaPorId(id);
-		System.out.println(tratamentoEditar);
-	}
-	
 	
 	@Transacional
 	public void inativarSelecionados(Tratamento tratamento){
@@ -66,19 +55,16 @@ public class TratamentoController implements Serializable{
 		}
 	
 	@Transacional
-	public String editar(){
-		this.dao.atualiza(this.tratamentoEditar);
-		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		this.tratamentoEditar = new Tratamento();
-		init();
-		this.listaTratamentos = dao.listaTodos();
-		return null;
-	}
-	
-	@Transacional
 	public String gravar(){
-		this.dao.adiciona(this.tratamento);
-		FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+		System.out.println(this.tratamento.toString());
+		this.tratamento.setTra_status('A');
+		if(this.tratamento.getTra_codigo() != null){
+			this.dao.atualiza(this.tratamento);
+			FacesUtil.addSuccessMessage("Atualizado Com Sucesso!!");
+		}else{
+			this.dao.adiciona(this.tratamento);
+			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+		}
 		this.tratamento = new Tratamento();
 		init();
 		return null;
@@ -87,14 +73,10 @@ public class TratamentoController implements Serializable{
 	@Transacional
 	public void remover(){
 		System.out.println("Chamando Remover()");
-		this.dao.remove(tratamentoEditar);
+		this.tratamento.setTra_status('T');
+		this.dao.remove(tratamento);
 		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
-	}
-	
-	public void pesquisaPorFiltro(){
-		System.out.println(this.filterTratamento.toString());
-		this.listaTratamentos = dao.pesquisaPorFiltro(this.filterTratamento); 
+		FacesUtil.addSuccessMessage("Registro Inativado Com Sucesso!!");
 	}
 	
 	public void limparTratamento(){
@@ -105,6 +87,14 @@ public class TratamentoController implements Serializable{
 		tratamento = dao.buscaPorId(id);
 	}
 
+	public List<PlanoPai> getListaPlanos() {
+		return listaPlanos;
+	}
+	
+	public void setListaPlanos(List<PlanoPai> listaPlanos) {
+		this.listaPlanos = listaPlanos;
+	}
+	
 	public Tratamento getTratamento() {
 		return tratamento;
 	}
@@ -113,14 +103,6 @@ public class TratamentoController implements Serializable{
 		this.tratamento = tratamento;
 	}
 
-	public Tratamento getFilterTratamento() {
-		return filterTratamento;
-	}
-	
-	public void setFilterTratamento(Tratamento filterTratamento) {
-		this.filterTratamento = filterTratamento;
-	}
-	
 	public List<Tratamento> getListaTratamentos() {
 		return listaTratamentos;
 	}
@@ -129,19 +111,4 @@ public class TratamentoController implements Serializable{
 		this.listaTratamentos = listaTratamentos;
 	}
 
-	public Tratamento getTratamentoEditar() {
-		return tratamentoEditar;
-	}
-	
-	public void setTratamentoEditar(Tratamento tratamentoEditar) {
-		this.tratamentoEditar = tratamentoEditar;
-	}
-	
-	public List<PlanoPai> getListaPlanos() {
-		return listaPlanos = planoDAO.listaTodos();
-	}
-
-	public void setListaPlanos(List<PlanoPai> listaPlanos) {
-		this.listaPlanos = listaPlanos;
-	}
 }
