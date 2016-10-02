@@ -37,19 +37,8 @@ public class FornecedorController implements Serializable{
 	}
 	
 	@Transacional
-	public void inativarSelecionados(Fornecedor fornecedor){
-			if(fornecedor.getFun_status().equals("A")){
-				fornecedor.setFun_status("I");
-			}else{
-				fornecedor.setFun_status("A");
-			}
-			this.dao.atualiza(fornecedor);
-			init();
-			FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
-		}
-	
-	@Transacional
 	public String gravar() {
+		this.fornecedor.setFun_status("A");
 		if(this.fornecedor.getFun_codigo() != null){
 			this.dao.atualiza(this.fornecedor);
 			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
@@ -63,10 +52,14 @@ public class FornecedorController implements Serializable{
 	
 	@Transacional
 	public void remover(){
-		System.out.println("Chamando Remover()");
-		this.dao.remove(fornecedor);
+		if(fornecedor.getFun_status().equals("A")){
+			fornecedor.setFun_status("I");
+		}else{
+			fornecedor.setFun_status("A");
+		}
+		this.dao.atualiza(fornecedor);
 		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+		FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
 	}
 	
 	public void limpar(){

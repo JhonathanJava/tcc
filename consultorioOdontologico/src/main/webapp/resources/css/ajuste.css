@@ -639,6 +639,13 @@
     margin-left: 0;
   }
 }
+.ui-growl{    background-color: #FFF;color: #000;z-index: 1200 !important;}
+.ui-shadow{box-shadow: none !important; -webkit-box-shadow:none !important}
+.col-md-6{width: 50% !important;}
+.ui-tooltip {z-index:1200 !important;}
+.ui-autocomplete-panel {z-index: 1200 !important; background-color: #E6E6E6 !important;}
+.red{color:red !important;font-weight:bold !important;}
+.green{color:green !important;font-weight:bold !important;}
 .ui-autocomplete{width: 100% !important}
 .ui-inputfield{width: 100% !important;padding: 6px 12px !important;}
 .ui-autocomplete-panel {z-index: 1200 !important;background-color: #EEE;color: #000;font-weight: bold;}

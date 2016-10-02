@@ -94,6 +94,8 @@ public class EstoqueEntrada implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((ete_codigo == null) ? 0 : ete_codigo.hashCode());
+		result = prime * result + ((ete_quantidade == null) ? 0 : ete_quantidade.hashCode());
+		result = prime * result + ((ete_valor == null) ? 0 : ete_valor.hashCode());
 		return result;
 	}
 
@@ -110,6 +112,16 @@ public class EstoqueEntrada implements Serializable{
 			if (other.ete_codigo != null)
 				return false;
 		} else if (!ete_codigo.equals(other.ete_codigo))
+			return false;
+		if (ete_quantidade == null) {
+			if (other.ete_quantidade != null)
+				return false;
+		} else if (!ete_quantidade.equals(other.ete_quantidade))
+			return false;
+		if (ete_valor == null) {
+			if (other.ete_valor != null)
+				return false;
+		} else if (!ete_valor.equals(other.ete_valor))
 			return false;
 		return true;
 	}

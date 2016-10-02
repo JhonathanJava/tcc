@@ -86,8 +86,13 @@
 											<h:outputText value="#{p.fun_nomeFantasia}"/>
 										</p:column>
 										
-										<p:column headerText="Telefone" sortBy="#{p.fun_telefone}" filterBy="#{p.fun_telefone}"  filterStyle="width:95%"  style="width:20%">
+										<p:column headerText="Telefone" sortBy="#{p.fun_telefone}" filterBy="#{p.fun_telefone}"  filterStyle="width:95%"  style="width:10%">
 											<h:outputText value="#{p.fun_telefone}"/>
+										</p:column>
+
+										<p:column headerText="Status" filterBy="#{p.fun_status}" sortBy="#{p.est_status}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="Ativo" rendered="#{p.fun_status eq 'A'}" styleClass="green"/>
+											<h:outputText value="Inativo" rendered="#{p.fun_status eq 'I'}" styleClass="red"/>
 										</p:column>
 
 										<p:column headerText="Editar" style="width:10%">
@@ -127,15 +132,14 @@
 							aria-label="Close" data-backdrop="false" id="fechar">
 							<span aria-hidden="true">x</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Excluir Fornecedor</h4>
+						<h4 class="modal-title" id="myModalLabel">Inativar Fornecedor</h4>
 					</div>
 					<h:form prependId="false" id="formExcluir"
 						styleClass="form-horizontal form-label-left">
 						<p:growl showDetail="false" redisplay="true" />
 						<p:tooltip />
 						<div class="modal-body">
-							<p align="center">Você realmente deseja excluir este
-								registro?</p>
+							<p align="center">Você realmente deseja inativar este registro?</p>
 						</div>
 
 						<div class="modal-footer">

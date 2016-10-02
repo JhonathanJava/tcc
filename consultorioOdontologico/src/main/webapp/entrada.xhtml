@@ -36,7 +36,7 @@
 
 									<p:commandButton class="btn btn-primary"
 										actionListener="#{estoqueEntradaController.limpar}"
-										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-toggle="modal" pt:data-target="#myModal" update="formIncluir"
 										pt:data-backdrop="static" value="Adicionar Novo" />
 								</h:form>
 							</div>
@@ -108,7 +108,10 @@
 										<p:column headerText="Valor Total"
 											filterBy="#{p.com_valorTotal}" sortBy="#{p.com_valorTotal}"
 											style="width:10%" filterStyle="width:95%">
-											<h:outputText value="#{p.com_valorTotal}" />
+											<h:outputText value="#{p.com_valorTotal}">
+											<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
 										</p:column>
 
 										<p:column headerText="Editar" style="width:10%">
@@ -214,8 +217,9 @@
 											value="#{estoqueEntradaController.compra.fornecedor}"
 											completeMethod="#{estoqueEntradaController.buscaFornecedor}" 
 											var="f" itemLabel="#{f.fun_nome}" minQueryLength="3" maxResults="5"
-											itemValue="#{f}" converter="omnifaces.SelectItemsConverter"
-											forceSelection="true">
+											itemValue="#{f}" forceSelection="true">
+											
+											<o:converter converterId="omnifaces.ListConverter" list="#{estoqueEntradaController.resultsFornecedor}"/>
 											
 											<p:column headerText="Código">
 												<h:outputText value="#{f.fun_codigo}" />
@@ -308,7 +312,7 @@
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Valor de Custo"/>
 										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
-											pt:data-tooltip="Valor de Custo" value="#{estoqueEntradaController.estoqueEntrada.ete_valor}" required="true" requiredMessage="Valor do Produto">
+											pt:data-tooltip="Valor de Custo" value="#{estoqueEntradaController.estoqueEntrada.ete_valor}">
 										</p:inputNumber>
 									</div>
 								</div>
@@ -316,7 +320,7 @@
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Quantidade"/>
-										<p:inputNumber style="width:100%" pt:data-tooltip="Quantidade de Entrada" value="#{estoqueEntradaController.estoqueEntrada.ete_quantidade}" required="true" requiredMessage="Quantidade do Produto">
+										<p:inputNumber style="width:100%" pt:data-tooltip="Quantidade de Entrada" value="#{estoqueEntradaController.estoqueEntrada.ete_quantidade}">
 										</p:inputNumber>
 									</div>
 								</div>
@@ -325,7 +329,7 @@
 									<div class="form-group" style="margin-top:5%">
 										<p:commandButton value="Adicionar"
 										actionListener="#{estoqueEntradaController.adicionaProduto}"
-										styleClass="btn btn-primary" update=":adicionaProduto :listaProduto :valorTotal"/>
+										styleClass="btn btn-primary" update=":adicionaProduto :listaProduto :valorTotal :teste"/>
 									</div>
 								</div>
 								
@@ -371,7 +375,7 @@
 										<p:column headerText="Remover" style="width:10%">
 											<center>
 												<p:commandButton actionListener="#{estoqueEntradaController.removeProduto(p)}"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update=":listaProduto" process="@this"/>
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update=":listaProduto :valorTotal" process="@this"/>
 											</center>
 										</p:column>
 										
@@ -383,8 +387,8 @@
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Valor de Frete"/>
-										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
-											pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_frete}">
+										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_frete}">
+											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorFrete}" render=":valorTotal" execute="@this"/>
 										</p:inputNumber>
 									</div>
 								</div>	
@@ -393,6 +397,7 @@
 										<p:outputLabel styleClass="control-label" value="Valor de Desconto"/>
 										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
 											pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_desconto}">
+											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorDesconto}" render=":valorTotal"  execute="@this"/>
 										</p:inputNumber>
 									</div>
 								</div>
@@ -401,6 +406,7 @@
 										<p:outputLabel styleClass="control-label" value="Valor de Juros"/>
 										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
 											pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_juros}">
+											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorJuro}" render=":valorTotal"  execute="@this"/>
 										</p:inputNumber>
 									</div>
 								</div>
@@ -417,7 +423,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{estoqueEntradaController.teste}"
+								actionListener="#{estoqueEntradaController.fecharNota}"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
 								styleClass="btn btn-primary" update="@form lista" />
 						</div>
