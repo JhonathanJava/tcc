@@ -22,16 +22,22 @@ public class Compra implements Serializable{
 	private Long com_codigo;
 	
 	@Column
-	private BigDecimal com_frete; 
+	private BigDecimal com_frete  = new BigDecimal(0.00);
 	
 	@Column
-	private BigDecimal com_desconto;
+	private BigDecimal com_juros  = new BigDecimal(0.00); 
 	
 	@Column
-	private BigDecimal com_valorTotal;
+	private BigDecimal com_desconto  = new BigDecimal(0.00);
+	
+	@Column
+	private BigDecimal com_valorTotal = new BigDecimal(0.00);
 	
 	@Column
 	private String com_nf; 
+	
+	@Column
+	private String com_obs;
 	
 	@Column
 	private Date com_data = new Date(); // data de Entrada
@@ -49,7 +55,13 @@ public class Compra implements Serializable{
 	@JoinColumn(name = "for_codigo")
 	@ManyToOne
 	private Fornecedor fornecedor = new Fornecedor();
+	
+	@Column
+	private String com_status = "A";
 
+	@Column
+	private Date com_dataCancelamento; 
+	
 	public Long getCom_codigo() {
 		return com_codigo;
 	}
@@ -129,7 +141,39 @@ public class Compra implements Serializable{
 	public void setCom_dataVencimento(Date com_dataVencimento) {
 		this.com_dataVencimento = com_dataVencimento;
 	}
+	
+	public String getCom_status() {
+		return com_status;
+	}
+	
+	public void setCom_status(String com_status) {
+		this.com_status = com_status;
+	}
+	
+	public Date getCom_dataCancelamento() {
+		return com_dataCancelamento;
+	}
+	
+	public void setCom_dataCancelamento(Date com_dataCancelamento) {
+		this.com_dataCancelamento = com_dataCancelamento;
+	}
 
+	public String getCom_obs() {
+		return com_obs;
+	}
+	
+	public void setCom_obs(String com_obs) {
+		this.com_obs = com_obs;
+	}
+	
+	public BigDecimal getCom_juros() {
+		return com_juros;
+	}
+	
+	public void setCom_juros(BigDecimal com_juros) {
+		this.com_juros = com_juros;
+	}
+	
 	@Override
 	public String toString() {
 		return "Compra [com_codigo=" + com_codigo + ", com_frete=" + com_frete + ", com_desconto=" + com_desconto

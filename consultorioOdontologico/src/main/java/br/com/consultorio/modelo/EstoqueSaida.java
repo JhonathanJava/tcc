@@ -1,6 +1,7 @@
 package br.com.consultorio.modelo;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,6 +29,9 @@ public class EstoqueSaida implements Serializable{
 	
 	@Column
 	private Date ets_data = new Date();
+	
+	@Column
+	private BigDecimal ets_valorVenda;
 
 	@JoinColumn(name = "usu_codigo")
 	@ManyToOne
@@ -100,6 +104,14 @@ public class EstoqueSaida implements Serializable{
 		this.ets_destinoSaida = ets_destinoSaida;
 	}
 
+	public BigDecimal getEts_valorVenda() {
+		return ets_valorVenda;
+	}
+	
+	public void setEts_valorVenda(BigDecimal ets_valorVenda) {
+		this.ets_valorVenda = ets_valorVenda;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

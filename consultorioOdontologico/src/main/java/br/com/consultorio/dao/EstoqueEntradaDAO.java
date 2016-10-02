@@ -6,10 +6,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-
+import br.com.consultorio.modelo.Compra;
 import br.com.consultorio.modelo.EstoqueEntrada;
 
 public class EstoqueEntradaDAO implements Serializable{
@@ -46,11 +45,10 @@ public class EstoqueEntradaDAO implements Serializable{
 		return dao.buscaPorId(id);
 	}
 	
-	public List<EstoqueEntrada> pesquisaEstoqueEntradaPorCompra (EstoqueEntrada estoque){
-		Session session = (Session) em.getDelegate();
-		Query query = session.createQuery("from Stock where stockCode = :code ");
-		query.setParameter("code", "7277");
-		List<EstoqueEntrada> list = query.list();
+	public List<EstoqueEntrada> pesquisaEstoqueEntradaPorCompra (Compra compra){
+		Query query = em.createQuery("from EstoqueEntrada where compra.com_codigo = :codigo ");
+		query.setParameter("codigo", compra.getCom_codigo());
+		List<EstoqueEntrada> list = query.getResultList();
 		return list;
 	}
 

@@ -6,8 +6,14 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import br.com.consultorio.modelo.Fornecedor;
+import br.com.consultorio.modelo.Paciente;
 
 public class FornecedorDAO implements Serializable{
 
@@ -43,6 +49,23 @@ public class FornecedorDAO implements Serializable{
 		return dao.buscaPorId(id);
 	}
 	
-
+	public List<Fornecedor> buscarPorNome(String consulta){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Fornecedor> query = builder.createQuery(Fornecedor.class);
+		Root<Fornecedor> from = query.from(Fornecedor.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, 
+		        builder.like(from.<String>get("fun_nome"), "%"+consulta+"%"));
+		}
+		
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("fun_status"), "A"));
+		
+		TypedQuery<Fornecedor> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("fun_nome"))));
+		List<Fornecedor> fornecedores = typedQuery.getResultList();
+		
+		return fornecedores;
+	}
 
 }

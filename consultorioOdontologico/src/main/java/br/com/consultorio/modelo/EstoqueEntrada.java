@@ -35,7 +35,7 @@ public class EstoqueEntrada implements Serializable{
 	private BigDecimal ete_valor; // valor de Custo
 
 	@Column
-	private BigDecimal ete_valorVenda;
+	private String ete_status = "A";
 	
 	public EstoqueEntrada() {
 		
@@ -81,12 +81,12 @@ public class EstoqueEntrada implements Serializable{
 		this.ete_valor = ete_valor;
 	}
 	
-	public BigDecimal getEte_valorVenda() {
-		return ete_valorVenda;
+	public String getEte_status() {
+		return ete_status;
 	}
 	
-	public void setEte_valorVenda(BigDecimal ete_valorVenda) {
-		this.ete_valorVenda = ete_valorVenda;
+	public void setEte_status(String ete_status) {
+		this.ete_status = ete_status;
 	}
 	
 	@Override
@@ -117,8 +117,7 @@ public class EstoqueEntrada implements Serializable{
 	@Override
 	public String toString() {
 		return "EstoqueEntrada [ete_codigo=" + ete_codigo + ", ete_quantidade=" + ete_quantidade + ", estoque="
-				+ estoque + ", compra=" + compra + ", ete_valor=" + ete_valor + ", ete_valorVenda=" + ete_valorVenda
-				+ "]";
+				+ estoque + ", compra=" + compra + ", ete_valor=" + ete_valor + ", ete_valorVenda= ]";
 	}
 
 	

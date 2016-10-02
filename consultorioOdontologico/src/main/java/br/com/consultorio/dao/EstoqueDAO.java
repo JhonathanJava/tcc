@@ -14,6 +14,7 @@ import javax.persistence.criteria.Root;
 
 import br.com.consultorio.modelo.Estoque;
 import br.com.consultorio.modelo.EstoqueEntrada;
+import br.com.consultorio.modelo.Fornecedor;
 
 public class EstoqueDAO implements Serializable{
 
@@ -47,6 +48,24 @@ public class EstoqueDAO implements Serializable{
 
 	public Estoque buscaPorId(Long id) {
 		return dao.buscaPorId(id);
+	}
+	
+	public List<Estoque> buscarPorNome(String consulta){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Estoque> query = builder.createQuery(Estoque.class);
+		Root<Estoque> from = query.from(Estoque.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, builder.like(from.<String>get("est_produto"), "%"+consulta+"%"));
+		}
+		
+		predicate = builder.and(predicate, builder.equal(from.<String>get("est_status"), "A"));
+		
+		TypedQuery<Estoque> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("est_produto"))));
+		List<Estoque> fornecedores = typedQuery.getResultList();
+		
+		return fornecedores;
 	}
 	
 }

@@ -1,7 +1,6 @@
 package br.com.consultorio.modelo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,8 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import org.hibernate.annotations.Formula;
 
 @Entity
 public class Estoque implements Serializable{
@@ -25,26 +22,14 @@ public class Estoque implements Serializable{
 	private String est_produto;
 	
 	@Column
-	private Integer est_quantidade;
-	
-	@Column
-	private Integer est_quantidadeMinima;
+	private Integer est_quantidadeMinima = 0;
 	
 	@Column
 	private Date est_data = new Date();
 	
 	@Column
-	private BigDecimal est_valor; // valor de Custo
-
-	@Column
-	private BigDecimal est_valorVenda;
+	private String est_status = "A";
 	
-	private Integer quantidadeAtualizada;
-	
-	private Integer quantidadeAtual;
-	
-	private Integer quantidadeNova;
-
 	public Estoque() {
 	}
 
@@ -64,14 +49,6 @@ public class Estoque implements Serializable{
 		this.est_produto = est_produto;
 	}
 
-	public Integer getEst_quantidade() {
-		return est_quantidade;
-	}
-
-	public void setEst_quantidade(Integer est_quantidade) {
-		this.est_quantidade = est_quantidade;
-	}
-
 	public Integer getEst_quantidadeMinima() {
 		return est_quantidadeMinima;
 	}
@@ -88,45 +65,12 @@ public class Estoque implements Serializable{
 		this.est_data = est_data;
 	}
 	
-	public Integer getQuantidadeAtual() {
-		return quantidadeAtual;
+	public String getEst_status() {
+		return est_status;
 	}
 	
-	public void setQuantidadeAtual(Integer quantidadeAtual) {
-		this.quantidadeAtual = quantidadeAtual;
-	}
-	
-	public Integer getQuantidadeAtualizada() {
-		return quantidadeAtualizada;
-	}
-	
-	public void setQuantidadeAtualizada(Integer quantidadeAtualizada) {
-		this.quantidadeAtualizada = quantidadeAtualizada;
-	}
-	
-	public Integer getQuantidadeNova() {
-		return quantidadeNova;
-	}
-	
-	public void setQuantidadeNova(Integer quantidadeNova) {
-		this.quantidadeNova = quantidadeNova;
-	}
-	
-	public BigDecimal getEst_valor() {
-		return est_valor;
-	}
-
-
-	public void setEst_valor(BigDecimal est_valor) {
-		this.est_valor = est_valor;
-	}
-	
-	public BigDecimal getEst_valorVenda() {
-		return est_valorVenda;
-	}
-	
-	public void setEst_valorVenda(BigDecimal est_valorVenda) {
-		this.est_valorVenda = est_valorVenda;
+	public void setEst_status(String est_status) {
+		this.est_status = est_status;
 	}
 	
 	@Override
@@ -156,8 +100,8 @@ public class Estoque implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Estoque [est_codigo=" + est_codigo + ", est_produto=" + est_produto + ", est_quantidade="
-				+ est_quantidade + ", est_quantidadeMinima=" + est_quantidadeMinima + ", est_data=" + est_data + "]";
+		return "Estoque [est_codigo=" + est_codigo + ", est_produto=" + est_produto + ", est_quantidadeMinima="
+				+ est_quantidadeMinima + ", est_data=" + est_data + ", est_status=" + est_status + "]";
 	}
 	
 }
