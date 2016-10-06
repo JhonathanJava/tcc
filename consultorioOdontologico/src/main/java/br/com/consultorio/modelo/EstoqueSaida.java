@@ -24,11 +24,18 @@ public class EstoqueSaida implements Serializable{
 	@Column
 	private Integer ets_quantidade;
 	
+	@JoinColumn(name = "des_codigo")
+	@ManyToOne
+	private DestinoProdutoSaida destinoProdutoSaida = new DestinoProdutoSaida();
+	
 	@Column
-	private String ets_destinoSaida;
+	private String ets_status;
 	
 	@Column
 	private Date ets_data = new Date();
+	
+	@Column
+	private Date ets_dataInativacao;
 	
 	@Column
 	private BigDecimal ets_valorVenda;
@@ -66,6 +73,13 @@ public class EstoqueSaida implements Serializable{
 		this.ets_quantidade = ets_quantidade;
 	}
 
+	public String getEts_status() {
+		return ets_status;
+	}
+	
+	public void setEts_status(String ets_status) {
+		this.ets_status = ets_status;
+	}
 
 	public Date getEts_data() {
 		return ets_data;
@@ -96,14 +110,14 @@ public class EstoqueSaida implements Serializable{
 		this.estoque = estoque;
 	}
 
-	public String getEts_destinoSaida() {
-		return ets_destinoSaida;
+	public DestinoProdutoSaida getDestinoProdutoSaida() {
+		return destinoProdutoSaida;
 	}
 	
-	public void setEts_destinoSaida(String ets_destinoSaida) {
-		this.ets_destinoSaida = ets_destinoSaida;
+	public void setDestinoProdutoSaida(DestinoProdutoSaida destinoProdutoSaida) {
+		this.destinoProdutoSaida = destinoProdutoSaida;
 	}
-
+	
 	public BigDecimal getEts_valorVenda() {
 		return ets_valorVenda;
 	}
@@ -112,14 +126,22 @@ public class EstoqueSaida implements Serializable{
 		this.ets_valorVenda = ets_valorVenda;
 	}
 	
+	public Date getEts_dataInativacao() {
+		return ets_dataInativacao;
+	}
+	
+	public void setEts_dataInativacao(Date ets_dataInativacao) {
+		this.ets_dataInativacao = ets_dataInativacao;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((ets_codigo == null) ? 0 : ets_codigo.hashCode());
+		result = prime * result + ((estoque == null) ? 0 : estoque.hashCode());
+		result = prime * result + ((ets_quantidade == null) ? 0 : ets_quantidade.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -130,14 +152,18 @@ public class EstoqueSaida implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		EstoqueSaida other = (EstoqueSaida) obj;
-		if (ets_codigo == null) {
-			if (other.ets_codigo != null)
+		if (estoque == null) {
+			if (other.estoque != null)
 				return false;
-		} else if (!ets_codigo.equals(other.ets_codigo))
+		} else if (!estoque.equals(other.estoque))
+			return false;
+		if (ets_quantidade == null) {
+			if (other.ets_quantidade != null)
+				return false;
+		} else if (!ets_quantidade.equals(other.ets_quantidade))
 			return false;
 		return true;
 	}
-
 
 	@Override
 	public String toString() {

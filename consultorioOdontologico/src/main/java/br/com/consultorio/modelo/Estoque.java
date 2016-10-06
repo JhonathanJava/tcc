@@ -21,6 +21,8 @@ public class Estoque implements Serializable{
 	@Column
 	private String est_produto;
 	
+	private Integer est_quantidade = 0;
+	
 	@Column
 	private Integer est_quantidadeMinima = 0;
 	
@@ -29,6 +31,9 @@ public class Estoque implements Serializable{
 	
 	@Column
 	private String est_status = "A";
+	
+	@Column
+	private Date est_dataInativado;
 	
 	public Estoque() {
 	}
@@ -71,6 +76,22 @@ public class Estoque implements Serializable{
 	
 	public void setEst_status(String est_status) {
 		this.est_status = est_status;
+	}
+	
+	public Integer getEst_quantidade() {
+		return est_quantidade;
+	}
+	
+	public void setEst_quantidade(Integer est_quantidade) {
+		this.est_quantidade = est_quantidade;
+	}
+	
+	public Date getEst_dataInativado() {
+		return est_dataInativado;
+	}
+	
+	public void setEst_dataInativado(Date est_dataInativado) {
+		this.est_dataInativado = est_dataInativado;
 	}
 	
 	@Override

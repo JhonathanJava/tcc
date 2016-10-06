@@ -3,8 +3,10 @@ package br.com.consultorio.controller;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 import javax.faces.context.FacesContext;
@@ -12,16 +14,20 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.context.RequestContext;
-
 import br.com.consultorio.dao.CompraDAO;
+import br.com.consultorio.dao.CondicaoPagamentoDAO;
 import br.com.consultorio.dao.EstoqueDAO;
 import br.com.consultorio.dao.EstoqueEntradaDAO;
+import br.com.consultorio.dao.FormaPagamentoDAO;
 import br.com.consultorio.dao.FornecedorDAO;
+import br.com.consultorio.dao.TituloDAO;
 import br.com.consultorio.modelo.Compra;
+import br.com.consultorio.modelo.CondicaoPagamento;
 import br.com.consultorio.modelo.Estoque;
 import br.com.consultorio.modelo.EstoqueEntrada;
+import br.com.consultorio.modelo.FormaPagamento;
 import br.com.consultorio.modelo.Fornecedor;
+import br.com.consultorio.modelo.Titulo;
 import br.com.consultorio.modelo.Usuario;
 import br.com.consultorio.tx.Transacional;
 import br.com.consultorio.util.jsf.FacesUtil;
@@ -40,11 +46,22 @@ public class EstoqueEntradaController implements Serializable{
 	
 	private Fornecedor fornecedor;
 	
+	private Titulo titulo;
+	
 	@Inject
 	private EstoqueDAO dao;
 	
 	@Inject
+	private TituloDAO tituloDAO;
+	
+	@Inject
 	private FornecedorDAO fornecedorDAO;
+	
+	@Inject
+	private CondicaoPagamentoDAO condicaoDAO;
+	
+	@Inject
+	private FormaPagamentoDAO formaPagamentoDAO;
 	
 	@Inject
 	private EstoqueEntradaDAO entradaDAO;
@@ -53,10 +70,13 @@ public class EstoqueEntradaController implements Serializable{
 	private CompraDAO compraDAO;
 	
 	private List<EstoqueEntrada> listaProduto;
+	private List<Titulo> listaTitulo;
 	private List<Compra> listaCompra;
 	private List<Fornecedor> listaFornecedores;
 	private List<Estoque> results = new ArrayList<Estoque>();
 	private List<Fornecedor> resultsFornecedor = new ArrayList<Fornecedor>();
+	private List<CondicaoPagamento> resultsPagamento = new ArrayList<CondicaoPagamento>();
+	private List<FormaPagamento> resultsFormaPagamento = new ArrayList<FormaPagamento>();
 	private String destinoSaida;
 	
 	private Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
@@ -73,6 +93,8 @@ public class EstoqueEntradaController implements Serializable{
 		this.listaProduto =  new ArrayList<>();
 		this.listaProduto.clear();
 		this.listaCompra = compraDAO.listaTodos();
+		this.listaTitulo = new ArrayList<>();
+		this.titulo = new Titulo();
 	}
 	
 	public void limpar(){
@@ -97,14 +119,50 @@ public class EstoqueEntradaController implements Serializable{
 			this.compraDAO.adiciona(this.getCompra());
 			
 			for (EstoqueEntrada p : listaProduto) {
+				
+				/* ATUALIZA A QUANTIDADE DE ESTOQUE DO PRODUTO */
+				
+				Estoque produto = dao.buscaPorId(p.getEstoque().getEst_codigo());
+				produto.setEst_quantidade(produto.getEst_quantidade() + p.getEte_quantidade());
+				dao.atualiza(produto);
+				
+				/* FAZ ENTRADA DO PRODUTO NO ESTOQUE */
 				p.setEte_status("A");
 				p.setCompra(this.getCompra());
 				this.entradaDAO.adiciona(p);
 			}
 			
+			for (Titulo t : listaTitulo) {
+				t.setCompra(this.compra);
+				System.out.println(t);
+				tituloDAO.adiciona(t);
+			}
+			
 			FacesUtil.addSuccessMessage("Entrada Efetuada com Sucesso!!");
 			init();
 		}
+	}
+	
+	public void geraParcelas(){
+		this.titulo.setTit_valor(getCompra().getCom_valorTotal());
+		System.out.println(titulo);
+		Integer numeroParcela = titulo.getCondicaoPagamento().getCon_numeroParcela();
+		BigDecimal valorTemp = titulo.getTit_valor().divide(new BigDecimal(numeroParcela));
+		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("America/Sao_Paulo"));
+		for(int i = 1; i <= numeroParcela; i++){
+			Titulo temp = new Titulo();
+			temp.setCondicaoPagamento(titulo.getCondicaoPagamento());
+			temp.setFormaPagamento(titulo.getFormaPagamento());
+			temp.setFornecedor(compra.getFornecedor());
+			temp.setTit_parcela(i);
+			temp.setTit_tipo("D");
+			temp.setTit_valor(valorTemp);
+			temp.setUsuario(usuario);
+			c.add(Calendar.DAY_OF_MONTH, (30*i));
+			temp.setTit_vencimento(c.getTime());
+			this.listaTitulo.add(temp);
+		}
+		
 	}
 	
 	public void atualizaValorJuro(){
@@ -168,6 +226,16 @@ public class EstoqueEntradaController implements Serializable{
         return resultsFornecedor;
 	}
 	
+	public List<CondicaoPagamento> buscaCondicaoPagamento(String query){
+		resultsPagamento = condicaoDAO.buscarCondicaoPorNomeAtivo(query);
+        return resultsPagamento;
+	}
+	
+	public List<FormaPagamento> buscaFormaPagamento(String query){
+		resultsFormaPagamento = formaPagamentoDAO.buscarFormaPorNomeAtivo(query);
+        return resultsFormaPagamento;
+	}
+	
 	public List<Estoque> buscaProduto(String query){
         results = dao.buscarPorNome(query);
         return results;
@@ -187,6 +255,38 @@ public class EstoqueEntradaController implements Serializable{
 		FacesUtil.addSuccessMessage("Nota cancelada, e entrada dos produtos da nota retirado do estoque!");
 	}
 	
+	public List<Titulo> getListaTitulo() {
+		return listaTitulo;
+	}
+	
+	public void setListaTitulo(List<Titulo> listaTitulo) {
+		this.listaTitulo = listaTitulo;
+	}
+	
+	public Titulo getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(Titulo titulo) {
+		this.titulo = titulo;
+	}
+
+	public List<CondicaoPagamento> getResultsPagamento() {
+		return resultsPagamento;
+	}
+
+	public void setResultsPagamento(List<CondicaoPagamento> resultsPagamento) {
+		this.resultsPagamento = resultsPagamento;
+	}
+
+	public List<FormaPagamento> getResultsFormaPagamento() {
+		return resultsFormaPagamento;
+	}
+
+	public void setResultsFormaPagamento(List<FormaPagamento> resultsFormaPagamento) {
+		this.resultsFormaPagamento = resultsFormaPagamento;
+	}
+
 	public List<Fornecedor> getResultsFornecedor() {
 		return resultsFornecedor;
 	}

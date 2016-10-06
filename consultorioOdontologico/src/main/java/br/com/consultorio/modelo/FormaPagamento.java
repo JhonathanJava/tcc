@@ -20,6 +20,9 @@ public class FormaPagamento implements Serializable{
 	@Column
 	private String for_descricao;
 	
+	@Column
+	private String for_status = "A";
+	
 	public Long getFor_codigo() {
 		return for_codigo;
 	}
@@ -36,6 +39,14 @@ public class FormaPagamento implements Serializable{
 		this.for_descricao = for_descricao;
 	}
 
+	public String getFor_status() {
+		return for_status;
+	}
+	
+	public void setFor_status(String for_status) {
+		this.for_status = for_status;
+	}
+	
 	@Override
 	public String toString() {
 		return "FormaPagamento [for_codigo=" + for_codigo + ", for_descricao=" + for_descricao + "]";

@@ -1,0 +1,264 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Ajuste de Estoque</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<h:form>
+									<p:commandButton class="btn btn-primary"
+										actionListener="#{ajusteEstoqueController.limpar}"
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-backdrop="static" value="Adicionar Novo" />
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="x_panel">
+					<div class="x_title">
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<h:form>
+									<div class="alert alert-warning" role="alert">
+										LISTA COM OS PRODUTOS COM QUANTIDADE CRITÍCA<br/>
+										<p:commandButton class="btn btn-warning" update="formExcluir"
+											actionListener="#{ajusteEstoqueController.limpar}"
+											pt:data-toggle="modal" pt:data-target="#excluir"
+											pt:data-backdrop="static" value="Mostrar" />
+									</div>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+						<div class="clearfix"></div>
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h2>Listagem de Pacientes</h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i
+													class="fa fa-chevron-up"></i></a></li>
+											<li class="dropdown"><a href="#" class="dropdown-toggle"
+												data-toggle="dropdown" role="button" aria-expanded="false"><i
+													class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Settings 1</a></li>
+													<li><a href="#">Settings 2</a></li>
+												</ul></li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">
+
+										<h:form prependId="false">
+
+											<p:dataTable value="#{ajusteEstoqueController.listaAjusteEstoque}"
+												id="lista" rowIndexVar="rowIx"
+												rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+												var="p" paginator="true" rows="10"
+												rowsPerPageTemplate="5,10,15"
+												paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+												currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+												styleClass="table table-striped table-bordered"
+												style="width:100%" responsive="true"
+												emptyMessage="Nenhum registro no banco de dados">
+
+												<p:column headerText="Código" filterBy="#{p.eje_codigo}"
+													sortBy="#{p.eje_codigo}" style="width:10%"
+													filterStyle="width:95%">
+													<h:outputText value="#{p.eje_codigo}" />
+												</p:column>
+
+												<p:column headerText="Produto" filterBy="#{p.estoque.est_produto}"
+													sortBy="#{p.estoque.est_produto}" style="width:50%"
+													filterStyle="width:95%">
+													<h:outputText value="#{p.estoque.est_produto}" />
+												</p:column>
+
+												<p:column headerText="Quantidade" style="width:10%">
+													<h:outputText value="#{p.estoque.est_quantidade}"
+														rendered="#{p.estoque.est_quantidade gt p.estoque.est_quantidadeMinima}"
+														styleClass="green" />
+													<h:outputText value="#{p.estoque.est_quantidade}"
+														rendered="#{p.estoque.est_quantidade lt p.estoque.est_quantidadeMinima}"
+														styleClass="red" />
+												</p:column>
+
+												<p:column headerText="Quantidade Mínima" style="width:10%">
+													<h:outputText value="#{p.estoque.est_quantidadeMinima}" />
+												</p:column>
+
+												<p:column headerText="Editar" style="width:10%">
+													<center>
+														<p:commandButton
+															actionListener="#{ajusteEstoqueController.buscarPorId(p.estoque.est_codigo)}"
+															pt:data-target="#myModal" pt:data-toggle="modal"
+															update="formIncluir" styleClass="btn btn-info"
+															icon="fa fa-fw fa-edit" />
+													</center>
+												</p:column>
+
+											</p:dataTable>
+										</h:form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<!-- Button trigger modal -->
+
+				<div class="modal" id="excluir" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close" data-backdrop="false" id="fechar">
+									<span aria-hidden="true">x</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Listagem de Produtos Com Saldo Crítico</h4>
+							</div>
+							<h:form prependId="false" id="formExcluir"
+								styleClass="form-horizontal form-label-left">
+								<p:growl showDetail="false" redisplay="true" />
+								<p:tooltip />
+								<div class="modal-body">
+									
+									<p:dataTable value="#{ajusteEstoqueController.listaEstoqueNegativo}"
+												id="lista2" rowIndexVar="rowIx"
+												rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+												var="p" paginator="true" rows="10"
+												rowsPerPageTemplate="5,10,15"
+												paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+												currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+												styleClass="table table-striped table-bordered"
+												style="width:100%" responsive="true"
+												emptyMessage="Nenhum registro no banco de dados">
+ 
+												<p:column headerText="Código" filterBy="#{p.est_codigo}"
+													sortBy="#{p.est_codigo}" style="width:10%"
+													filterStyle="width:95%">
+													<h:outputText value="#{p.est_codigo}" />
+												</p:column>
+
+												<p:column headerText="Produto" filterBy="#{p.est_produto}"
+													sortBy="#{p.est_produto}" style="width:50%"
+													filterStyle="width:95%">
+													<h:outputText value="#{p.est_produto}" />
+												</p:column>
+
+												<p:column headerText="Quantidade" style="width:10%">
+													<h:outputText value="#{p.est_quantidade}"
+														rendered="#{p.est_quantidade gt p.est_quantidadeMinima}"
+														styleClass="green" />
+													<h:outputText value="#{p.est_quantidade}"
+														rendered="#{p.est_quantidade lt p.est_quantidadeMinima}"
+														styleClass="red" />
+												</p:column>
+
+												<p:column headerText="Quantidade Mínima" style="width:10%">
+													<h:outputText value="#{p.est_quantidadeMinima}" />
+												</p:column>
+
+												<p:column headerText="Editar" style="width:10%">
+													<center>
+														<p:commandButton
+															actionListener="#{ajusteEstoqueController.buscarPorId(p.est_codigo)}"
+															pt:data-target="#myModal" pt:data-toggle="modal"
+															update="formIncluir" styleClass="btn btn-info"
+															icon="fa fa-fw fa-edit" />
+													</center>
+												</p:column>
+
+											</p:dataTable>
+									
+								</div>
+
+							</h:form>
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal -->
+				<div class="modal" id="myModal" tabindex="-1" role="dialog"
+					aria-labelledby="myModalLabel">
+					<div class="modal-dialog modal-md" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close" data-backdrop="false" id="fecharInserir">
+									<span aria-hidden="true">x</span>
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Ajuste de Estoque</h4>
+							</div>
+							<h:form prependId="false" id="formIncluir">
+								<p:growl showDetail="false" redisplay="true" />
+								<p:tooltip />
+								<div class="modal-body">
+								
+								<div class="row">
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Quantidade Atual"/>
+											<p:inputText styleClass="form-control" pt:data-tooltip="Quantidade Atual do Produto"
+											value="#{ajusteEstoqueController.estoque.est_quantidade}" readonly="true"/>
+										</div>
+									</div>
+									<div class="col-md-9 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Quantidade Nova"/>
+											<p:inputText styleClass="form-control" pt:data-tooltip="Digite a quantidade certa do Estoque"
+											value="#{ajusteEstoqueController.ajusteEstoque.eje_quantidade}" required="true"
+											requiredMessage="Digite a nova Quantidade" />
+										</div>
+									</div>
+								</div>	
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-danger"
+										data-dismiss="modal">Cancelar</button>
+									<p:commandButton value="Salvar"
+										actionListener="#{ajusteEstoqueController.ajustar}"
+										oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+										styleClass="btn btn-primary" update="@form lista lista2" />
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+	</ui:define>
+</ui:composition>

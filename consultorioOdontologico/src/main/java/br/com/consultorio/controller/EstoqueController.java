@@ -1,6 +1,7 @@
 package br.com.consultorio.controller;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -39,6 +40,7 @@ public class EstoqueController implements Serializable{
 	
 	@Transacional
 	public void inativarProduto(){
+		this.estoque.setEst_dataInativado(new Date());
 		this.estoque.setEst_status("I");
 		dao.atualiza(estoque);
 		FacesUtil.addSuccessMessage("Produto Inativado!");
@@ -48,6 +50,7 @@ public class EstoqueController implements Serializable{
 	@Transacional
 	public void gravar(){
 		System.out.println(estoque);
+		this.estoque.setEst_status("A");
 		if(this.estoque.getEst_codigo() != null){
 			dao.atualiza(estoque);
 			FacesUtil.addSuccessMessage("Registro Alterado Com Sucesso!");

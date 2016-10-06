@@ -13,8 +13,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import br.com.consultorio.modelo.Estoque;
-import br.com.consultorio.modelo.EstoqueEntrada;
-import br.com.consultorio.modelo.Fornecedor;
 
 public class EstoqueDAO implements Serializable{
 
@@ -35,7 +33,7 @@ public class EstoqueDAO implements Serializable{
 	}
 
 	public void remove(Estoque t) {
-		dao.remove(t);
+		dao.atualiza(t);
 	}
 
 	public void atualiza(Estoque t) {
@@ -63,9 +61,24 @@ public class EstoqueDAO implements Serializable{
 		predicate = builder.and(predicate, builder.equal(from.<String>get("est_status"), "A"));
 		
 		TypedQuery<Estoque> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("est_produto"))));
-		List<Estoque> fornecedores = typedQuery.getResultList();
+		List<Estoque> estoque = typedQuery.getResultList();
 		
-		return fornecedores;
+		return estoque;
+	}
+	
+	public List<Estoque> buscarProdutoAtivo(){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Estoque> query = builder.createQuery(Estoque.class);
+		Root<Estoque> from = query.from(Estoque.class);
+		
+		Predicate predicate = builder.and();
+		
+		predicate = builder.and(predicate, builder.equal(from.<String>get("est_status"), "A"));
+		
+		TypedQuery<Estoque> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("est_produto"))));
+		List<Estoque> estoque = typedQuery.getResultList();
+		
+		return estoque;
 	}
 	
 }

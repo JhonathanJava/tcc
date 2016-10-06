@@ -1,0 +1,419 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Baixa de Produto</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<h:form>
+
+									<p:commandButton class="btn btn-primary"
+										actionListener="#{estoqueSaidaController.limpar}"
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-backdrop="static" value="Adicionar Novo" />
+
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Listagem de Saída dos Produtos</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+
+								<h:form prependId="false">
+
+									<p:dataTable value="#{estoqueSaidaController.listaSaidas}"
+										id="lista" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.ets_codigo}"
+											sortBy="#{p.ets_codigo}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.ets_codigo}" />
+										</p:column>
+
+										<p:column headerText="Produto"
+											filterBy="#{p.estoque.est_produto}"
+											sortBy="#{p.estoque.est_produto}" style="width:30%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.estoque.est_produto}" />
+										</p:column>
+
+										<p:column headerText="Quantidade"
+											filterBy="#{p.ets_quantidade}" sortBy="#{p.ets_quantidade}"
+											style="width:10%" filterStyle="width:95%">
+											<h:outputText value="#{p.ets_quantidade}" />
+										</p:column>
+
+										<p:column headerText="Destino Saída"
+											filterBy="#{p.destinoProdutoSaida.des_descricao}"
+											sortBy="#{p.destinoProdutoSaida.des_descricao}"
+											style="width:30%" filterStyle="width:95%">
+											<h:outputText value="#{p.destinoProdutoSaida.des_descricao}" />
+										</p:column>
+
+										<p:column headerText="Status" filterBy="#{p.ets_status}"
+											sortBy="#{p.ets_status}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="Ativo" rendered="#{p.ets_status eq 'A'}" />
+											<h:outputText value="Inativo"
+												rendered="#{p.ets_status eq 'I'}" />
+										</p:column>
+
+										<p:column headerText="Editar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{estoqueSaidaController.buscaPorId(p.ets_codigo)}"
+													pt:data-target="#myAlterar" pt:data-toggle="modal"
+													update="formAlterar" styleClass="btn btn-info"
+													icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+										<p:column headerText="Excluir" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{estoqueSaidaController.buscaPorId(p.ets_codigo)}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Button trigger modal -->
+
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Inativar Saída do
+							Produto</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">Você realmente deseja inativar este
+								registro?</p>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Excluir"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{estoqueSaidaController.inativarSaida}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Adicionar Saída de
+							Produtos</h4>
+					</div>
+					<h:form prependId="false" id="formIncluir">
+						<p:growl showDetail="false" redisplay="true" id="teste"/>
+						<p:tooltip />
+						<div class="modal-body">
+							<h:panelGroup id="adicionaProduto">
+							<div class="row">
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Data" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											value="#{estoqueSaidaController.estoqueSaida.ets_data}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+									</div>
+								</div>
+
+								<div class="col-md-8 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Produto (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueSaidaController.estoqueSaida.estoque}"
+											completeMethod="#{estoqueSaidaController.buscaProduto}"
+											var="f" itemLabel="#{f.est_produto}" minQueryLength="3"
+											maxResults="5" itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{estoqueSaidaController.results}" />
+
+											<p:column headerText="Produto">
+												<h:outputText value="#{f.est_produto}" />
+											</p:column>
+
+										</p:autoComplete>
+									</div>
+								</div>
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Quantidade"/>
+										<p:inputNumber style="width:100%" pt:data-tooltip="Quantidade de Saída" value="#{estoqueSaidaController.estoqueSaida.ets_quantidade}"/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-9 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Destino da Saída (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueSaidaController.estoqueSaida.destinoProdutoSaida}"
+											completeMethod="#{estoqueSaidaController.buscaDestinoSaida}"
+											var="f" itemLabel="#{f.des_descricao}" minQueryLength="3"
+											maxResults="5" itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter" list="#{estoqueSaidaController.resultsDestinoSaida}" />
+
+											<p:column headerText="Tipo de Saída">
+												<h:outputText value="#{f.des_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+									</div>
+								</div>
+								
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:commandButton value="Adicionar"
+										actionListener="#{estoqueSaidaController.adicionaProduto}"
+										styleClass="btn btn-primary" update=":adicionaProduto :listaProduto :teste"/>
+									</div>
+								</div>
+								
+								</div>
+							
+							</h:panelGroup>
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="alert alert-success" role="alert">LISTA COM OS PRODUTOS QUE SERÃO DADA SAÍDA</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<p:dataTable value="#{estoqueSaidaController.listaProduto}"
+										id="listaProduto" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15" paginatorPosition="top"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum Produto Adicionado na Nota">
+										
+										<p:column headerText="Produto"
+											filterBy="#{p.estoque.est_produto}"
+											sortBy="#{p.estoque.est_produto}" style="width:40%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.estoque.est_produto}" />
+										</p:column>
+										
+										<p:column headerText="Quantidade" style="width:10%" >
+											<h:outputText value="#{p.ets_quantidade}" />
+										</p:column>
+										
+										<p:column headerText="Destino" style="width:40%" >
+											<h:outputText value="#{p.destinoProdutoSaida.des_descricao}" />
+										</p:column>
+										
+										<p:column headerText="Remover" style="width:10%">
+											<center>
+												<p:commandButton actionListener="#{estoqueSaidaController.removeProduto(p)}"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update=":listaProduto" process="@this"/>
+											</center>
+										</p:column>
+										
+									</p:dataTable>
+								</div>
+							</div>	
+			
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{estoqueSaidaController.fecharSaida}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div class="modal" id="myAlterar" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharAlterar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Alterar Baixa de Produtos</h4>
+					</div>
+					<h:form prependId="false" id="formAlterar">
+						<p:growl showDetail="false" redisplay="true" id="teste2"/>
+						<p:tooltip />
+						<div class="modal-body">
+							<h:panelGroup id="adicionaProduto2">
+							<div class="row">
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Data" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											value="#{estoqueSaidaController.estoqueSaida.ets_data}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+									</div>
+								</div>
+
+								<div class="col-md-8 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Produto (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueSaidaController.estoqueSaida.estoque}"
+											completeMethod="#{estoqueSaidaController.buscaProduto}"
+											var="f" itemLabel="#{f.est_produto}" minQueryLength="3"
+											maxResults="5" itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{estoqueSaidaController.results}" />
+
+											<p:column headerText="Produto">
+												<h:outputText value="#{f.est_produto}" />
+											</p:column>
+
+										</p:autoComplete>
+									</div>
+								</div>
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Quantidade"/>
+										<p:inputNumber style="width:100%" pt:data-tooltip="Quantidade de Saída" value="#{estoqueSaidaController.estoqueSaida.ets_quantidade}"/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Destino da Saída (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueSaidaController.estoqueSaida.destinoProdutoSaida}"
+											completeMethod="#{estoqueSaidaController.buscaDestinoSaida}"
+											var="f" itemLabel="#{f.des_descricao}" minQueryLength="3"
+											maxResults="5" itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter" list="#{estoqueSaidaController.resultsDestinoSaida}" />
+
+											<p:column headerText="Produto">
+												<h:outputText value="#{f.des_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+									</div>
+								</div>
+								</div>
+							
+							</h:panelGroup>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{estoqueSaidaController.alterarSaida}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharAlterar')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+		
+		
+	</ui:define>
+</ui:composition>

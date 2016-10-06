@@ -3,8 +3,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui" template="/template.xhtml">
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/template.xhtml">
 
 	<ui:define name="conteudo">
 		<!-- page content -->
@@ -36,8 +36,9 @@
 
 									<p:commandButton class="btn btn-primary"
 										actionListener="#{estoqueEntradaController.limpar}"
-										pt:data-toggle="modal" pt:data-target="#myModal" update="formIncluir"
-										pt:data-backdrop="static" value="Adicionar Novo" />
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										update="formIncluir" pt:data-backdrop="static"
+										value="Adicionar Novo" />
 								</h:form>
 							</div>
 						</div>
@@ -109,7 +110,7 @@
 											filterBy="#{p.com_valorTotal}" sortBy="#{p.com_valorTotal}"
 											style="width:10%" filterStyle="width:95%">
 											<h:outputText value="#{p.com_valorTotal}">
-											<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
 													type="currency" />
 											</h:outputText>
 										</p:column>
@@ -192,35 +193,37 @@
 							Entrada</h4>
 					</div>
 					<h:form prependId="false" id="formIncluir">
-						<p:growl showDetail="false" redisplay="true" id="teste"/>
+						<p:growl showDetail="false" redisplay="true" id="teste" />
 						<p:tooltip />
 						<div class="modal-body">
 
 							<div class="row">
-							
+
 								<div class="col-md-2 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label"
-											value="Data de Entrada"/>
-										<p:inputMask styleClass="form-control"
-											mask="99/99/9999" readonly="true"
+											value="Data de Entrada" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											readonly="true"
 											value="#{estoqueEntradaController.compra.com_data}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
 								</div>
-							
+
 								<div class="col-md-8 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Fornecedor (Digite o nome para buscar)" />
-										<p:autoComplete  pt:data-tooltip="Digite o nome para buscar"
+										<p:outputLabel styleClass="control-label"
+											value="Fornecedor (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
 											value="#{estoqueEntradaController.compra.fornecedor}"
-											completeMethod="#{estoqueEntradaController.buscaFornecedor}" 
-											var="f" itemLabel="#{f.fun_nome}" minQueryLength="3" maxResults="5"
-											itemValue="#{f}" forceSelection="true">
-											
-											<o:converter converterId="omnifaces.ListConverter" list="#{estoqueEntradaController.resultsFornecedor}"/>
-											
+											completeMethod="#{estoqueEntradaController.buscaFornecedor}"
+											var="f" itemLabel="#{f.fun_nome}" minQueryLength="3"
+											maxResults="5" itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{estoqueEntradaController.resultsFornecedor}" />
+
 											<p:column headerText="Código">
 												<h:outputText value="#{f.fun_codigo}" />
 											</p:column>
@@ -228,119 +231,134 @@
 											<p:column headerText="Nome">
 												<h:outputText value="#{f.fun_nome}" />
 											</p:column>
-											
+
 											<p:column headerText="Telefone">
 												<h:outputText value="#{f.fun_telefone}" />
 											</p:column>
 										</p:autoComplete>
-										
+
 									</div>
 								</div>
-								
+
 								<div class="col-md-2 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Nota Fiscal"/>
-										<p:inputText styleClass="form-control" value="#{estoqueEntradaController.compra.com_nf}"/>
+										<p:outputLabel styleClass="control-label" value="Nota Fiscal" />
+										<p:inputText styleClass="form-control"
+											value="#{estoqueEntradaController.compra.com_nf}" />
 									</div>
 								</div>
-								
+
 							</div>
-							
+
 							<div class="row">
-							
+
 								<div class="col-md-2 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label"
-											value="Data da Compra"/>
-										<p:inputMask styleClass="form-control" mask="99/99/9999" value="#{estoqueEntradaController.compra.com_dataCompra}">
+											value="Data da Compra" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											value="#{estoqueEntradaController.compra.com_dataCompra}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
 								</div>
-								
+
 								<div class="col-md-2 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label"
-											value="Data de Vencimento"/>
-										<p:inputMask styleClass="form-control" mask="99/99/9999" value="#{estoqueEntradaController.compra.com_dataVencimento}">
+											value="Data de Vencimento" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											value="#{estoqueEntradaController.compra.com_dataVencimento}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
 								</div>
-								
+
 								<div class="col-md-8 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Observação da Nota"/>
-										<p:inputText styleClass="form-control" value="#{estoqueEntradaController.compra.com_obs}"/>
+										<p:outputLabel styleClass="control-label"
+											value="Observação da Nota" />
+										<p:inputText styleClass="form-control"
+											value="#{estoqueEntradaController.compra.com_obs}" />
 									</div>
 								</div>
 							</div>
-						
+
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
-									<div class="alert alert-info" role="alert">ADICIONE OS PRODUTOS DA NOTA ABAIXO</div>
+									<div class="alert alert-info" role="alert">ADICIONE OS
+										PRODUTOS DA NOTA ABAIXO</div>
 								</div>
 							</div>
-							
+
 							<h:panelGroup id="adicionaProduto">
-							
-							<div class="row">
-								<div class="col-md-12 col-sm-12 col-xs-12">
-									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Produto (Digite o nome para buscar)" />
-										<p:autoComplete  pt:data-tooltip="Digite o nome para buscar"  
-											value="#{estoqueEntradaController.estoqueEntrada.estoque}" forceSelection="true"
-											completeMethod="#{estoqueEntradaController.buscaProduto}" 
-											var="f" itemLabel="#{f.est_produto}" 
-											itemValue="#{f}" minQueryLength="3" maxResults="5" > 
-											
-											<o:converter converterId="omnifaces.ListConverter" list="#{estoqueEntradaController.results}"/>
-											
-											<p:column headerText="Produto">
-												<h:outputText value="#{f.est_produto}" />
-											</p:column>
-											
-										</p:autoComplete>
-										
+
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Produto (Digite o nome para buscar)" />
+											<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+												value="#{estoqueEntradaController.estoqueEntrada.estoque}"
+												forceSelection="true"
+												completeMethod="#{estoqueEntradaController.buscaProduto}"
+												var="f" itemLabel="#{f.est_produto}" itemValue="#{f}"
+												minQueryLength="3" maxResults="5">
+
+												<o:converter converterId="omnifaces.ListConverter"
+													list="#{estoqueEntradaController.results}" />
+
+												<p:column headerText="Produto">
+													<h:outputText value="#{f.est_produto}" />
+												</p:column>
+
+											</p:autoComplete>
+
+										</div>
 									</div>
+
 								</div>
-								
-							</div>
-							
-							<div class="row">
-								<div class="col-md-3 col-sm-12 col-xs-12">
-									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Valor de Custo"/>
-										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
-											pt:data-tooltip="Valor de Custo" value="#{estoqueEntradaController.estoqueEntrada.ete_valor}">
-										</p:inputNumber>
+
+								<div class="row">
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor de Custo" />
+											<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor de Custo"
+												value="#{estoqueEntradaController.estoqueEntrada.ete_valor}">
+											</p:inputNumber>
+										</div>
 									</div>
-								</div>
-								
-								<div class="col-md-3 col-sm-12 col-xs-12">
-									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Quantidade"/>
-										<p:inputNumber style="width:100%" pt:data-tooltip="Quantidade de Entrada" value="#{estoqueEntradaController.estoqueEntrada.ete_quantidade}">
-										</p:inputNumber>
+
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Quantidade" />
+											<p:inputNumber style="width:100%"
+												pt:data-tooltip="Quantidade de Entrada"
+												value="#{estoqueEntradaController.estoqueEntrada.ete_quantidade}">
+											</p:inputNumber>
+										</div>
 									</div>
-								</div>
-								
-								<div class="col-md-6 col-sm-12 col-xs-12">
-									<div class="form-group" style="margin-top:5%">
-										<p:commandButton value="Adicionar"
-										actionListener="#{estoqueEntradaController.adicionaProduto}"
-										styleClass="btn btn-primary" update=":adicionaProduto :listaProduto :valorTotal :teste"/>
+
+									<div class="col-md-6 col-sm-12 col-xs-12">
+										<div class="form-group" style="margin-top: 5%">
+											<p:commandButton value="Adicionar"
+												actionListener="#{estoqueEntradaController.adicionaProduto}"
+												styleClass="btn btn-primary"
+												update=":adicionaProduto :listaProduto :valorTotal :teste" />
+										</div>
 									</div>
+
 								</div>
-								
-							</div>	
 							</h:panelGroup>
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
-									<div class="alert alert-success" role="alert">LISTA COM OS PRODUTOS ADICIONADOS NA NOTA</div>
+									<div class="alert alert-success" role="alert">LISTA COM
+										OS PRODUTOS ADICIONADOS NA NOTA</div>
 								</div>
-							</div>	
-							
+							</div>
+
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
 									<p:dataTable value="#{estoqueEntradaController.listaProduto}"
@@ -353,68 +371,86 @@
 										styleClass="table table-striped table-bordered"
 										style="width:100%" responsive="true"
 										emptyMessage="Nenhum Produto Adicionado na Nota">
-										
+
 										<p:column headerText="Produto"
 											filterBy="#{p.estoque.est_produto}"
 											sortBy="#{p.estoque.est_produto}" style="width:65%"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.estoque.est_produto}" />
 										</p:column>
-										
-										<p:column headerText="Quantidade" style="width:10%" >
+
+										<p:column headerText="Quantidade" style="width:10%">
 											<h:outputText value="#{p.ete_quantidade}" />
 										</p:column>
-										
+
 										<p:column headerText="Valor de Custo" style="width:15%">
 											<h:outputText value="#{p.ete_valor}">
 												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
 													type="currency" />
 											</h:outputText>
 										</p:column>
-										
+
 										<p:column headerText="Remover" style="width:10%">
 											<center>
-												<p:commandButton actionListener="#{estoqueEntradaController.removeProduto(p)}"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" update=":listaProduto :valorTotal" process="@this"/>
+												<p:commandButton
+													actionListener="#{estoqueEntradaController.removeProduto(p)}"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o"
+													update=":listaProduto :valorTotal" process="@this" />
 											</center>
 										</p:column>
-										
+
 									</p:dataTable>
 								</div>
-							</div>	
-							
+							</div>
+
 							<div class="row">
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Valor de Frete"/>
-										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_frete}">
-											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorFrete}" render=":valorTotal" execute="@this"/>
-										</p:inputNumber>
-									</div>
-								</div>	
-								<div class="col-md-3 col-sm-12 col-xs-12">
-									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Valor de Desconto"/>
-										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
-											pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_desconto}">
-											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorDesconto}" render=":valorTotal"  execute="@this"/>
+										<p:outputLabel styleClass="control-label"
+											value="Valor de Frete" />
+										<p:inputNumber decimalPlaces="2" symbol="R$"
+											style="width:100%" pt:data-tooltip="Valor de Frete"
+											value="#{estoqueEntradaController.compra.com_frete}">
+											<f:ajax event="blur"
+												listener="#{estoqueEntradaController.atualizaValorFrete}"
+												render=":valorTotal" execute="@this" />
 										</p:inputNumber>
 									</div>
 								</div>
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Valor de Juros"/>
-										<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
-											pt:data-tooltip="Valor de Frete" value="#{estoqueEntradaController.compra.com_juros}">
-											<f:ajax event="blur" listener="#{estoqueEntradaController.atualizaValorJuro}" render=":valorTotal"  execute="@this"/>
+										<p:outputLabel styleClass="control-label"
+											value="Valor de Desconto" />
+										<p:inputNumber decimalPlaces="2" symbol="R$"
+											style="width:100%" pt:data-tooltip="Valor de Frete"
+											value="#{estoqueEntradaController.compra.com_desconto}">
+											<f:ajax event="blur"
+												listener="#{estoqueEntradaController.atualizaValorDesconto}"
+												render=":valorTotal" execute="@this" />
 										</p:inputNumber>
 									</div>
 								</div>
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="Valor Total"/>
-										<p:inputNumber readonly="true" decimalPlaces="2" symbol="R$" style="width:100%;background-color:#EEE !important"
-											pt:data-tooltip="Valor Total" value="#{estoqueEntradaController.compra.com_valorTotal}" id="valorTotal">
+										<p:outputLabel styleClass="control-label"
+											value="Valor de Juros" />
+										<p:inputNumber decimalPlaces="2" symbol="R$"
+											style="width:100%" pt:data-tooltip="Valor de Frete"
+											value="#{estoqueEntradaController.compra.com_juros}">
+											<f:ajax event="blur"
+												listener="#{estoqueEntradaController.atualizaValorJuro}"
+												render=":valorTotal" execute="@this" />
+										</p:inputNumber>
+									</div>
+								</div>
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Valor Total" />
+										<p:inputNumber readonly="true" decimalPlaces="2" symbol="R$"
+											style="width:100%;background-color:#EEE !important"
+											pt:data-tooltip="Valor Total"
+											value="#{estoqueEntradaController.compra.com_valorTotal}"
+											id="valorTotal">
 										</p:inputNumber>
 									</div>
 								</div>
@@ -423,13 +459,159 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{estoqueEntradaController.fecharNota}"
-								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="@form lista" />
+								styleClass="btn btn-primary" update="@form lista formTitulo"
+								pt:data-toggle="modal" pt:data-target="#geraTitulo"
+								pt:data-backdrop="static" />
 						</div>
 					</h:form>
 				</div>
 			</div>
 		</div>
+
+		<div class="modal" id="geraTitulo" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true"></span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Gera Título</h4>
+					</div>
+					<h:form prependId="false" id="formTitulo"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Forma de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueEntradaController.titulo.formaPagamento}"
+											forceSelection="true"
+											completeMethod="#{estoqueEntradaController.buscaFormaPagamento}"
+											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{estoqueEntradaController.resultsFormaPagamento}" />
+
+											<p:column headerText="Formas de Pagamento">
+												<h:outputText value="#{f.for_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+
+								<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Condição de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{estoqueEntradaController.titulo.condicaoPagamento}"
+											forceSelection="true"
+											completeMethod="#{estoqueEntradaController.buscaCondicaoPagamento}"
+											var="f" itemLabel="#{f.con_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{estoqueEntradaController.resultsPagamento}" />
+
+											<p:column headerText="Condições de Pagamento">
+												<h:outputText value="#{f.con_descricao}" />
+											</p:column>
+
+											<p:column headerText="Número de Parcelas">
+												<h:outputText value="#{f.con_numeroParcela}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Valor Total"/>
+										<p:inputText readonly="true" styleClass="form-control" pt:data-tooltip="Valor Total" style="background-color:#EEE !important"
+											 value="#{estoqueEntradaController.compra.com_valorTotal}">
+											<f:convertNumber currencySymbol="R$" type="currency"/>
+										</p:inputText>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+								
+								<p:commandButton value="Gerar Parcela" actionListener="#{estoqueEntradaController.geraParcelas}" styleClass="btn btn-warning" update="listaTitulo"/>
+								
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="alert alert-success" role="alert">LISTA COM AS PARCELAS GERADAS </div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+								
+								<p:dataTable value="#{estoqueEntradaController.listaTitulo}"
+										id="listaTitulo" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15" paginatorPosition="top"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhuma Parcela Gerada">
+
+										<p:column headerText="Número da Parcela" style="width:20%">
+											<h:outputText value="#{p.tit_parcela}" />
+										</p:column>
+				
+										<p:column headerText="Valor"  style="width:20%">
+											<h:outputText value="#{p.tit_valor}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Data de Vencimento" style="width:20%">
+											<p:inputMask styleClass="form-control"
+												requiredMessage="Digite a data de vencimento" mask="99/99/9999"
+												value="#{p.tit_vencimento}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputMask>
+										</p:column>
+
+									</p:dataTable>
+								
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton value="Fechar Entrada"
+								onstart="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{estoqueEntradaController.fecharNota}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
 	</ui:define>
 </ui:composition>

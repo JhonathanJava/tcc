@@ -21,8 +21,6 @@ public class FormaPagamentoController implements Serializable{
 	
 	private FormaPagamento formaPagamento;
 	
-	private FormaPagamento formaPagamentoEditar;
-	
 	@Inject
 	private FormaPagamentoDAO dao;
 	
@@ -31,22 +29,16 @@ public class FormaPagamentoController implements Serializable{
 	@PostConstruct
 	 void init() {
 		this.formaPagamento = new FormaPagamento();
-		this.formaPagamentoEditar = new FormaPagamento();
 		this.formaPagamentos = dao.listaTodos();
 	}
 	
 	public void buscaPorId(Long id){
 		formaPagamento = dao.buscaPorId(id);
-		System.out.println("ID = "+formaPagamento.toString());
-	}
-	
-	public void buscaEditarPorId(Long id){
-		formaPagamentoEditar = dao.buscaPorId(id);
-		System.out.println("ID = "+formaPagamentoEditar.toString());
 	}
 	
 	@Transacional
 	public String gravar() {
+		this.formaPagamento.setFor_status("A");
 		if(this.formaPagamento.getFor_codigo() != null){
 			this.dao.atualiza(this.formaPagamento);
 			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
@@ -60,21 +52,11 @@ public class FormaPagamentoController implements Serializable{
 	}
 	
 	@Transacional
-	public String editar(){
-		this.dao.atualiza(this.formaPagamentoEditar);
-		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		this.formaPagamentoEditar = new FormaPagamento();
+	public void inativarFormaPagamento(){
+		this.formaPagamento.setFor_status("I");
+		this.dao.atualiza(formaPagamento);
 		init();
-		this.formaPagamentos = dao.listaTodos();
-		return null;
-	}
-	
-	@Transacional
-	public void remover(){
-		System.out.println("Chamando Remover()");
-		this.dao.remove(formaPagamentoEditar);
-		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+		FacesUtil.addSuccessMessage("Registro Inativado Com Sucesso!!");
 	}
 	
 	public void limpar(){
@@ -87,14 +69,6 @@ public class FormaPagamentoController implements Serializable{
 
 	public void setFormaPagamento(FormaPagamento formaPagamento) {
 		this.formaPagamento = formaPagamento;
-	}
-
-	public FormaPagamento getFormaPagamentoEditar() {
-		return formaPagamentoEditar;
-	}
-
-	public void setFormaPagamentoEditar(FormaPagamento formaPagamentoEditar) {
-		this.formaPagamentoEditar = formaPagamentoEditar;
 	}
 
 	public List<FormaPagamento> getFormaPagamentos() {
