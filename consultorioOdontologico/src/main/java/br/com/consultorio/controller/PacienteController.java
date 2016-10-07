@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -85,7 +86,7 @@ public class PacienteController implements Serializable{
 	
 	@Transacional
 	public String salvar(){
-		System.out.println("ToString = "+ this.paciente.toString());
+		this.paciente.setPac_status("A");
 		if(this.paciente.getPlano() == null){
 			this.planosDAO.adiciona(this.paciente.getPlano());
 		}else{
@@ -109,11 +110,15 @@ public class PacienteController implements Serializable{
 	
 	@Transacional
 	public void excluirRegistro(){
-		System.out.println("Paciente: "+paciente.toString());
-		this.dao.remove(paciente);
-		listaTodos();
-		this.paciente = new Paciente();
-		FacesUtil.addSuccessMessage("Excluído Com Sucesso!!");
+		if(paciente.getPac_status().equals("A")){
+			paciente.setPac_status("I");
+			paciente.setPac_dataInativacao(Calendar.getInstance().getTime());
+		}else{
+			paciente.setPac_status("A");
+		}
+		this.dao.atualiza(paciente);
+		init();
+		FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
 	}
 	
 	public void buscaPorId(Long id){

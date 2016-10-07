@@ -134,6 +134,7 @@ public class EstoqueEntradaController implements Serializable{
 			
 			for (Titulo t : listaTitulo) {
 				t.setCompra(this.compra);
+				t.setTit_favorecido(this.compra.getFornecedor().getFun_nome());
 				System.out.println(t);
 				tituloDAO.adiciona(t);
 			}

@@ -1,0 +1,706 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Títulos á Pagar</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<h:form>
+
+									<p:commandButton class="btn btn-primary"
+										actionListener="#{pagamentoController.limparTitulo}"
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-backdrop="static" value="Adicionar Novo" />
+
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Listagem de Títulos á Pagar</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+
+								<h:form prependId="false">
+
+									<p:dataTable value="#{pagamentoController.titulos}" id="lista"
+										rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.tit_codigo}"
+											sortBy="#{p.tit_codigo}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.tit_codigo}" />
+										</p:column>
+
+										<p:column headerText="Favorecido"
+											filterBy="#{p.fornecedor.fun_nome}"
+											sortBy="#{p.fornecedor.fun_nome}" style="width:50%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.tit_favorecido}" />
+										</p:column>
+
+										<p:column headerText="Data Vencimento"
+											sortBy="#{p.tit_tit_vencimento}" style="width:20%">
+											<h:outputText value="#{p.tit_vencimento}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Valor" sortBy="#{p.tit_valor}"
+											style="width:10%">
+											<h:outputText value="#{p.tit_valor}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</p:column>
+										
+										<p:column headerText="Parcela" filterBy="#{p.tit_codigo}"
+											sortBy="#{p.tit_parcela}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.tit_parcela} / #{p.condicaoPagamento.con_numeroParcela}" />
+										</p:column>
+
+										<p:column headerText="Status" filterBy="#{p.tit_status}"
+											sortBy="#{p.tit_status}" style="width:20%"
+											filterStyle="width:95%">
+											<h:outputText value="Pago" rendered="#{p.tit_status.equals(Pago)}"
+												styleClass="green" />
+											<h:outputText value="Aguardando"
+												rendered="#{p.tit_status eq 'Aguardando'}" styleClass="red" />
+											<h:outputText value="Aguardando"
+												rendered="#{p.tit_status eq 'Inativo'}" styleClass="red" />
+										</p:column>
+
+										<p:column headerText="Editar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													pt:data-target="#myModal" pt:data-toggle="modal"
+													update="formIncluir" styleClass="btn btn-info"
+													icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+										<p:column headerText="Pagar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													pt:data-target="#pagamento" pt:data-toggle="modal"
+													update="formPagar" styleClass="btn btn-warning"
+													icon="fa fa-fw fa-money" />
+											</center>
+										</p:column>
+
+
+										<p:column headerText="Inativar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Button trigger modal -->
+
+		<div class="modal" id="pagamento" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharPagamento">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Pagamento Título</h4>
+					</div>
+					<h:form prependId="false" id="formPagar"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+
+								<div class="row">
+									<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Data Vencimento" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999" readonly="true"
+											value="#{pagamentoController.titulo.tit_vencimento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+									</div>
+								</div>
+									<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Título" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true" 
+												styleClass="readonly" pt:data-tooltip="Valor do Título"
+												value="#{pagamentoController.titulo.tit_valor}"
+												required="true" requiredMessage="Valor do Título">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Juros" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" pt:data-tooltip="Valor do Juros"
+												value="#{pagamentoController.caixaPagamento.cap_juro}" rendered="#{pagamentoController.caixaPagamento.cap_juro eq 0}">
+												<f:ajax event="blur" execute="@this" render="@form" listener="#{pagamentoController.calcular}"/>
+											</p:inputNumber>
+											<p:inputNumber decimalPlaces="2" symbol="R$" pt:data-tooltip="Valor do Juros" readonly="true" styleClass="readonly"
+												value="#{pagamentoController.caixaPagamento.cap_juro}" rendered="#{pagamentoController.caixaPagamento.cap_juro ne 0}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-12 col-xs-12"> 
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Desconto" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor do Desconto"
+												value="#{pagamentoController.caixaPagamento.cap_desconto}" rendered="#{pagamentoController.caixaPagamento.cap_desconto eq 0}">
+												<f:ajax event="blur" execute="@this" render="@form" listener="#{pagamentoController.calcular}"/>
+											</p:inputNumber>
+											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor do Desconto" readonly="true" styleClass="readonly"
+												value="#{pagamentoController.caixaPagamento.cap_desconto}" rendered="#{pagamentoController.caixaPagamento.cap_desconto ne 0}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor Total" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true" pt:data-tooltip="Valor Total"
+												styleClass="readonly" value="#{pagamentoController.txtValorTotal}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor Restante" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true"  pt:data-tooltip="Valor Restante"
+												styleClass="readonly"	value="#{pagamentoController.txtValorRestante}" id="valorRest">
+											</p:inputNumber>
+										</div>
+									</div>
+								</div>
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="alert alert-success" role="alert">ABAIXO INSIRA AS FORMA DE PAGAMENTO E OS VALORES PAGO</div>
+								</div>
+							</div>
+							<h:panelGroup id="caixa">
+							<div class="row">
+								<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Forma de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{pagamentoController.caixaPagamento.formaPagamento}"
+											forceSelection="true"
+											completeMethod="#{pagamentoController.buscaFormaPagamento}"
+											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{pagamentoController.resultsFormaPagamento}" />
+
+											<p:column headerText="Formas de Pagamento">
+												<h:outputText value="#{f.for_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Data Pagamento" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999" required="true" requiredMessage="Digite a data para adicionar"
+											value="#{pagamentoController.caixaPagamento.cap_data}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+									</div>
+								</div>
+								<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor Pago" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" required="true" requiredMessage="Digite o valor para adicionar"
+												style="width:100%" pt:data-tooltip="Valor Pago"
+												value="#{pagamentoController.caixaPagamento.cap_valor}">
+											</p:inputNumber>
+										</div>
+									</div>
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									<div class="form-group" style="margin-top:10%">
+										<p:commandButton value="Adicionar" icon="fa fa-fw fa-plus"
+										styleClass="btn btn-primary" actionListener="#{pagamentoController.adicionaPagamento}" process="caixa" update="caixa valorRest"/>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+							<p:dataTable value="#{pagamentoController.pagamentos}" id="lista3"
+										rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15" paginatorPosition="top"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										
+										<p:column headerText="Data"
+											sortBy="#{p.cap_data}" style="width:20%">
+											<h:outputText value="#{p.cap_data}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										
+										<p:column headerText="Forma Pagamento" style="width:50%">
+											<h:outputText value="#{p.formaPagamento.for_descricao}" />
+										</p:column>
+
+										<p:column headerText="Valor" sortBy="#{p.cap_valor}"
+											style="width:20%">
+											<h:outputText value="#{p.cap_valor}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</p:column>
+										
+										<p:column headerText="Remover" style="width:10%">
+											<center>
+												<p:commandButton  update="caixa valorRest"
+													actionListener="#{pagamentoController.removerPagamento(p)}"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+
+									</p:dataTable>
+						</div>
+						
+						</div>
+						</h:panelGroup>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Pagar"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharPagamento')"
+								actionListener="#{pagamentoController.pagar}" process="@form"
+								styleClass="btn btn-success" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Inativar Título</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">Você realmente deseja inativar este
+								registro?</p>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Excluir"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{pagamentoController.inativarSelecionados}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Adicionar Titulo</h4>
+					</div>
+					<h:form prependId="false" id="formIncluir">
+						<p:growl showDetail="false" redisplay="true" id="growl"/>
+						<p:tooltip />
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Tipo de Favorecido" />
+										<h:selectOneRadio label="Favorecido"
+											value="#{pagamentoController.txtTipoFavorecido}">
+											<f:selectItem itemLabel="Paciente" itemValue="P" />
+											<f:selectItem itemLabel="Fornecedor" itemValue="F" />
+											<f:selectItem itemLabel="Outro" itemValue="O" />
+											<f:ajax event="change" render="grupoFavorecido"
+												execute="@this" />
+										</h:selectOneRadio>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<h:panelGroup id="grupoFavorecido">
+									<ui:fragment
+										rendered="#{pagamentoController.txtTipoFavorecido eq 'O'}">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<p:outputLabel styleClass="control-label" value="Favorecido" />
+												<p:inputText styleClass="form-control"
+													pt:data-tooltip="Nome do Favorecidof"
+													value="#{pagamentoController.titulo.tit_favorecido}"
+													required="true" requiredMessage="Digite Nome do Favorecido" />
+											</div>
+										</div>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{pagamentoController.txtTipoFavorecido eq 'P'}">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<p:outputLabel styleClass="control-label"
+													value="Paciente (Digite o nome para buscar)" />
+												<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+													value="#{pagamentoController.titulo.paciente}"
+													completeMethod="#{pagamentoController.buscaPaciente}"
+													var="f" itemLabel="#{f.pac_nome}" minQueryLength="3"
+													maxResults="5" itemValue="#{f}" forceSelection="true">
+
+													<o:converter converterId="omnifaces.ListConverter"
+														list="#{pagamentoController.resultsPaciente}" />
+
+													<p:column headerText="Código">
+														<h:outputText value="#{f.pac_codigo}" />
+													</p:column>
+
+													<p:column headerText="Nome">
+														<h:outputText value="#{f.pac_nome}" />
+													</p:column>
+
+													<p:column headerText="Telefone">
+														<h:outputText value="#{f.pac_telefone}" />
+													</p:column>
+												</p:autoComplete>
+											</div>
+										</div>
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{pagamentoController.txtTipoFavorecido eq 'F'}">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+												<p:outputLabel styleClass="control-label"
+													value="Fornecedor (Digite o nome para buscar)" />
+												<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+													value="#{pagamentoController.titulo.fornecedor}"
+													completeMethod="#{pagamentoController.buscaFornecedor}"
+													var="f" itemLabel="#{f.fun_nome}" minQueryLength="3"
+													maxResults="5" itemValue="#{f}" forceSelection="true">
+
+													<o:converter converterId="omnifaces.ListConverter"
+														list="#{pagamentoController.resultsFornecedor}" />
+
+													<p:column headerText="Código">
+														<h:outputText value="#{f.fun_codigo}" />
+													</p:column>
+
+													<p:column headerText="Nome">
+														<h:outputText value="#{f.fun_nome}" />
+													</p:column>
+
+													<p:column headerText="Telefone">
+														<h:outputText value="#{f.fun_telefone}" />
+													</p:column>
+												</p:autoComplete>
+											</div>
+										</div>
+									</ui:fragment>
+								</h:panelGroup>
+
+							</div>
+
+							<h:panelGroup id="valores">
+								<div class="row">
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Data do Título" />
+											<p:inputMask styleClass="form-control" mask="99/99/9999"
+												value="#{pagamentoController.titulo.tit_data}"
+												required="true"
+												requiredMessage="A Data de vencimento deve ser informado">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputMask>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Título" />
+											<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor do Título"
+												value="#{pagamentoController.titulo.tit_valor}"
+												required="true" requiredMessage="Valor do Título">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Juros" />
+											<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor do Juros"
+												value="#{pagamentoController.titulo.tit_juros}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor do Desconto" />
+											<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor do Desconto"
+												value="#{pagamentoController.titulo.tit_desconto}">
+											</p:inputNumber>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+							<div class="row">
+								<div class="col-md-2 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Data Vencimento" />
+										<p:inputMask styleClass="form-control" mask="99/99/9999"
+											value="#{pagamentoController.titulo.tit_vencimento}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+										</p:inputMask>
+									</div>
+								</div>
+								<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Forma de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{pagamentoController.titulo.formaPagamento}"
+											forceSelection="true"
+											completeMethod="#{pagamentoController.buscaFormaPagamento}"
+											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{pagamentoController.resultsFormaPagamento}" />
+
+											<p:column headerText="Formas de Pagamento">
+												<h:outputText value="#{f.for_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+
+								<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Condição de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{pagamentoController.titulo.condicaoPagamento}"
+											forceSelection="true"
+											completeMethod="#{pagamentoController.buscaCondicaoPagamento}"
+											var="f" itemLabel="#{f.con_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{pagamentoController.resultsPagamento}" />
+
+											<p:column headerText="Condições de Pagamento">
+												<h:outputText value="#{f.con_descricao}" />
+											</p:column>
+
+											<p:column headerText="Número de Parcelas">
+												<h:outputText value="#{f.con_numeroParcela}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Observação do Título" />
+										<p:inputTextarea rows="2"
+											value="#{pagamentoController.titulo.tit_observacao}"
+											styleClass="form-control" />
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:commandButton value="Gerar Titulo"
+											actionListener="#{pagamentoController.geraTitulo}"
+											update="lista2 growl" styleClass="btn btn-primary"/>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+
+									<p:dataTable value="#{pagamentoController.parcelas}"
+										id="lista2" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true" editable="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Favorecido"
+											filterBy="#{p.tit_favorecido}" sortBy="#{p.tit_favorecido}"
+											style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.tit_favorecido}" />
+										</p:column>
+
+										<p:column headerText="Data Vencimento" sortBy="#{p.tit_tit_vencimento}" style="width:20%">
+												<p:inputMask styleClass="form-control" mask="99/99/9999"
+												value="#{p.tit_vencimento}"
+												required="true"
+												requiredMessage="A Data de vencimento deve ser informado">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputMask>
+										</p:column>
+
+										<p:column headerText="Valor" sortBy="#{p.tit_valor}"
+											style="width:10%">
+												<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor do Título"
+												value="#{p.tit_valor}"
+												required="true" requiredMessage="Valor do Título">
+											</p:inputNumber>
+										</p:column>
+										
+									</p:dataTable>
+
+								</div>
+							</div>
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{pagamentoController.gravar}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>
+</ui:composition>

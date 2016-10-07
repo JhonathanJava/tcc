@@ -25,11 +25,17 @@ public class Titulo implements Serializable{
 	private Long tit_codigo;
 	
 	@Column
-	private String tit_status = "A";// A - Ativo , I - Inativo
+	private String tit_status = "Aguardando";// A - Ativo , I - Inativo
 	
 	@Column
 	private BigDecimal tit_valor;
 	
+	@Column
+	private BigDecimal tit_juros = BigDecimal.ZERO;
+	
+	@Column
+	private BigDecimal tit_desconto = BigDecimal.ZERO;
+
 	@Column
 	private Integer tit_parcela;
 	
@@ -42,9 +48,15 @@ public class Titulo implements Serializable{
 	@Column
 	private Date tit_pagamento;
 	
+	@Column String tit_favorecido;
+	
 	@Column
 	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar tit_data = Calendar.getInstance();
+	private Date tit_data = new Date();
+	
+	@Column
+	@Temporal(TemporalType.TIMESTAMP)
+	private Calendar tit_dtInativacao;
 	
 	@ManyToOne
 	@JoinColumn(name="usu_codigo")
@@ -73,6 +85,16 @@ public class Titulo implements Serializable{
 	@Column
 	private String tit_tipo; // C - Credito - D - Debito
 
+	@Column String tit_observacao;
+	
+	public String getTit_favorecido() {
+		return tit_favorecido;
+	}
+	
+	public void setTit_favorecido(String tit_favorecido) {
+		this.tit_favorecido = tit_favorecido;
+	}
+	
 	public Long getTit_codigo() {
 		return tit_codigo;
 	}
@@ -113,11 +135,11 @@ public class Titulo implements Serializable{
 		this.tit_pago = tit_pago;
 	}
 
-	public Calendar getTit_data() {
+	public Date getTit_data() {
 		return tit_data;
 	}
 
-	public void setTit_data(Calendar tit_data) {
+	public void setTit_data(Date tit_data) {
 		this.tit_data = tit_data;
 	}
 	
@@ -191,6 +213,38 @@ public class Titulo implements Serializable{
 
 	public void setTit_pagamento(Date tit_pagamento) {
 		this.tit_pagamento = tit_pagamento;
+	}
+	
+	public Calendar getTit_dtInativacao() {
+		return tit_dtInativacao;
+	}
+	
+	public void setTit_dtInativacao(Calendar tit_dtInativacao) {
+		this.tit_dtInativacao = tit_dtInativacao;
+	}
+
+	public String getTit_observacao() {
+		return tit_observacao;
+	}
+	
+	public void setTit_observacao(String tit_observacao) {
+		this.tit_observacao = tit_observacao;
+	}
+	
+	public BigDecimal getTit_juros() {
+		return tit_juros;
+	}
+
+	public void setTit_juros(BigDecimal tit_juros) {
+		this.tit_juros = tit_juros;
+	}
+
+	public BigDecimal getTit_desconto() {
+		return tit_desconto;
+	}
+
+	public void setTit_desconto(BigDecimal tit_desconto) {
+		this.tit_desconto = tit_desconto;
 	}
 
 	@Override

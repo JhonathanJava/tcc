@@ -86,6 +86,23 @@ public class PacienteDAO implements Serializable{
 		return pacientes;
 	}
 
-
+	public List<Paciente> buscarPorNome(String consulta){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Paciente> query = builder.createQuery(Paciente.class);
+		Root<Paciente> from = query.from(Paciente.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, 
+		        builder.like(from.<String>get("pac_nome"), "%"+consulta+"%"));
+		}
+		
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("pac_status"), "A"));
+		
+		TypedQuery<Paciente> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("pac_nome"))));
+		List<Paciente> pacientes = typedQuery.getResultList();
+		
+		return pacientes;
+	}
 
 }

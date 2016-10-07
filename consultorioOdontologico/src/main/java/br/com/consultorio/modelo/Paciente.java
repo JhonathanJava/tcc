@@ -49,6 +49,9 @@ public class Paciente implements Serializable{
 	private Date pac_dataNascimentoResponsavel;
 	
 	@Column
+	private Date pac_dataInativacao;
+	
+	@Column
 	@Email(message="Digite um e-mail válido no formato: email@email.com")
 	private String pac_email;
 	
@@ -89,7 +92,7 @@ public class Paciente implements Serializable{
 	private String pac_cpfResponsavel;
 	
 	@Column
-	private Character pac_status;
+	private String pac_status = "A";
 	
 	@JoinColumn(name = "pla_codigo")
 	@ManyToOne
@@ -255,11 +258,11 @@ public class Paciente implements Serializable{
 		this.pac_cpfResponsavel = pac_cpfResponsavel;
 	}
 
-	public Character getPac_status() {
+	public String getPac_status() {
 		return pac_status;
 	}
 
-	public void setPac_status(Character pac_status) {
+	public void setPac_status(String pac_status) {
 		this.pac_status = pac_status;
 	}
 
@@ -277,6 +280,14 @@ public class Paciente implements Serializable{
 	
 	public void setPlano(Plano plano) {
 		this.plano = plano;
+	}
+	
+	public Date getPac_dataInativacao() {
+		return pac_dataInativacao;
+	}
+	
+	public void setPac_dataInativacao(Date pac_dataInativacao) {
+		this.pac_dataInativacao = pac_dataInativacao;
 	}
 	
 	@Override

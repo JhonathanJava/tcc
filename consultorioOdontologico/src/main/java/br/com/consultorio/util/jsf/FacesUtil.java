@@ -15,6 +15,7 @@ public class FacesUtil {
 		FacesContext.getCurrentInstance().addMessage(null, 
 				new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						message, message)); 
+		FacesContext.getCurrentInstance().validationFailed();
 	}
 	
 	public static void addWarnMessage(String message) {
