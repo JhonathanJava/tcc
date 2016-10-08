@@ -86,7 +86,7 @@ public class AnamneseController implements Serializable{
 
 	@Transacional
 	public String gravarModelo() {
-		System.out.println(modelo);
+		this.modelo.setMoa_status("A");
 		if(this.modelo.getMoa_codigo() != null){
 			this.modeloDAO.atualiza(this.modelo);
 			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
@@ -94,6 +94,7 @@ public class AnamneseController implements Serializable{
 			this.modeloDAO.adiciona(this.modelo);
 			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		}
+		this.modeloAnamneses = modeloDAO.listaTodos();
 		return null;
 	}
 	
@@ -113,13 +114,13 @@ public class AnamneseController implements Serializable{
 	
 	@Transacional
 	public void alterarStatus(){
-		if(this.anamnese.getAnm_status().equals("A")){
-			this.anamnese.setAnm_status("I");
-			this.anamnese.setAnm_dataInativacao(new Date());
+		if(this.modelo.getMoa_status().equals("A")){
+			this.modelo.setMoa_status("I");
+			this.modelo.setMoa_dataInativacao(new Date());
 		}else{
-			this.anamnese.setAnm_status("A");
+			this.modelo.setMoa_status("A");
 		}
-		this.dao.atualiza(anamnese);
+		this.modeloDAO.atualiza(modelo);
 		init();
 		FacesUtil.addSuccessMessage("Registro Status Alterado!!");
 	}

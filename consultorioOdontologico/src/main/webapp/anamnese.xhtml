@@ -90,7 +90,12 @@
 											filterStyle="width:95%">
 											<h:outputText value="#{p.moa_descricao}" />
 										</p:column>
-
+										
+										<p:column headerText="Status" filterBy="#{p.moa_status}" sortBy="#{p.moa_status}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="Ativo" rendered="#{p.moa_status eq 'A'}" styleClass="green"/>
+											<h:outputText value="Inativo" rendered="#{p.moa_status eq 'I'}" styleClass="red"/>
+										</p:column>
+										
 										<p:column headerText="Editar" style="width:10%">
 											<center>
 												<p:commandButton
@@ -143,9 +148,9 @@
 						<div class="modal-footer">
 							<p:commandButton type="button" value="Cancelar"
 								pt:data-dismiss="modal" styleClass="btn btn-primary" />
-							<p:commandButton value="Excluir"
+							<p:commandButton value="Inativar"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{usuarioController.alterarStatus}"
+								actionListener="#{anamneseController.alterarStatus}"
 								styleClass="btn btn-danger" update="@form lista" />
 						</div>
 
@@ -195,7 +200,7 @@
 									<div class="form-group" style="margin-top:15%;">
 										<p:commandButton value="Gravar"
 											actionListener="#{anamneseController.gravarModelo}"
-											styleClass="btn btn-primary" update="@form" />
+											styleClass="btn btn-primary" update="@form lista" />
 									</div>
 								</div>
 							</div>

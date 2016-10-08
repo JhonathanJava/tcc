@@ -1,14 +1,13 @@
 package br.com.consultorio.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class ModeloAnamnese implements Serializable{
@@ -21,6 +20,15 @@ public class ModeloAnamnese implements Serializable{
 	
 	@Column
 	private String moa_descricao;
+	
+	@Column
+	private String moa_status = "A";
+
+	@Column
+	private Date moa_dataInativacao;
+	
+	@Column 
+	private Date moa_data = new Date();
 	
 	public Long getMoa_codigo() {
 		return moa_codigo;
@@ -38,6 +46,29 @@ public class ModeloAnamnese implements Serializable{
 		this.moa_descricao = moa_descricao;
 	}
 
+	public String getMoa_status() {
+		return moa_status;
+	}
+
+	public void setMoa_status(String moa_status) {
+		this.moa_status = moa_status;
+	}
+
+	public Date getMoa_dataInativacao() {
+		return moa_dataInativacao;
+	}
+
+	public void setMoa_dataInativacao(Date moa_dataInativacao) {
+		this.moa_dataInativacao = moa_dataInativacao;
+	}
+
+	public Date getMoa_data() {
+		return moa_data;
+	}
+
+	public void setMoa_data(Date moa_data) {
+		this.moa_data = moa_data;
+	}
 
 	@Override
 	public String toString() {
