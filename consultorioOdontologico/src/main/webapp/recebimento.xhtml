@@ -15,7 +15,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Títulos á Pagar</h2>
+								<h2>Títulos á Receber</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -35,7 +35,7 @@
 								<h:form>
 
 									<p:commandButton class="btn btn-primary"
-										actionListener="#{pagamentoController.limparTitulo}"
+										actionListener="#{recebimentoController.limparTitulo}"
 										pt:data-toggle="modal" pt:data-target="#myModal"
 										pt:data-backdrop="static" value="Adicionar Novo" />
 
@@ -49,7 +49,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Listagem de Títulos á Pagar</h2>
+								<h2>Listagem de Títulos á Receber</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -69,7 +69,7 @@
 
 								<h:form prependId="false">
 
-									<p:dataTable value="#{pagamentoController.titulos}" id="lista"
+									<p:dataTable value="#{recebimentoController.titulos}" id="lista"
 										rowIndexVar="rowIx"
 										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10"
@@ -128,7 +128,7 @@
 										<p:column headerText="Editar" style="width:10%">
 											<center>
 												<p:commandButton rendered="#{p.tit_status ne 'Pago'}"
-													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													actionListener="#{recebimentoController.carregaPeloId(p)}"
 													pt:data-target="#editar" pt:data-toggle="modal"
 													update="formEditar" styleClass="btn btn-info"
 													icon="fa fa-fw fa-edit" />
@@ -138,7 +138,7 @@
 										<p:column headerText="Pagar" style="width:10%">
 											<center>
 												<p:commandButton rendered="#{p.tit_status ne 'Pago'}"
-													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													actionListener="#{recebimentoController.carregaPeloId(p)}"
 													pt:data-target="#pagamento" pt:data-toggle="modal"
 													update="formPagar" styleClass="btn btn-warning"
 													icon="fa fa-fw fa-money" />
@@ -149,7 +149,7 @@
 										<p:column headerText="Inativar" style="width:10%">
 											<center>
 												<p:commandButton rendered="#{p.tit_status ne 'Pago'}"
-													actionListener="#{pagamentoController.carregaPeloId(p)}"
+													actionListener="#{recebimentoController.carregaPeloId(p)}"
 													pt:data-target="#excluir" pt:data-toggle="modal"
 													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
 											</center>
@@ -189,7 +189,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Data Vencimento" />
 										<p:inputMask styleClass="form-control" mask="99/99/9999" readonly="true"
-											value="#{pagamentoController.titulo.tit_vencimento}">
+											value="#{recebimentoController.titulo.tit_vencimento}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
@@ -200,7 +200,7 @@
 												value="Valor do Título" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true" 
 												styleClass="readonly" pt:data-tooltip="Valor do Título"
-												value="#{pagamentoController.titulo.tit_valor}"
+												value="#{recebimentoController.titulo.tit_valor}"
 												required="true" requiredMessage="Valor do Título">
 											</p:inputNumber>
 										</div>
@@ -210,11 +210,11 @@
 											<p:outputLabel styleClass="control-label"
 												value="Valor do Juros" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" pt:data-tooltip="Valor do Juros"
-												value="#{pagamentoController.caixaPagamento.cap_juro}" rendered="#{pagamentoController.caixaPagamento.cap_juro eq 0}">
-												<f:ajax event="blur" execute="@this" render="@form" listener="#{pagamentoController.calcular}"/>
+												value="#{recebimentoController.caixaPagamento.cap_juro}" rendered="#{recebimentoController.caixaPagamento.cap_juro eq 0}">
+												<f:ajax event="blur" execute="@this" render="@form" listener="#{recebimentoController.calcular}"/>
 											</p:inputNumber>
 											<p:inputNumber decimalPlaces="2" symbol="R$" pt:data-tooltip="Valor do Juros" readonly="true" styleClass="readonly"
-												value="#{pagamentoController.caixaPagamento.cap_juro}" rendered="#{pagamentoController.caixaPagamento.cap_juro ne 0}">
+												value="#{recebimentoController.caixaPagamento.cap_juro}" rendered="#{recebimentoController.caixaPagamento.cap_juro ne 0}">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -223,11 +223,11 @@
 											<p:outputLabel styleClass="control-label"
 												value="Valor do Desconto" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor do Desconto"
-												value="#{pagamentoController.caixaPagamento.cap_desconto}" rendered="#{pagamentoController.caixaPagamento.cap_desconto eq 0}">
-												<f:ajax event="blur" execute="@this" render="@form" listener="#{pagamentoController.calcular}"/>
+												value="#{recebimentoController.caixaPagamento.cap_desconto}" rendered="#{recebimentoController.caixaPagamento.cap_desconto eq 0}">
+												<f:ajax event="blur" execute="@this" render="@form" listener="#{recebimentoController.calcular}"/>
 											</p:inputNumber>
 											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%" pt:data-tooltip="Valor do Desconto" readonly="true" styleClass="readonly"
-												value="#{pagamentoController.caixaPagamento.cap_desconto}" rendered="#{pagamentoController.caixaPagamento.cap_desconto ne 0}">
+												value="#{recebimentoController.caixaPagamento.cap_desconto}" rendered="#{recebimentoController.caixaPagamento.cap_desconto ne 0}">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -236,7 +236,7 @@
 											<p:outputLabel styleClass="control-label"
 												value="Valor Total" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true" pt:data-tooltip="Valor Total"
-												styleClass="readonly" value="#{pagamentoController.txtValorTotal}">
+												styleClass="readonly" value="#{recebimentoController.txtValorTotal}">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -245,7 +245,7 @@
 											<p:outputLabel styleClass="control-label"
 												value="Valor Restante" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true"  pt:data-tooltip="Valor Restante"
-												styleClass="readonly"	value="#{pagamentoController.txtValorRestante}" id="valorRest">
+												styleClass="readonly"	value="#{recebimentoController.txtValorRestante}" id="valorRest">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -261,14 +261,14 @@
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Forma de Pagamento (Digite o nome para buscar)" />
 										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-											value="#{pagamentoController.caixaPagamento.formaPagamento}"
+											value="#{recebimentoController.caixaPagamento.formaPagamento}"
 											forceSelection="true"
-											completeMethod="#{pagamentoController.buscaFormaPagamento}"
+											completeMethod="#{recebimentoController.buscaFormaPagamento}"
 											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
 											minQueryLength="3" maxResults="5">
 
 											<o:converter converterId="omnifaces.ListConverter"
-												list="#{pagamentoController.resultsFormaPagamento}" />
+												list="#{recebimentoController.resultsFormaPagamento}" />
 
 											<p:column headerText="Formas de Pagamento">
 												<h:outputText value="#{f.for_descricao}" />
@@ -283,7 +283,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Data Pagamento" />
 										<p:inputMask styleClass="form-control" mask="99/99/9999" required="true" requiredMessage="Digite a data para adicionar"
-											value="#{pagamentoController.caixaPagamento.cap_data}">
+											value="#{recebimentoController.caixaPagamento.cap_data}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
@@ -294,21 +294,21 @@
 												value="Valor Pago" />
 											<p:inputNumber decimalPlaces="2" symbol="R$" required="true" requiredMessage="Digite o valor para adicionar"
 												style="width:100%" pt:data-tooltip="Valor Pago"
-												value="#{pagamentoController.caixaPagamento.cap_valor}">
+												value="#{recebimentoController.caixaPagamento.cap_valor}">
 											</p:inputNumber>
 										</div>
 									</div>
 								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group" style="margin-top:10%">
 										<p:commandButton value="Adicionar" icon="fa fa-fw fa-plus"
-										styleClass="btn btn-primary" actionListener="#{pagamentoController.adicionaPagamento}" process="caixa" update="caixa valorRest"/>
+										styleClass="btn btn-primary" actionListener="#{recebimentoController.adicionaPagamento}" process="caixa" update="caixa valorRest"/>
 									</div>
 								</div>
 							</div>
 							
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
-							<p:dataTable value="#{pagamentoController.pagamentos}" id="lista3"
+							<p:dataTable value="#{recebimentoController.pagamentos}" id="lista3"
 										rowIndexVar="rowIx"
 										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10"
@@ -342,7 +342,7 @@
 										<p:column headerText="Remover" style="width:10%">
 											<center>
 												<p:commandButton  update="caixa valorRest"
-													actionListener="#{pagamentoController.removerPagamento(p)}"
+													actionListener="#{recebimentoController.removerPagamento(p)}"
 													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
 											</center>
 										</p:column>
@@ -359,7 +359,7 @@
 								pt:data-dismiss="modal" styleClass="btn btn-primary" />
 							<p:commandButton value="Pagar"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharPagamento')"
-								actionListener="#{pagamentoController.pagar}" process="@form"
+								actionListener="#{recebimentoController.pagar}" process="@form"
 								styleClass="btn btn-success" update="@form lista" />
 						</div>
 
@@ -394,7 +394,7 @@
 								pt:data-dismiss="modal" styleClass="btn btn-primary" />
 							<p:commandButton value="Excluir"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{pagamentoController.inativarSelecionados}"
+								actionListener="#{recebimentoController.inativarSelecionados}"
 								styleClass="btn btn-danger" update="@form lista" />
 						</div>
 
@@ -425,7 +425,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Tipo de Favorecido" />
 										<h:selectOneRadio label="Favorecido"
-											value="#{pagamentoController.txtTipoFavorecido}">
+											value="#{recebimentoController.txtTipoFavorecido}">
 											<f:selectItem itemLabel="Paciente" itemValue="P" />
 											<f:selectItem itemLabel="Fornecedor" itemValue="F" />
 											<f:selectItem itemLabel="Outro" itemValue="O" />
@@ -439,31 +439,31 @@
 							<div class="row">
 								<h:panelGroup id="grupoFavorecido">
 									<ui:fragment
-										rendered="#{pagamentoController.txtTipoFavorecido eq 'O'}">
+										rendered="#{recebimentoController.txtTipoFavorecido eq 'O'}">
 										<div class="col-md-12 col-sm-12 col-xs-12">
 											<div class="form-group">
 												<p:outputLabel styleClass="control-label" value="Favorecido" />
 												<p:inputText styleClass="form-control"
 													pt:data-tooltip="Nome do Favorecidof"
-													value="#{pagamentoController.titulo.tit_favorecido}"
+													value="#{recebimentoController.titulo.tit_favorecido}"
 													required="true" requiredMessage="Digite Nome do Favorecido" />
 											</div>
 										</div>
 									</ui:fragment>
 									<ui:fragment
-										rendered="#{pagamentoController.txtTipoFavorecido eq 'P'}">
+										rendered="#{recebimentoController.txtTipoFavorecido eq 'P'}">
 										<div class="col-md-12 col-sm-12 col-xs-12">
 											<div class="form-group">
 												<p:outputLabel styleClass="control-label"
 													value="Paciente (Digite o nome para buscar)" />
 												<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-													value="#{pagamentoController.titulo.paciente}"
-													completeMethod="#{pagamentoController.buscaPaciente}"
+													value="#{recebimentoController.titulo.paciente}"
+													completeMethod="#{recebimentoController.buscaPaciente}"
 													var="f" itemLabel="#{f.pac_nome}" minQueryLength="3"
 													maxResults="5" itemValue="#{f}" forceSelection="true">
 
 													<o:converter converterId="omnifaces.ListConverter"
-														list="#{pagamentoController.resultsPaciente}" />
+														list="#{recebimentoController.resultsPaciente}" />
 
 													<p:column headerText="Código">
 														<h:outputText value="#{f.pac_codigo}" />
@@ -481,19 +481,19 @@
 										</div>
 									</ui:fragment>
 									<ui:fragment
-										rendered="#{pagamentoController.txtTipoFavorecido eq 'F'}">
+										rendered="#{recebimentoController.txtTipoFavorecido eq 'F'}">
 										<div class="col-md-12 col-sm-12 col-xs-12">
 											<div class="form-group">
 												<p:outputLabel styleClass="control-label"
 													value="Fornecedor (Digite o nome para buscar)" />
 												<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-													value="#{pagamentoController.titulo.fornecedor}"
-													completeMethod="#{pagamentoController.buscaFornecedor}"
+													value="#{recebimentoController.titulo.fornecedor}"
+													completeMethod="#{recebimentoController.buscaFornecedor}"
 													var="f" itemLabel="#{f.fun_nome}" minQueryLength="3"
 													maxResults="5" itemValue="#{f}" forceSelection="true">
 
 													<o:converter converterId="omnifaces.ListConverter"
-														list="#{pagamentoController.resultsFornecedor}" />
+														list="#{recebimentoController.resultsFornecedor}" />
 
 													<p:column headerText="Código">
 														<h:outputText value="#{f.fun_codigo}" />
@@ -521,7 +521,7 @@
 											<p:outputLabel styleClass="control-label"
 												value="Data do Título" />
 											<p:inputMask styleClass="form-control" mask="99/99/9999"
-												value="#{pagamentoController.titulo.tit_data}"
+												value="#{recebimentoController.titulo.tit_data}"
 												required="true"
 												requiredMessage="A Data de vencimento deve ser informado">
 												<f:convertDateTime pattern="dd/MM/yyyy" />
@@ -534,7 +534,7 @@
 												value="Valor do Título" />
 											<p:inputNumber decimalPlaces="2" symbol="R$"
 												style="width:100%" pt:data-tooltip="Valor do Título"
-												value="#{pagamentoController.titulo.tit_valor}"
+												value="#{recebimentoController.titulo.tit_valor}"
 												required="true" requiredMessage="Valor do Título">
 											</p:inputNumber>
 										</div>
@@ -545,7 +545,7 @@
 												value="Valor do Juros" />
 											<p:inputNumber decimalPlaces="2" symbol="R$"
 												style="width:100%" pt:data-tooltip="Valor do Juros"
-												value="#{pagamentoController.titulo.tit_juros}">
+												value="#{recebimentoController.titulo.tit_juros}">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -555,7 +555,7 @@
 												value="Valor do Desconto" />
 											<p:inputNumber decimalPlaces="2" symbol="R$"
 												style="width:100%" pt:data-tooltip="Valor do Desconto"
-												value="#{pagamentoController.titulo.tit_desconto}">
+												value="#{recebimentoController.titulo.tit_desconto}">
 											</p:inputNumber>
 										</div>
 									</div>
@@ -567,7 +567,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Data Vencimento" />
 										<p:inputMask styleClass="form-control" mask="99/99/9999"
-											value="#{pagamentoController.titulo.tit_vencimento}">
+											value="#{recebimentoController.titulo.tit_vencimento}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
@@ -577,14 +577,14 @@
 										<p:outputLabel styleClass="control-label"
 											value="Forma de Pagamento (Digite o nome para buscar)" />
 										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-											value="#{pagamentoController.titulo.formaPagamento}"
+											value="#{recebimentoController.titulo.formaPagamento}"
 											forceSelection="true"
-											completeMethod="#{pagamentoController.buscaFormaPagamento}"
+											completeMethod="#{recebimentoController.buscaFormaPagamento}"
 											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
 											minQueryLength="3" maxResults="5">
 
 											<o:converter converterId="omnifaces.ListConverter"
-												list="#{pagamentoController.resultsFormaPagamento}" />
+												list="#{recebimentoController.resultsFormaPagamento}" />
 
 											<p:column headerText="Formas de Pagamento">
 												<h:outputText value="#{f.for_descricao}" />
@@ -600,14 +600,14 @@
 										<p:outputLabel styleClass="control-label"
 											value="Condição de Pagamento (Digite o nome para buscar)" />
 										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-											value="#{pagamentoController.titulo.condicaoPagamento}"
+											value="#{recebimentoController.titulo.condicaoPagamento}"
 											forceSelection="true"
-											completeMethod="#{pagamentoController.buscaCondicaoPagamento}"
+											completeMethod="#{recebimentoController.buscaCondicaoPagamento}"
 											var="f" itemLabel="#{f.con_descricao}" itemValue="#{f}"
 											minQueryLength="3" maxResults="5">
 
 											<o:converter converterId="omnifaces.ListConverter"
-												list="#{pagamentoController.resultsPagamento}" />
+												list="#{recebimentoController.resultsPagamento}" />
 
 											<p:column headerText="Condições de Pagamento">
 												<h:outputText value="#{f.con_descricao}" />
@@ -630,7 +630,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Observação do Título" />
 										<p:inputTextarea rows="2"
-											value="#{pagamentoController.titulo.tit_observacao}"
+											value="#{recebimentoController.titulo.tit_observacao}"
 											styleClass="form-control" />
 									</div>
 								</div>
@@ -640,7 +640,7 @@
 								<div class="col-md-12 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:commandButton value="Gerar Titulo"
-											actionListener="#{pagamentoController.geraTitulo}"
+											actionListener="#{recebimentoController.geraTitulo}"
 											update="lista2 growl" styleClass="btn btn-primary"/>
 									</div>
 								</div>
@@ -649,7 +649,7 @@
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12">
 
-									<p:dataTable value="#{pagamentoController.parcelas}"
+									<p:dataTable value="#{recebimentoController.parcelas}"
 										id="lista2" rowIndexVar="rowIx"
 										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10"
@@ -693,7 +693,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{pagamentoController.gravar}"
+								actionListener="#{recebimentoController.gravar}"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
 								styleClass="btn btn-primary" update="@form lista" />
 						</div>
@@ -723,7 +723,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Data Vencimento" />
 										<p:inputMask styleClass="form-control" mask="99/99/9999"
-											value="#{pagamentoController.titulo.tit_vencimento}">
+											value="#{recebimentoController.titulo.tit_vencimento}">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</p:inputMask>
 									</div>
@@ -734,7 +734,7 @@
 												value="Valor do Título" />
 											<p:inputNumber decimalPlaces="2" symbol="R$"
 												style="width:100%" pt:data-tooltip="Valor do Título"
-												value="#{pagamentoController.titulo.tit_valor}"
+												value="#{recebimentoController.titulo.tit_valor}"
 												required="true" requiredMessage="Valor do Título">
 											</p:inputNumber>
 										</div>
@@ -744,7 +744,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Observação do Título" />
 										<p:inputTextarea rows="1"
-											value="#{pagamentoController.titulo.tit_observacao}"
+											value="#{recebimentoController.titulo.tit_observacao}"
 											styleClass="form-control" />
 									</div>
 								</div>
@@ -753,7 +753,7 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{pagamentoController.editar}"
+								actionListener="#{recebimentoController.editar}"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharEditar')"
 								styleClass="btn btn-primary" update="@form lista" />
 						</div>

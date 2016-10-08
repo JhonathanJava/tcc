@@ -32,7 +32,7 @@ import br.com.consultorio.util.jsf.FacesUtil;
 
 @Named
 @ViewScoped
-public class PagamentoController implements Serializable{
+public class RecebimentoController implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -75,7 +75,7 @@ public class PagamentoController implements Serializable{
 	@PostConstruct
 	 void init() {
 		this.titulo = new Titulo();
-		this.titulos = dao.buscarTitulo("D");
+		this.titulos = dao.buscarTitulo("C");
 		this.parcelas = new ArrayList<>();
 		this.caixaPagamento = new CaixaPagamento();
 		this.pagamentos = new ArrayList<>();
@@ -217,7 +217,7 @@ public class PagamentoController implements Serializable{
 				temp.setFormaPagamento(titulo.getFormaPagamento());
 				temp.setTit_parcela(i);
 				temp.setTit_favorecido(titulo.getTit_favorecido());
-				temp.setTit_tipo("D");
+				temp.setTit_tipo("C");
 				temp.setTit_status("Aguardando");
 				temp.setTit_valor(valorTemp);
 				temp.setUsuario(usuario);

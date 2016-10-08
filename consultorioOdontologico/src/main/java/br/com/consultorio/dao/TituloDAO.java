@@ -49,7 +49,7 @@ public class TituloDAO implements Serializable{
 		return dao.buscaPorId(id);
 	}
 	
-	public List<Titulo> buscarTitulo(String tipo,String status){
+	public List<Titulo> buscarTitulo(String tipo){
 		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Titulo> query = builder.createQuery(Titulo.class);
 		Root<Titulo> from = query.from(Titulo.class);
@@ -57,7 +57,6 @@ public class TituloDAO implements Serializable{
 		Predicate predicate = builder.and();
 		
 		predicate = builder.and(predicate, builder.equal(from.<String>get("tit_tipo"), tipo));
-		predicate = builder.and(predicate, builder.equal(from.<String>get("tit_status"), status));
 		
 		TypedQuery<Titulo> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("tit_codigo"))));
 		List<Titulo> titulos = typedQuery.getResultList();
