@@ -2,6 +2,7 @@ package br.com.consultorio.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -65,9 +66,7 @@ public class AnamneseController implements Serializable{
 		this.dao.remove(anamnese);
 		this.anamnese = new Anamnese();
 		this.anamneses = this.dao.listaAnamnesePorModelo(modelo.getMoa_codigo());
-		for (Anamnese s : anamneses) {
-			System.out.println(s);
-		}
+		FacesUtil.addSuccessMessage("Pergunta Removida do Modelo");
 	}
 	
 	@Transacional
@@ -81,6 +80,7 @@ public class AnamneseController implements Serializable{
 		}
 		this.anamnese = new Anamnese();
 		this.anamneses = this.dao.listaAnamnesePorModelo(modelo.getMoa_codigo());
+		FacesUtil.addSuccessMessage("Pergunta Adicionada no Modelo");
 	}
 	
 
@@ -94,7 +94,6 @@ public class AnamneseController implements Serializable{
 			this.modeloDAO.adiciona(this.modelo);
 			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
 		}
-		init();
 		return null;
 	}
 	
@@ -113,11 +112,16 @@ public class AnamneseController implements Serializable{
 	}
 	
 	@Transacional
-	public void remover(Anamnese anamnese){
-		System.out.println("Chamando Remover()");
-		this.dao.remove(anamnese);
+	public void alterarStatus(){
+		if(this.anamnese.getAnm_status().equals("A")){
+			this.anamnese.setAnm_status("I");
+			this.anamnese.setAnm_dataInativacao(new Date());
+		}else{
+			this.anamnese.setAnm_status("A");
+		}
+		this.dao.atualiza(anamnese);
 		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+		FacesUtil.addSuccessMessage("Registro Status Alterado!!");
 	}
 	
 	public void limparAnamnese(){

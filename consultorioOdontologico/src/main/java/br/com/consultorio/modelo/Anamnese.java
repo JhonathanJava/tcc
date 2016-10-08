@@ -1,6 +1,7 @@
 package br.com.consultorio.modelo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +37,12 @@ public class Anamnese implements Serializable{
 	
 	@Column 
 	private String anm_tipoAlerta;
+	
+	@Column
+	private Date anm_dataInativacao;
+	
+	@Column 
+	String anm_status = "A";
 	
 	@JoinColumn(name = "moa_codigo")
 	@ManyToOne
@@ -106,6 +113,22 @@ public class Anamnese implements Serializable{
 	
 	public void setModeloAnamnese(ModeloAnamnese modeloAnamnese) {
 		this.modeloAnamnese = modeloAnamnese;
+	}
+	
+	public Date getAnm_dataInativacao() {
+		return anm_dataInativacao;
+	}
+
+	public void setAnm_dataInativacao(Date anm_dataInativacao) {
+		this.anm_dataInativacao = anm_dataInativacao;
+	}
+
+	public String getAnm_status() {
+		return anm_status;
+	}
+
+	public void setAnm_status(String anm_status) {
+		this.anm_status = anm_status;
 	}
 
 	@Override
