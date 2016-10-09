@@ -1,0 +1,569 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui"
+	template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Cadastro de Orçamento</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<h:form>
+
+									<p:commandButton class="btn btn-primary"
+										actionListener="#{orcamentoController.limpar}"
+										pt:data-toggle="modal" pt:data-target="#myModal"
+										pt:data-backdrop="static" value="Adicionar Novo" />
+
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Listagem de Orçamento</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+
+								<h:form prependId="false">
+
+									<p:dataTable value="#{orcamentoController.listaOrcamento}"
+										id="lista" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.orc_codigo}"
+											sortBy="#{p.orc_codigo}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.orc_codigo}" />
+										</p:column>
+
+										<p:column headerText="Paciente"
+											filterBy="#{p.paciente.pac_nome}"
+											sortBy="#{p.paciente.pac_nome}" style="width:48%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.paciente.pac_nome}" />
+										</p:column>
+
+										<p:column headerText="Data do Orçamento"
+											sortBy="#{p.orc_data}" style="width:20%">
+											<h:outputText value="#{p.orc_data}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										
+										<p:column headerText="Valor Total"
+											sortBy="#{p.orc_total}" style="width:20%">
+											<h:outputText value="#{p.orc_total}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Status" filterBy="#{p.orc_status}"
+											sortBy="#{p.orc_status}" style="width:12%"
+											filterStyle="width:95%">
+											<h:outputText value="Aprovado"
+												rendered="#{p.orc_status eq 'Aprovado'}" styleClass="green" />
+											<h:outputText value="Reprovado"
+												rendered="#{p.orc_status eq 'Reprovado'}" styleClass="red" />
+											<h:outputText value="Aguardando"
+												rendered="#{p.orc_status eq 'Aguardando'}"
+												styleClass="yellow" />
+										</p:column>
+
+										<p:column headerText="Editar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{orcamentoController.carregaPeloId(p)}"
+													pt:data-target="#myModal" pt:data-toggle="modal"
+													update="formIncluir" styleClass="btn btn-info"
+													icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+										<p:column headerText="Análisar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{orcamentoController.carregaPeloId(p)}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Button trigger modal -->
+
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-md" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Orçamento Pendente</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" id="growl" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">Este Orçamento esta pendente abaixo você
+								altera o status dele.</p>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Reprovar"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{orcamentoController.alteraStatus('Reprovado')}"
+								styleClass="btn btn-danger" update="@form lista" />
+							<p:commandButton value="Gerar Atendimento"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{orcamentoController.alteraStatus('Aprovado')}"
+								styleClass="btn btn-success" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Adicionar Orçamento</h4>
+					</div>
+					<h:form prependId="false" id="formIncluir">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							
+							<div class="row">
+							<h:panelGroup id="pacienteAuto">
+								<div class="col-md-6 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Paciente" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar" rendered="#{orcamentoController.listaItens.size() == 0}"
+											value="#{orcamentoController.orcamento.paciente}"
+											completeMethod="#{orcamentoController.buscaPaciente}" var="f"
+											itemLabel="#{f.pac_nome}" minQueryLength="3" maxResults="5"
+											itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsPaciente}" />
+
+											<p:ajax event="itemSelect" update="itemPlano" />
+
+											<p:column headerText="Código">
+												<h:outputText value="#{f.pac_codigo}" />
+											</p:column>
+
+											<p:column headerText="Nome">
+												<h:outputText value="#{f.pac_nome}" />
+											</p:column>
+
+											<p:column headerText="Telefone">
+												<h:outputText value="#{f.pac_telefone}" />
+											</p:column>
+										</p:autoComplete>
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar" disabled="true" readonly="true" styleClass="readonly"
+											value="#{orcamentoController.orcamento.paciente}" rendered="#{orcamentoController.listaItens.size() > 0}"
+											completeMethod="#{orcamentoController.buscaPaciente}" var="f"
+											itemLabel="#{f.pac_nome}" minQueryLength="3" maxResults="5"
+											itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsPaciente}" />
+
+											<p:ajax event="itemSelect" update="itemPlano" />
+
+											<p:column headerText="Código">
+												<h:outputText value="#{f.pac_codigo}" />
+											</p:column>
+
+											<p:column headerText="Nome">
+												<h:outputText value="#{f.pac_nome}" />
+											</p:column>
+
+											<p:column headerText="Telefone">
+												<h:outputText value="#{f.pac_telefone}" />
+											</p:column>
+										</p:autoComplete>
+									</div>
+								</div>
+								</h:panelGroup>
+								<h:panelGroup id="itemPlano">
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Plano de Saúde" />
+											<p:inputText
+												value="#{orcamentoController.orcamento.paciente.plano.planoPai.plp_descricao}"
+												readonly="true" id="planoSaude" styleClass="readonly" />
+										</div>
+									</div>
+
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Desconto do Plano" />
+											<p:inputText
+												value="#{orcamentoController.orcamento.paciente.plano.planoPai.pla_desconto}"
+												styleClass="readonly"
+												rendered="#{orcamentoController.orcamento.paciente.plano.planoPai.plp_tipoDesconto eq 'M'}"
+												readonly="true">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</p:inputText>
+											<p:inputText
+												value="#{orcamentoController.orcamento.paciente.plano.planoPai.pla_desconto} %"
+												styleClass="readonly"
+												rendered="#{orcamentoController.orcamento.paciente.plano.planoPai.plp_tipoDesconto eq 'P'}"
+												readonly="true" />
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+							
+							<div class="row">
+							<div class="col-md-4 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Forma de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{orcamentoController.orcamento.formaPagamento}"
+											forceSelection="true"
+											completeMethod="#{orcamentoController.buscaFormaPagamento}"
+											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsFormaPagamento}" />
+
+											<p:column headerText="Formas de Pagamento">
+												<h:outputText value="#{f.for_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+							<div class="col-md-4 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Condição de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{orcamentoController.orcamento.condicaoPagamento}"
+											forceSelection="true"
+											completeMethod="#{orcamentoController.buscaCondicaoPagamento}"
+											var="f" itemLabel="#{f.con_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsPagamento}" />
+
+											<p:column headerText="Condições de Pagamento">
+												<h:outputText value="#{f.con_descricao}" />
+											</p:column>
+
+											<p:column headerText="Número de Parcelas">
+												<h:outputText value="#{f.con_numeroParcela}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+							<div class="col-md-4 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Médico / Dentista (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{orcamentoController.orcamento.usuario}"
+											forceSelection="true"
+											completeMethod="#{orcamentoController.buscaProfissional}"
+											var="f" itemLabel="#{f.usu_nome}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultUsuario}" />
+
+											<p:column headerText="Nome">
+												<h:outputText value="#{f.usu_nome}" /> 
+											</p:column>
+
+											<p:column headerText="Cargo">
+												<h:outputText value="#{f.cargo.car_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Observação do Orçamento" />
+										<p:inputText styleClass="form-control"
+											value="#{orcamentoController.orcamento.orc_observacao}" />
+									</div>
+								</div>
+							</div>
+							<h:panelGroup id="itemInfo">
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Tratamento" />
+											<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+												value="#{orcamentoController.item.tratamento}"
+												completeMethod="#{orcamentoController.buscaTratamento}"
+												var="f" itemLabel="#{f.tra_descricao}" minQueryLength="3"
+												maxResults="5" itemValue="#{f}" forceSelection="true">
+
+												<o:converter converterId="omnifaces.ListConverter"
+													list="#{orcamentoController.resultsTratamento}" />
+
+												<p:ajax event="itemSelect" update="valorUnitario" />
+
+												<p:column headerText="Código">
+													<h:outputText value="#{f.tra_codigo}" />
+												</p:column>
+
+												<p:column headerText="Nome">
+													<h:outputText value="#{f.tra_descricao}" />
+												</p:column>
+
+												<p:column headerText="Valor">
+													<h:outputText value="#{f.tra_valor}">
+														<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+															type="currency" />
+													</h:outputText>
+												</p:column>
+											</p:autoComplete>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Valor Unitário" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" readonly="true"
+												id="valorUnitario" pt:data-tooltip="Valor Unitário"
+												styleClass="readonly"
+												value="#{orcamentoController.item.tratamento.tra_valor}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Dente/Região" />
+											<h:outputLink id="odontograma" value="#">
+												<h:outputText value=" - Odontograma" />
+											</h:outputLink>
+											<p:tooltip for="odontograma" position="top">
+												<p:graphicImage name="images/odontograma.jpg" width="400"
+													height="200" />
+											</p:tooltip>
+											<p:inputText styleClass="form-control"
+												pt:data-tooltip="Região do dente para Tratamento"
+												value="#{orcamentoController.item.ori_denteRegiao}" />
+										</div>
+									</div>
+									<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Quantidade" />
+											<p:inputNumber pt:data-tooltip="Quantidade"
+												value="#{orcamentoController.item.ori_quantidade}">
+											</p:inputNumber>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-12 col-xs-12">
+										<p:commandButton value="Adicionar" style="margin-top:7%"
+											actionListener="#{orcamentoController.adicionaItem}"
+											update="itemInfo growl pacienteAuto" process="itemInfo"
+											styleClass="btn btn-primary" icon="fa fa-fw fa-plus" />
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<div class="alert alert-success" role="alert">LISTA COM OS TRATAMENTOS DO ORÇAMENTO</div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12 col-sm-12 col-xs-12">
+										<p:dataTable value="#{orcamentoController.listaItens}"
+											id="lista2" rowIndexVar="rowIx"
+											rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+											var="p" paginator="true" rows="10"
+											rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+											paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+											currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+											styleClass="table table-striped table-bordered"
+											style="width:100%" responsive="true"
+											emptyMessage="Nenhum registro no banco de dados">
+
+											<p:column headerText="Tratamento"
+												filterBy="#{p.tratamento.tra_descricao}"
+												sortBy="#{p.tratamento.tra_descricao}" style="width:50%"
+												filterStyle="width:95%">
+												<h:outputText value="#{p.tratamento.tra_descricao}" />
+											</p:column>
+
+											<p:column headerText="valor" style="width:10%">
+												<h:outputText value="#{p.tratamento.tra_valor}">
+													<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+														type="currency" />
+												</h:outputText>
+											</p:column>
+
+											<p:column headerText="Tratamento" style="width:10%">
+												<h:outputText value="#{p.ori_quantidade}" />
+											</p:column>
+
+											<p:column headerText="valor Total" style="width:10%">
+												<h:outputText
+													value="#{p.tratamento.tra_valor * p.ori_quantidade}">
+													<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+														type="currency" />
+												</h:outputText>
+											</p:column>
+
+											<p:column headerText="Remover" style="width:10%">
+												<center>
+													<p:commandButton
+														actionListener="#{orcamentoController.removerItem(p)}"
+														update="itemInfo" process="itemInfo"
+														styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+												</center>
+											</p:column>
+
+										</p:dataTable>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-4 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Sub-Total" />
+											<h:outputText pt:data-tooltip="Sub-Total valor sem o desconto"
+												styleClass="readonly form-control"
+												value="#{orcamentoController.subTotal}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</div>
+									</div>
+									<div class="col-md-4 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Desconto" />
+											<h:outputText pt:data-tooltip="Desconto pelo plano de saúde"
+												styleClass="readonly form-control"
+												value="#{orcamentoController.orcamento.orc_desconto}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</div>
+									</div>
+									<div class="col-md-4 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Valor Total" />
+											<h:outputText pt:data-tooltip="Valor com desconto"
+												styleClass="readonly form-control"
+												value="#{orcamentoController.orcamento.orc_total}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</div>
+									</div>
+								</div>
+							</h:panelGroup>
+
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{orcamentoController.gravar}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

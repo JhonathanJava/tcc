@@ -7,6 +7,10 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import br.com.consultorio.modelo.Perfil;
 
@@ -49,19 +53,23 @@ public class PerfilDAO implements Serializable{
 		List<Perfil> perfils = query.getResultList();
 		return perfils;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
+	public List<Perfil> buscarPorNome(String consulta){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Perfil> query = builder.createQuery(Perfil.class);
+		Root<Perfil> from = query.from(Perfil.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, 
+		        builder.like(from.<String>get("per_descricao"), "%"+consulta+"%"));
+		}
+		
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("per_status"), "Ativo"));
+		
+		TypedQuery<Perfil> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("per_descricao"))));
+		List<Perfil> perfil = typedQuery.getResultList();
+		
+		return perfil;
+	}
 }

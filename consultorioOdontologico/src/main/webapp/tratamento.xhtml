@@ -203,7 +203,7 @@
 								</div>
 							</div>
 								<div class="row">
-									<div class="col-md-6 col-sm-12 col-xs-12">
+									<div class="col-md-12 col-sm-12 col-xs-12">
 										<p:outputLabel styleClass="control-label"
 											value="Plano de Saúde" />
 										<h:selectOneMenu styleClass="form-control"
@@ -211,16 +211,6 @@
 											value="#{tratamentoController.tratamento.planoPai}">
 											<f:selectItems value="#{tratamentoController.listaPlanos}"
 												var="p" itemValue="#{p}" itemLabel="#{p.plp_descricao}" />
-										</h:selectOneMenu>
-									</div>
-
-									<div class="col-md-6 col-sm-12 col-xs-12">
-										<p:outputLabel styleClass="control-label"
-											value="Dentes/Região" />
-										<h:selectOneMenu styleClass="form-control"
-											value="#{tratamentoController.tratamento.tra_denteRegiao}">
-											<f:selectItem itemValue="11" itemLabel="11" />
-											<f:selectItem itemValue="Face" itemLabel="Face" />
 										</h:selectOneMenu>
 									</div>
 								</div>

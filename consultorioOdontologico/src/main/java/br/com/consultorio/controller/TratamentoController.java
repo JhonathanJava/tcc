@@ -45,9 +45,9 @@ public class TratamentoController implements Serializable{
 	@Transacional
 	public void inativarSelecionados(Tratamento tratamento){
 			if(tratamento.getTra_status().equals("A")){
-				tratamento.setTra_status('I');
+				tratamento.setTra_status("I");
 			}else{
-				tratamento.setTra_status('A');
+				tratamento.setTra_status("A");
 			}
 			this.dao.atualiza(tratamento);
 			init();
@@ -57,7 +57,7 @@ public class TratamentoController implements Serializable{
 	@Transacional
 	public String gravar(){
 		System.out.println(this.tratamento.toString());
-		this.tratamento.setTra_status('A');
+		this.tratamento.setTra_status("A");
 		if(this.tratamento.getTra_codigo() != null){
 			this.dao.atualiza(this.tratamento);
 			FacesUtil.addSuccessMessage("Atualizado Com Sucesso!!");
@@ -72,9 +72,8 @@ public class TratamentoController implements Serializable{
 	
 	@Transacional
 	public void remover(){
-		System.out.println("Chamando Remover()");
-		this.tratamento.setTra_status('T');
-		this.dao.remove(tratamento);
+		this.tratamento.setTra_status("I");
+		this.dao.atualiza(tratamento);
 		init();
 		FacesUtil.addSuccessMessage("Registro Inativado Com Sucesso!!");
 	}

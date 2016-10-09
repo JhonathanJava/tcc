@@ -6,7 +6,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
+import br.com.consultorio.modelo.Orcamento;
 import br.com.consultorio.modelo.OrcamentoItem;
 
 public class OrcamentoItemDAO implements Serializable{
@@ -41,6 +47,21 @@ public class OrcamentoItemDAO implements Serializable{
 
 	public OrcamentoItem buscaPorId(Long id) {
 		return dao.buscaPorId(id);
+	}
+
+	public List<OrcamentoItem> buscaPorOrcamento(Orcamento orcamento) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<OrcamentoItem> query = builder.createQuery(OrcamentoItem.class);
+		Root<OrcamentoItem> from = query.from(OrcamentoItem.class);
+		
+		Predicate predicate = builder.and();
+		
+		predicate = builder.and(predicate, builder.equal(from.join("orcamento").get("orc_codigo"),orcamento.getOrc_codigo()));
+
+		TypedQuery<OrcamentoItem> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("ori_codigo"))));
+		List<OrcamentoItem> itens = typedQuery.getResultList();
+		
+		return itens;
 	}
 
 }

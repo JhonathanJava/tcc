@@ -15,7 +15,6 @@ import br.com.consultorio.dao.CargoDAO;
 import br.com.consultorio.dao.PerfilDAO;
 import br.com.consultorio.dao.UsuarioDAO;
 import br.com.consultorio.modelo.Cargo;
-import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.Perfil;
 import br.com.consultorio.modelo.Usuario;
 import br.com.consultorio.tx.Transacional;
@@ -70,6 +69,16 @@ public class UsuarioController implements Serializable{
 		this.usuario = this.dao.buscaPorId(usuario.getUsu_codigo());
 	}
 	
+	public List<Cargo> buscaCargo(String query){
+		listCargo = cargoDao.buscarCargo(query);
+        return listCargo;
+	}
+	
+	public List<Perfil> buscaPerfil(String query){
+		listPerfis = perfilDAO.buscarPorNome(query);
+        return listPerfis;
+	}
+	
 	@Transacional
 	public String editar(){
 		System.out.println("ToString = "+ this.usuarioEditar.toString());
@@ -109,33 +118,44 @@ public class UsuarioController implements Serializable{
 		return null;
 	}
 	
+	public Boolean validaGravar(){
+		if(this.usuario.getCargo() == null){
+			FacesUtil.addErrorMessage("Você deve Selecionar um cargo para o usuário");
+			return false;
+		}
+		if(this.usuario.getPerfil() == null){
+			FacesUtil.addErrorMessage("Você deve Selecionar um perfil para o usuário");
+			return false;
+		}
+		return true;
+	}
+	
 	@Transacional
 	public String gravar() {
-		System.out.println("ToString = "+ this.usuario.toString());
-		if(this.usuario.getUsu_ativo().equals("false")){
-			this.usuario.setUsu_ativo("Inativo");
-		}else{
-			this.usuario.setUsu_ativo("Ativo");
+		if(validaGravar()){
+			if(this.usuario.getUsu_codigo() != null){
+				this.dao.atualiza(this.usuario);
+				FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
+			}else{
+				this.dao.adiciona(this.usuario);
+				FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+			}
+			init();
 		}
-		if(this.usuario.getUsu_codigo() != null){
-			System.out.println("Salvando");
-			this.dao.atualiza(this.usuario);
-			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		}else{
-			System.out.println("Alterando");
-			this.dao.adiciona(this.usuario);
-			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
-		}
-		init();
 		return null;
 	}
 	
 	@Transacional
 	public void remover(){
-		System.out.println("Chamando Remover()");
-		this.dao.remove(usuario);
+		this.usuario.setUsu_dataInativacao(new Date());
+		if(this.usuario.getUsu_status().equals("A")){
+			this.usuario.setUsu_status("I");
+		}else{
+			this.usuario.setUsu_status("A");	
+		}
+		this.dao.atualiza(usuario);
 		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+		FacesUtil.addSuccessMessage("Registro Inativado Com Sucesso!!");
 	}
 	
 	public void pesquisaPorFiltro(){

@@ -12,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import br.com.consultorio.modelo.Paciente;
 import br.com.consultorio.modelo.PlanoPai;
 import br.com.consultorio.modelo.Tratamento;
 
@@ -73,6 +74,24 @@ public class TratamentoDAO implements Serializable{
 		return tratamentos;
 	}
 
+	public List<Tratamento> buscarPorNome(String consulta){
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Tratamento> query = builder.createQuery(Tratamento.class);
+		Root<Tratamento> from = query.from(Tratamento.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, 
+		        builder.like(from.<String>get("tra_descricao"), "%"+consulta+"%"));
+		}
+		
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("tra_status"), "A"));
+		
+		TypedQuery<Tratamento> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("tra_descricao"))));
+		List<Tratamento> tratamentos = typedQuery.getResultList();
+		
+		return tratamentos;
+	}
 
 
 }

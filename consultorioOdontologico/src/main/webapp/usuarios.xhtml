@@ -2,7 +2,7 @@
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" xmlns:o="http://omnifaces.org/ui"
 	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
 
 	<ui:define name="conteudo">
@@ -85,28 +85,40 @@
 										</p:column>
 
 										<p:column headerText="Nome" filterBy="#{p.usu_nome}"
-											sortBy="#{p.usu_nome}" style="width:50%"
+											sortBy="#{p.usu_nome}" style="width:20%"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.usu_nome}" />
 										</p:column>
 
 										<p:column headerText="Login" filterBy="#{p.usu_login}"
-											sortBy="#{p.usu_login}" style="width:20%"
+											sortBy="#{p.usu_login}" style="width:10%"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.usu_login}" />
-										</p:column>
-
-										<p:column headerText="Cargo"
-											filterBy="#{p.cargo.car_descricao}"
-											sortBy="#{p.cargo.car_descricao}" style="width:20%"
-											filterStyle="width:95%">
-											<h:outputText value="#{p.cargo.car_descricao}" />
 										</p:column>
 
 										<p:column headerText="Email" filterBy="#{p.usu_email}"
 											sortBy="#{p.usu_email}" style="width:20%"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.usu_email}" />
+										</p:column>
+										
+										<p:column headerText="Cargo"
+											filterBy="#{p.cargo.car_descricao}"
+											sortBy="#{p.cargo.car_descricao}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.cargo.car_descricao}" />
+										</p:column>
+										
+										<p:column headerText="Perfil"
+											filterBy="#{p.perfil.per_descricao}"
+											sortBy="#{p.perfil.per_descricao}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.perfil.per_descricao}" />
+										</p:column>
+										
+										<p:column headerText="Status" filterBy="#{p.usu_status}" sortBy="#{p.usu_status}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="Ativo" rendered="#{p.usu_status eq 'A'}" styleClass="green"/>
+											<h:outputText value="Inativo" rendered="#{p.usu_status eq 'I'}" styleClass="red"/>
 										</p:column>
 
 										<p:column headerText="Editar" style="width:10%">
@@ -147,15 +159,14 @@
 							aria-label="Close" data-backdrop="false" id="fechar">
 							<span aria-hidden="true">X</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Excluir Paciente</h4>
+						<h4 class="modal-title" id="myModalLabel">Inativar Usuário</h4>
 					</div>
 					<h:form prependId="false" id="formExcluir"
 						styleClass="form-horizontal form-label-left">
 						<p:growl showDetail="false" redisplay="true" />
 						<p:tooltip />
 						<div class="modal-body">
-							<p align="center">Você realmente deseja excluir este
-								registro?</p>
+							<p align="center">Você realmente deseja inativar este registro?</p>
 						</div>
 
 						<div class="modal-footer">
@@ -190,40 +201,50 @@
 						<div class="modal-body">
 
 							<div class="row">
-								<div class="col-md-6 col-sm-6 col-xs-6">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Nome" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control" id="teste1"
 											pt:data-tooltip="Digite seu Nome"
 											value="#{usuarioController.usuario.usu_nome}" required="true"
 											requiredMessage="Digite Seu Nome" />
 									</div>
 								</div>
-								<div class="col-md-6 col-sm-6 col-xs-6">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Email" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control"  id="teste2"
 											pt:data-tooltip="Digite seu e-mail: domain@gmail.com"
 											value="#{usuarioController.usuario.usu_email}"
 											required="true" requiredMessage="Digite Seu Email" />
 									</div>
 								</div>
+								<div class="col-md-4 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Médico / Dentista" />
+										<h:selectOneMenu styleClass="form-control"  id="teste3"
+											value="#{usuarioController.usuario.usu_profissional}">
+											<f:selectItem itemLabel="Não" itemValue="Não" />
+											<f:selectItem itemLabel="Sim" itemValue="Sim" />
+										</h:selectOneMenu>
+									</div>
+								</div>
 							</div>
 
 							<div class="row">
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Login" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control"  id="teste4"
 											pt:data-tooltip="Digite seu Login"
 											value="#{usuarioController.usuario.usu_login}"
 											required="true" requiredMessage="Digite Seu Login" />
 									</div>
 								</div>
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Senha" />
-										<p:password weakLabel="fraca" goodLabel="boa"
+										<p:password weakLabel="fraca" goodLabel="boa"  id="teste5"
 											strongLabel="Forte" styleClass="form-control"
 											pt:data-tooltip="Digite sua Senha"
 											value="#{usuarioController.usuario.usu_senha}"
@@ -231,9 +252,9 @@
 									</div>
 								</div>
 
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label"
+										<p:outputLabel styleClass="control-label" 
 											value="Data Nascimento" />
 										<p:inputMask id="editarDataNascimento"
 											styleClass="form-control"
@@ -249,30 +270,30 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="CPF" />
-										<p:inputMask styleClass="form-control"
+										<p:inputMask styleClass="form-control" id="teste6"
 											pt:data-tooltip="Digite seu CPF"
 											value="#{usuarioController.usuario.usu_cpf}" required="true"
 											requiredMessage="Digite Seu CPF" mask="999.999.999-99" />
 									</div>
 								</div>
 
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
-										<p:outputLabel styleClass="control-label" value="CRO" />
-										<p:inputText styleClass="form-control"
+										<p:outputLabel styleClass="control-label" value="CRM / CRO" />
+										<p:inputText styleClass="form-control" id="teste7"
 											pt:data-tooltip="Digite seu CRO"
 											value="#{usuarioController.usuario.usu_cro}" required="true"
 											requiredMessage="Digite Seu CRO" />
 									</div>
 								</div>
 
-								<div class="col-md-4 col-sm-4 col-xs-4">
+								<div class="col-md-4 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Telefone" />
-										<p:inputMask styleClass="form-control"
+										<p:inputMask styleClass="form-control" id="teste8"
 											value="#{usuarioController.usuario.usu_telefone}"
 											mask="(99) 9999-9999?9" />
 									</div>
@@ -281,29 +302,29 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-3 col-sm-3 col-xs-3">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Endereço" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control" id="teste9"
 											pt:data-tooltip="Digite seu Endereço"
 											value="#{usuarioController.usuario.usu_endereco}"
 											required="true" requiredMessage="Digite Seu Endereço" />
 									</div>
 								</div>
 
-								<div class="col-md-3 col-sm-3 col-xs-3">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Bairro" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control" id="teste10"
 											value="#{usuarioController.usuario.usu_bairro}" />
 									</div>
 								</div>
 
 
-								<div class="col-md-3 col-sm-3 col-xs-3">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Estado" />
-										<h:selectOneMenu styleClass="form-control"
+										<h:selectOneMenu styleClass="form-control" id="teste11"
 											value="#{usuarioController.usuario.usu_estado}">
 											<f:selectItem itemLabel="Paraná" itemValue="Paraná" />
 											<f:selectItem itemLabel="São Paulo" itemValue="São Paulo" />
@@ -311,11 +332,11 @@
 									</div>
 								</div>
 
-								<div class="col-md-3 col-sm-3 col-xs-3">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Cidade" />
 										<p:inputText styleClass="form-control"
-											pt:data-tooltip="Digite sua cidade"
+											pt:data-tooltip="Digite sua cidade" id="teste512"
 											value="#{usuarioController.usuario.usu_cidade}"
 											required="true" requiredMessage="Digite Sua Cidade" />
 									</div>
@@ -324,33 +345,67 @@
 							</div>
 
 							<div class="row">
-								<div class="col-md-2 col-sm-12 col-xs-12">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Número" />
 										<p:inputText styleClass="form-control"
-											pt:data-tooltip="Digite o numero"
+											pt:data-tooltip="Digite o numero" id="teste52"
 											value="#{usuarioController.usuario.usu_numeroEndereco}"
 											required="true" requiredMessage="Digite o Número" />
 									</div>
 								</div>
 
-								<div class="col-md-6 col-sm-12 col-xs-12">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Complemento" />
-										<p:inputText styleClass="form-control"
+										<p:inputText styleClass="form-control" id="teste123"
 											value="#{usuarioController.usuario.usu_complemento}" />
 									</div>
 								</div>
 
-								<div class="col-md-4 col-sm-12 col-xs-12">
+								<div class="col-md-3 col-sm-12 col-xs-12">
 									<div class="form-group">
 										<p:outputLabel styleClass="control-label" value="Cargo" />
-										<h:selectOneMenu styleClass="form-control"
-											converter="omnifaces.SelectItemsConverter"
-											value="#{usuarioController.usuario.cargo}">
-											<f:selectItems value="#{usuarioController.listCargo}" var="p"
-												itemValue="#{p}" itemLabel="#{p.car_descricao}" />
-										</h:selectOneMenu>
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{usuarioController.usuario.cargo}"
+											completeMethod="#{usuarioController.buscaCargo}" var="f"
+											itemLabel="#{f.car_descricao}" minQueryLength="3" maxResults="5"
+											itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{usuarioController.listCargo}" />
+
+											<p:column headerText="Código">
+												<h:outputText value="#{f.car_codigo}" />
+											</p:column>
+
+											<p:column headerText="Nome do Cargo">
+												<h:outputText value="#{f.car_descricao}" />
+											</p:column>
+										</p:autoComplete>
+									</div>
+								</div>
+								
+								<div class="col-md-3 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Perfil" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{usuarioController.usuario.perfil}"
+											completeMethod="#{usuarioController.buscaPerfil}" var="f"
+											itemLabel="#{f.per_descricao}" minQueryLength="3" maxResults="5"
+											itemValue="#{f}" forceSelection="true">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{usuarioController.listPerfis}" />
+
+											<p:column headerText="Código">
+												<h:outputText value="#{f.per_codigo}" />
+											</p:column>
+
+											<p:column headerText="Nome do Perfil">
+												<h:outputText value="#{f.per_descricao}" />
+											</p:column>
+										</p:autoComplete>
 									</div>
 								</div>
 

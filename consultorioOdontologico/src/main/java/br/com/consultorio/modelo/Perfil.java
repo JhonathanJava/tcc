@@ -24,7 +24,7 @@ public class Perfil implements Serializable{
 	private String per_descricao;
 	
 	@Column
-	private String per_status;
+	private String per_status = "Ativo";
 	
 	@Column
 	@Temporal(TemporalType.DATE)

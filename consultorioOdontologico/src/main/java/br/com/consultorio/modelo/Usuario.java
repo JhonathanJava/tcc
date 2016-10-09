@@ -89,6 +89,8 @@ public class Usuario implements Serializable{
 	
 	@Column String usu_bairro;
 	
+	@Column String usu_profissional = "Não";
+	
 	@JoinColumn(name = "per_codigo")
 	@ManyToOne
 	private Perfil perfil;
@@ -273,6 +275,14 @@ public class Usuario implements Serializable{
 		this.usu_bairro = usu_bairro;
 	}
 
+	public String getUsu_profissional() {
+		return usu_profissional;
+	}
+	
+	public void setUsu_profissional(String usu_profissional) {
+		this.usu_profissional = usu_profissional;
+	}
+	
 	@Override
 	public String toString() {
 		return "Usuario [usu_codigo=" + usu_codigo + ", usu_email=" + usu_email + ", usu_senha=" + usu_senha

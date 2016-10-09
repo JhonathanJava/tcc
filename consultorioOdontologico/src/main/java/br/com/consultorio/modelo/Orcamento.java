@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 public class Orcamento implements Serializable{
 
@@ -22,34 +25,55 @@ public class Orcamento implements Serializable{
 	private Long orc_codigo;
 	
 	@Column
-	private String orc_descricao;
-	
-	@Column
 	private Date orc_data = new Date();
-	
-	@Column 
-	private String orc_tipoPagamento;
 	
 	@Column
 	private String orc_observacao;
 	
 	@Column
-	private String orc_status;
+	private String orc_status = "Aguardando"; // AG - Aguardando, RE - Reprovado , AP - Aprovado
 	
 	@Column
-	private BigDecimal orc_desconto;
+	private BigDecimal orc_desconto  = BigDecimal.ZERO;
 	
 	@Column 
-	private BigDecimal orc_total;
+	private BigDecimal orc_total  = BigDecimal.ZERO;
 	
 	@ManyToOne
 	@JoinColumn(name="cax_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Caixa caixa;
 	
 	@ManyToOne
+	@JoinColumn(name="plp_codigo", nullable = true)
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private PlanoPai plano = new PlanoPai();
+	
+	@ManyToOne
 	@JoinColumn(name="usu_codigo")
-	private Usuario usuario; // Profissional do Atendimento
-
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private Usuario usuario = new Usuario(); // Profissional do Atendimento
+	
+	@ManyToOne
+	@JoinColumn(name="pac_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private Paciente paciente = new Paciente();
+	
+	@ManyToOne
+	@JoinColumn(name="con_codigo", nullable = true)
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private CondicaoPagamento condicaoPagamento = new CondicaoPagamento();
+	
+	@ManyToOne
+	@JoinColumn(name="fop_codigo", nullable = true)
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private FormaPagamento formaPagamento = new FormaPagamento();
+	
+	@Column
+	private Date orc_dataAnalise;
+	
+	private BigDecimal valorDesconto;
+	
 	public Long getOrc_codigo() {
 		return orc_codigo;
 	}
@@ -58,28 +82,12 @@ public class Orcamento implements Serializable{
 		this.orc_codigo = orc_codigo;
 	}
 
-	public String getOrc_descricao() {
-		return orc_descricao;
-	}
-
-	public void setOrc_descricao(String orc_descricao) {
-		this.orc_descricao = orc_descricao;
-	}
-
 	public Date getOrc_data() {
 		return orc_data;
 	}
 
 	public void setOrc_data(Date orc_data) {
 		this.orc_data = orc_data;
-	}
-
-	public String getOrc_tipoPagamento() {
-		return orc_tipoPagamento;
-	}
-
-	public void setOrc_tipoPagamento(String orc_tipoPagamento) {
-		this.orc_tipoPagamento = orc_tipoPagamento;
 	}
 
 	public String getOrc_observacao() {
@@ -130,11 +138,61 @@ public class Orcamento implements Serializable{
 		this.usuario = usuario;
 	}
 	
-	@Override
-	public String toString() {
-		return "Orcamento [orc_codigo=" + orc_codigo + ", orc_descricao=" + orc_descricao + ", orc_data=" + orc_data
-				+ ", orc_tipoPagamento=" + orc_tipoPagamento + ", orc_observacao=" + orc_observacao + ", orc_status="
-				+ orc_status + ", orc_desconto=" + orc_desconto + ", orc_total=" + orc_total + "]";
+	public Date getOrc_dataAnalise() {
+		return orc_dataAnalise;
 	}
 	
+	public void setOrc_dataAnalise(Date orc_dataAnalise) {
+		this.orc_dataAnalise = orc_dataAnalise;
+	}
+	
+	public Paciente getPaciente() {
+		return paciente;
+	}
+	
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
+	}
+	
+	public BigDecimal getValorDesconto() {
+		return valorDesconto;
+	}
+	
+	public void setValorDesconto(BigDecimal valorDesconto) {
+		this.valorDesconto = valorDesconto;
+	}
+
+	public CondicaoPagamento getCondicaoPagamento() {
+		return condicaoPagamento;
+	}
+
+	public void setCondicaoPagamento(CondicaoPagamento condicaoPagamento) {
+		this.condicaoPagamento = condicaoPagamento;
+	}
+
+	public FormaPagamento getFormaPagamento() {
+		return formaPagamento;
+	}
+
+	public void setFormaPagamento(FormaPagamento formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
+	
+	public PlanoPai getPlano() {
+		return plano;
+	}
+	
+	public void setPlano(PlanoPai plano) {
+		this.plano = plano;
+	}
+
+	@Override
+	public String toString() {
+		return "Orcamento [orc_codigo=" + orc_codigo + ", orc_data=" + orc_data + ", orc_observacao=" + orc_observacao
+				+ ", orc_status=" + orc_status + ", orc_desconto=" + orc_desconto + ", orc_total=" + orc_total
+				+ ", caixa=" + caixa + ", usuario=" + usuario + ", paciente=" + paciente + ", condicaoPagamento="
+				+ condicaoPagamento + ", formaPagamento=" + formaPagamento + ", orc_dataAnalise=" + orc_dataAnalise
+				+ ", valorDesconto=" + valorDesconto + "]";
+	}
+
 }

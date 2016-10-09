@@ -5,7 +5,7 @@
 	
 	<persistence-unit name="consultorioOdontologico" transaction-type="RESOURCE_LOCAL">
 		<properties>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/consultorio"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/consultorio?useSSL=false"/>
 			<property name="javax.persistence.jdbc.user" value="root"/>
 			<property name="javax.persistence.jdbc.password" value="admin"/>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
@@ -14,7 +14,7 @@
 			<property name="hibernate.hbm2ddl.auto" value="update"/>
 			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.format_sql" value="true"/>
-		
+			
 			<property name="current_session_context_class" value="thread"/> 
 			<property name="hibernate.enable_lazy_load_no_trans" value="true"/>
 			<property name="c3p0.acquire_increment" value="1"/>   

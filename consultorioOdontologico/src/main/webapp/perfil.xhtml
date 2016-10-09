@@ -31,9 +31,9 @@
 								<div class="clearfix"></div>
 							</div>
 							<div class="x_content">
-								<h:form>
+								<h:form> 
 
-									<p:commandButton class="btn btn-primary" actionListener="#{pacienteController.limpar}"
+									<p:commandButton class="btn btn-primary" actionListener="#{perfilController.limpar}"
 										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
 
 								</h:form>
@@ -66,7 +66,7 @@
 								
 								<h:form  prependId="false">
 
-									<p:dataTable value="#{pacienteController.listaPacientes}" id="listaPacientes" 
+									<p:dataTable value="#{perfilController.perfils}" id="lista" 
 										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
 										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
@@ -74,37 +74,23 @@
 										styleClass="table table-striped table-bordered"
 										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
 
-										<p:column headerText="Código" filterBy="#{p.pac_codigo}" sortBy="#{p.pac_codigo}" style="width:10%">
-											<h:outputText value="#{p.pac_codigo}" />
+										<p:column headerText="Código" filterBy="#{p.per_codigo}" sortBy="#{p.per_codigo}" style="width:10%">
+											<h:outputText value="#{p.per_codigo}" />
 										</p:column>
 
-										<p:column headerText="Nome" filterBy="#{p.pac_nome}" sortBy="#{p.pac_nome}" style="width:50%" filterStyle="width:95%">
-											<h:outputText value="#{p.pac_nome}" />
-										</p:column>
-
-										<p:column headerText="Data Nascimento" sortBy="#{p.pac_dataNascimento}" style="width:20%">
-											<h:outputText value="#{p.pac_dataNascimento}">
-												<f:convertDateTime pattern="dd/MM/yyyy" />
-											</h:outputText>
+										<p:column headerText="Nome" filterBy="#{p.per_descricao}" sortBy="#{p.per_descricao}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.per_descricao}" />
 										</p:column>
 
 										<p:column headerText="Editar" style="width:10%">
 											<center>
 												<p:commandButton
-													actionListener="#{pacienteController.buscaEditarPorId(p.pac_codigo)}"
-													pt:data-target="#alterar" pt:data-toggle="modal"
+													actionListener="#{perfilController.carregaPeloId(p)}"
+													pt:data-target="#myModal" pt:data-toggle="modal" update="formIncluir"
 													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
 											</center>
 										</p:column>
 
-										<p:column headerText="Excluir" style="width:10%">
-											<center>
-												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#amodal" pt:data-toggle="modal"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
-											</center>
-										</p:column>
 									</p:dataTable>
 								</h:form>
 							</div>
@@ -119,92 +105,37 @@
 		<!-- Modal -->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-sm " role="document">
+			<div class="modal-dialog modal-md" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close" data-backdrop="false" id="fecharInserir">
-							<span aria-hidden="true">X</span>
+							<span aria-hidden="true">x</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
+						<h4 class="modal-title" id="myModalLabel">Adicionar Perfil</h4>
 					</div>
-					<h:form prependId="false">
+					<h:form prependId="false"  id="formIncluir">
 						<p:growl showDetail="false" redisplay="true"/>
 						<p:tooltip/>
 						<div class="modal-body">
 						
 						<div class="row">
-							<div class="col-md-6">
+							<div class="col-md-12 col-sm-12 col-xs-12">
 								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Nome"/>
-									<p:inputText styleClass="form-control" pt:data-tooltip="Tooltip for an input"
-									value="#{pacienteController.paciente.pac_nome}" required="true"
-									requiredMessage="Digite Seu Nome" />
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Sexo"/>
-									<h:selectOneMenu label="Sexo" id="editarSexo" styleClass="form-control"
-										required="true" requiredMessage="Por Favor selecione o sexo"
-										value="#{pacienteController.paciente.pac_sexo}">
-										<f:selectItem itemLabel="Masculino" itemValue="M"/>
-										<f:selectItem itemLabel="Feminino" itemValue="F"/>
-									</h:selectOneMenu>
+									<p:outputLabel styleClass="control-label" value="Nome do Perfil"/>
+									<p:inputText styleClass="form-control" pt:data-tooltip="Nome do Perfil"
+									value="#{perfilController.perfil.per_descricao}" required="true"
+									requiredMessage="Digite o Nome do Perfil" />
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-3">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Data Nascimento"/>
-									<p:inputMask id="editarDataNascimento" styleClass="form-control"
-										requiredMessage="Digite a data de Nascimento" mask="99/99/9999"
-										value="#{pacienteController.paciente.pac_dataNascimento}">
-										<f:ajax event="blur"
-											listener="#{pacienteController.calculaIdade()}"
-											render="editarMostraIdade editarDadosResponsavel" execute="@this" />
-										<f:convertDateTime pattern="dd/MM/yyyy" />
-									</p:inputMask>
-									<p:outputLabel style="color:red;text-align:right;display:inherit"
-										value="O Paciente tem #{pacienteController.diferencaAnos} anos"
-										id="editarMostraIdade" />
-								</div>
-							</div>
-							
-							<div class="col-md-3">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="CPF"/>
-									<p:inputMask id="editarCpf" styleClass="form-control " required="true"  value="#{pacienteController.paciente.pac_cpf}"
-										requiredMessage="Digite do seu CPF" mask="999.999.999-99"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="RG"/>
-									<h:inputText id="editarRG" required="true" value="#{pacienteController.paciente.pac_rg}" requiredMessage="Digite o número do seu RG" 
-										styleClass="form-control"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Celular"/>
-										<h:inputText id="editarCelular" styleClass="form-control" value="#{pacienteController.paciente.pac_celular}"
-											 />
-								</div>
-							</div>
-					</div>
-						
-								
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger"
 								data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{pacienteController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="@form" />
+								actionListener="#{perfilController.gravar}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
 						</div>
 					</h:form>
 				</div>

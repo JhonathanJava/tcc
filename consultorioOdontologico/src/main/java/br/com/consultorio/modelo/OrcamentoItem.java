@@ -2,6 +2,7 @@ package br.com.consultorio.modelo;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,12 @@ public class OrcamentoItem implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long ori_codigo;
 	
+	@Column
+	private String ori_denteRegiao;
+	
+	@Column
+	private Integer ori_quantidade = 0;
+	
 	@ManyToOne
 	@JoinColumn(name="orc_codigo")
 	private Orcamento orcamento;
@@ -26,10 +33,6 @@ public class OrcamentoItem implements Serializable{
 	@JoinColumn(name="tra_codigo")
 	private Tratamento tratamento;
 	
-	@ManyToOne
-	@JoinColumn(name="plp_codigo")
-	private PlanoPai planoPai;
-
 	public Long getOri_codigo() {
 		return ori_codigo;
 	}
@@ -54,18 +57,25 @@ public class OrcamentoItem implements Serializable{
 		this.tratamento = tratamento;
 	}
 
-	public PlanoPai getPlanoPai() {
-		return planoPai;
+	public String getOri_denteRegiao() {
+		return ori_denteRegiao;
 	}
-
-	public void setPlanoPai(PlanoPai planoPai) {
-		this.planoPai = planoPai;
+	
+	public void setOri_denteRegiao(String ori_denteRegiao) {
+		this.ori_denteRegiao = ori_denteRegiao;
 	}
-
+	
+	public Integer getOri_quantidade() {
+		return ori_quantidade;
+	}	
+	
+	public void setOri_quantidade(Integer ori_quantidade) {
+		this.ori_quantidade = ori_quantidade;
+	}
+	
 	@Override
 	public String toString() {
-		return "OrcamentoItem [ori_codigo=" + ori_codigo + ", orcamento=" + orcamento + ", tratamento=" + tratamento
-				+ ", planoPai=" + planoPai + "]";
+		return "OrcamentoItem [ori_codigo=" + ori_codigo + ", orcamento=" + orcamento + ", tratamento=" + tratamento+ ", planoPai= ]";
 	}
 
 	@Override

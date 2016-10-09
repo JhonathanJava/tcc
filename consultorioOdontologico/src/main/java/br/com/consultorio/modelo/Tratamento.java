@@ -25,14 +25,11 @@ public class Tratamento implements Serializable{
 	private String tra_descricao;
 	
 	@Column
-	private Character tra_status = 'A';
+	private String tra_status = "A";
 	
 	@Column
 	@Min(value=0,message = "O Valor deve ser no mínimo 0.0, não podendo ser valor negativo")
 	private BigDecimal tra_valor;
-	
-	@Column
-	private String tra_denteRegiao;
 	
 	@ManyToOne
 	@JoinColumn(name="plp_codigo")
@@ -58,11 +55,11 @@ public class Tratamento implements Serializable{
 		this.tra_descricao = tra_descricao;
 	}
 	
-	public Character getTra_status() {
+	public String getTra_status() {
 		return tra_status;
 	}
 
-	public void setTra_status(Character tra_status) {
+	public void setTra_status(String tra_status) {
 		this.tra_status = tra_status;
 	}
 
@@ -72,14 +69,6 @@ public class Tratamento implements Serializable{
 
 	public void setTra_valor(BigDecimal tra_valor) {
 		this.tra_valor = tra_valor;
-	}
-
-	public String getTra_denteRegiao() {
-		return tra_denteRegiao;
-	}
-
-	public void setTra_denteRegiao(String tra_denteRegiao) {
-		this.tra_denteRegiao = tra_denteRegiao;
 	}
 
 	public PlanoPai getPlanoPai() {
@@ -93,7 +82,7 @@ public class Tratamento implements Serializable{
 	@Override
 	public String toString() {
 		return "Tratamento [tra_codigo=" + tra_codigo + ", tra_status=" + tra_status + ", tra_valor=" + tra_valor
-				+ ", tra_denteRegiao=" + tra_denteRegiao + ", planoPai=" + planoPai + "]";
+				+ ", tra_denteRegiao=" + ", planoPai=" + planoPai + "]";
 	}
 
 	@Override

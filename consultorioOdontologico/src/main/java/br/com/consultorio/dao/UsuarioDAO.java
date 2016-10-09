@@ -21,13 +21,13 @@ public class UsuarioDAO implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
-	EntityManager manager;
+	EntityManager em;
 	
 	private GenericDAO<Usuario> dao;
 	
 	@PostConstruct
 	void init(){
-		this.dao = new GenericDAO<Usuario>(this.manager,Usuario.class);
+		this.dao = new GenericDAO<Usuario>(this.em,Usuario.class);
 	}
 	
 	public void adiciona(Usuario t) {
@@ -51,7 +51,7 @@ public class UsuarioDAO implements Serializable{
 	}
 	
 	public List<Usuario> pesquisaPorFiltro(Usuario usuario){
-		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaBuilder builder = em.getCriteriaBuilder();
 		CriteriaQuery<Usuario> query = builder.createQuery(Usuario.class);
 		Root<Usuario> from = query.from(Usuario.class);
 		
@@ -61,7 +61,7 @@ public class UsuarioDAO implements Serializable{
 		        builder.like(from.<String>get("usu_nome"), "%"+usuario.getUsu_nome()+"%"));
 		}
 		
-		TypedQuery<Usuario> typedQuery = manager.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("usu_nome"))));
+		TypedQuery<Usuario> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("usu_nome"))));
 		List<Usuario> usuarios = typedQuery.getResultList();
 		
 		return usuarios;
@@ -71,7 +71,7 @@ public class UsuarioDAO implements Serializable{
 	
 	public Usuario existe(Usuario usuario){
 		Usuario resultado = new Usuario();
-		TypedQuery<Usuario> query = manager.createQuery(" select u from Usuario u where u.usu_ativo = 'Ativo' and u.usu_login = :uLogin and u.usu_senha = :uSenha ", Usuario.class);
+		TypedQuery<Usuario> query = em.createQuery(" select u from Usuario u where u.usu_ativo = 'Ativo' and u.usu_login = :uLogin and u.usu_senha = :uSenha ", Usuario.class);
 		
 		query.setParameter("uLogin",usuario.getUsu_login());
 		query.setParameter("uSenha",usuario.getUsu_senha());
@@ -88,5 +88,25 @@ public class UsuarioDAO implements Serializable{
 			return null;
 		}
 		return resultado;
+	}
+
+	public List<Usuario> buscarProfissional(String consulta) {
+		CriteriaBuilder builder = em.getCriteriaBuilder();
+		CriteriaQuery<Usuario> query = builder.createQuery(Usuario.class);
+		Root<Usuario> from = query.from(Usuario.class);
+		
+		Predicate predicate = builder.and();
+		if (consulta != null && !consulta.equals("")){
+		    predicate = builder.and(predicate, 
+		        builder.like(from.<String>get("usu_nome"), "%"+consulta+"%"));
+		}
+		
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("usu_status"), "A"));
+		 predicate = builder.and(predicate, builder.equal(from.<String>get("usu_profissional"), "Sim"));
+		
+		TypedQuery<Usuario> typedQuery = em.createQuery(query.select(from ).where( predicate ).orderBy(builder.asc(from.get("usu_nome"))));
+		List<Usuario> usuarios = typedQuery.getResultList();
+		
+		return usuarios;
 	}
 }
