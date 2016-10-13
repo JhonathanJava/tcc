@@ -34,7 +34,7 @@
 							<div class="x_content">
 								<h:form>
 
-									<p:commandButton class="btn btn-primary"
+									<p:commandButton class="btn btn-primary" update="formIncluir"
 										actionListener="#{orcamentoController.limpar}"
 										pt:data-toggle="modal" pt:data-target="#myModal"
 										pt:data-backdrop="static" value="Adicionar Novo" />
@@ -88,7 +88,7 @@
 
 										<p:column headerText="Paciente"
 											filterBy="#{p.paciente.pac_nome}"
-											sortBy="#{p.paciente.pac_nome}" style="width:48%"
+											sortBy="#{p.paciente.pac_nome}" style="width:46%"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.paciente.pac_nome}" />
 										</p:column>
@@ -126,16 +126,25 @@
 													actionListener="#{orcamentoController.carregaPeloId(p)}"
 													pt:data-target="#myModal" pt:data-toggle="modal"
 													update="formIncluir" styleClass="btn btn-info"
-													icon="fa fa-fw fa-edit" />
+													icon="fa fa-fw fa-edit" rendered="#{p.orc_status ne 'Aprovado'}"/>
 											</center>
 										</p:column>
 
-										<p:column headerText="Análisar" style="width:10%">
+										<p:column headerText="Gerar Atendimento" style="width:12%">
+											<center>
+												<p:commandButton
+													actionListener="#{orcamentoController.carregaPeloId(p)}" update="formGeraAtendimento"
+													pt:data-target="#geraAtendimento" pt:data-toggle="modal"
+													styleClass="btn btn-success" icon="fa fa-fw fa-check" rendered="#{p.orc_status ne 'Aprovado'}"/>
+											</center>
+										</p:column>
+										
+										<p:column headerText="Reprovar" style="width:10%">
 											<center>
 												<p:commandButton
 													actionListener="#{orcamentoController.carregaPeloId(p)}"
 													pt:data-target="#excluir" pt:data-toggle="modal"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" rendered="#{p.orc_status ne 'Aprovado'}"/>
 											</center>
 										</p:column>
 									</p:dataTable>
@@ -165,8 +174,7 @@
 						<p:growl showDetail="false" redisplay="true" id="growl" />
 						<p:tooltip />
 						<div class="modal-body">
-							<p align="center">Este Orçamento esta pendente abaixo você
-								altera o status dele.</p>
+							<p align="center">Deseja Reprovar Este Orçamento?.</p>
 						</div>
 
 						<div class="modal-footer">
@@ -176,12 +184,208 @@
 								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
 								actionListener="#{orcamentoController.alteraStatus('Reprovado')}"
 								styleClass="btn btn-danger" update="@form lista" />
-							<p:commandButton value="Gerar Atendimento"
-								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{orcamentoController.alteraStatus('Aprovado')}"
-								styleClass="btn btn-success" update="@form lista" />
 						</div>
 
+					</h:form>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal" id="geraAtendimento" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar3">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Gerando Atendimento</h4>
+					</div>
+					<h:form prependId="false" id="formGeraAtendimento"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" id="growl3" />
+						<p:tooltip />
+						<div class="modal-body">
+							
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Paciente" />
+										<p:inputText value="#{orcamentoController.orcamento.paciente.pac_nome}" styleClass="readonly" readonly="true"/>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3 col-sm-12 col-xs-12">
+								<p:outputLabel styleClass="control-label"
+												value="Data do Atendimento" />
+									<p:inputMask  styleClass="form-control" requiredMessage="Digite a data da consulta" 
+										mask="99/99/9999" value="#{orcamentoController.agenda.age_dataConsulta}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:inputMask>
+								</div>
+								<div class="col-md-9 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label"
+												value="Médico / Dentista (Digite o nome para buscar)" />
+											<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+												value="#{orcamentoController.orcamento.usuario}"
+												forceSelection="true"
+												completeMethod="#{orcamentoController.buscaProfissional}"
+												var="f" itemLabel="#{f.usu_nome}" itemValue="#{f}"
+												minQueryLength="3" maxResults="5">
+	
+												<o:converter converterId="omnifaces.ListConverter"
+													list="#{orcamentoController.resultUsuario}" />
+	
+												<p:column headerText="Nome">
+													<h:outputText value="#{f.usu_nome}" /> 
+												</p:column>
+	
+												<p:column headerText="Cargo">
+													<h:outputText value="#{f.cargo.car_descricao}" />
+												</p:column>
+											</p:autoComplete>
+	
+										</div>
+									</div>
+								</div>
+							
+							<div class="row">
+							<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Forma de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{orcamentoController.orcamento.formaPagamento}"
+											forceSelection="true"
+											completeMethod="#{orcamentoController.buscaFormaPagamento}"
+											var="f" itemLabel="#{f.for_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsFormaPagamento}" />
+
+											<p:column headerText="Formas de Pagamento">
+												<h:outputText value="#{f.for_descricao}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+							<div class="col-md-5 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Condição de Pagamento (Digite o nome para buscar)" />
+										<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+											value="#{orcamentoController.orcamento.condicaoPagamento}"
+											forceSelection="true"
+											completeMethod="#{orcamentoController.buscaCondicaoPagamento}"
+											var="f" itemLabel="#{f.con_descricao}" itemValue="#{f}"
+											minQueryLength="3" maxResults="5">
+
+											<o:converter converterId="omnifaces.ListConverter"
+												list="#{orcamentoController.resultsPagamento}" />
+
+											<p:column headerText="Condições de Pagamento">
+												<h:outputText value="#{f.con_descricao}" />
+											</p:column>
+
+											<p:column headerText="Número de Parcelas">
+												<h:outputText value="#{f.con_numeroParcela}" />
+											</p:column>
+
+										</p:autoComplete>
+
+									</div>
+								</div>
+								
+								<div class="col-md-2 col-sm-12 col-xs-12">
+										<div class="form-group">
+											<p:outputLabel styleClass="control-label" value="Valor Total" />
+											<h:outputText pt:data-tooltip="Valor com desconto"
+												styleClass="readonly form-control" 
+												value="#{orcamentoController.orcamento.orc_total}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
+										</div>
+									</div>
+							</div>	
+								
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Motivo da Consulta" />
+										<p:inputText value="#{orcamentoController.agenda.age_motivo}"/>
+									</div>
+								</div>	
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:commandButton value="Gerar Titulo" process="@form"
+											actionListener="#{orcamentoController.geraTitulo}"
+											update="lista12 growl" styleClass="btn btn-primary"/>
+									</div>
+								</div>
+							</div>
+							
+			 				<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+
+									<p:dataTable value="#{orcamentoController.parcelas}"
+										id="lista12" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true" editable="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Favorecido"
+											filterBy="#{p.tit_favorecido}" sortBy="#{p.tit_favorecido}"
+											style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.tit_favorecido}" />
+										</p:column>
+
+										<p:column headerText="Data Vencimento" sortBy="#{p.tit_tit_vencimento}" style="width:20%">
+												<p:inputMask styleClass="form-control" mask="99/99/9999"
+												value="#{p.tit_vencimento}"
+												required="true"
+												requiredMessage="A Data de vencimento deve ser informado">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</p:inputMask>
+										</p:column>
+
+										<p:column headerText="Valor" sortBy="#{p.tit_valor}"
+											style="width:10%">
+												<p:inputNumber decimalPlaces="2" symbol="R$"
+												style="width:100%" pt:data-tooltip="Valor do Título"
+												value="#{p.tit_valor}"
+												required="true" requiredMessage="Valor do Título">
+											</p:inputNumber>
+										</p:column>
+										
+									</p:dataTable>
+
+								</div>
+							</div>
+							
+						</div>
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Cancelar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Gerar Atendimento" partialSubmit="true"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar3')" 
+								actionListener="#{orcamentoController.alteraStatus('Aprovado')}"
+								styleClass="btn btn-success" update="growl3 lista" />
+						</div>
 					</h:form>
 				</div>
 			</div>
