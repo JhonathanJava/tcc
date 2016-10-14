@@ -14,7 +14,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Cadastro de Paciente</h2>
+								<h2>Cadastro de Caixa</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -33,8 +33,8 @@
 							<div class="x_content">
 								<h:form>
 
-									<p:commandButton class="btn btn-primary" actionListener="#{pacienteController.limpar}"
-										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
+									<p:commandButton class="btn btn-primary" actionListener="#{caixaController.limparCaixa}"
+										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Abrir Caixa"/>
 
 								</h:form>
 							</div>
@@ -46,7 +46,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Listagem de Pacientes</h2>
+								<h2>Listagem dos Caixas</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -66,7 +66,7 @@
 								
 								<h:form  prependId="false">
 
-									<p:dataTable value="#{pacienteController.listaPacientes}" id="lista"   paginatorPosition="bottom"
+									<p:dataTable value="#{caixaController.listaCaixa}" id="lista" paginatorPosition="bottom"
 										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
 										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
@@ -74,37 +74,44 @@
 										styleClass="table table-striped table-bordered"
 										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
 
-										<p:column headerText="Código" filterBy="#{p.pac_codigo}" sortBy="#{p.pac_codigo}" style="width:10%" filterStyle="width:95%">
-											<h:outputText value="#{p.pac_codigo}" />
+										<p:column headerText="Código" filterBy="#{p.cai_codigo}" sortBy="#{p.cai_codigo}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="#{p.cai_codigo}" />
 										</p:column>
 
-										<p:column headerText="Nome" filterBy="#{p.pac_nome}" sortBy="#{p.pac_nome}" style="width:50%" filterStyle="width:95%">
-											<h:outputText value="#{p.pac_nome}" />
+										<p:column headerText="Descrição" filterBy="#{p.cai_descricao}" sortBy="#{p.cai_descricao}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.cai_descricao}" />
+										</p:column>
+										
+										<p:column headerText="Valor Abertura" sortBy="#{p.tra_valor}"
+											style="width:20%">
+											<h:outputText value="#{p.cai_valorAbertura}">
+												<f:convertNumber pattern="R$ #,##0.00" currencySymbol="R$"
+													type="currency" />
+											</h:outputText>
 										</p:column>
 
-										<p:column headerText="Data Nascimento" sortBy="#{p.pac_dataNascimento}" style="width:20%">
-											<h:outputText value="#{p.pac_dataNascimento}">
+										<p:column headerText="Data Abertura" sortBy="#{p.cai_dtAbertura}" style="width:20%">
+											<h:outputText value="#{p.cai_dtAbertura}">
 												<f:convertDateTime pattern="dd/MM/yyyy" />
 											</h:outputText>
 										</p:column>
 
-										<p:column headerText="Editar" style="width:10%">
+										<p:column headerText="Data Fechamento" sortBy="#{p.cai_dtFechamento}" style="width:17%">
+											<h:outputText value="#{p.cai_dtFechamento}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+										
+
+										<p:column headerText="Fechar Caixa" style="width:13%">
 											<center>
-												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#myModal" pt:data-toggle="modal" update="formIncluir"
-													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+												<p:commandButton rendered="#{p.cai_dtFechamento == null}"
+													actionListener="#{caixaController.buscarPorId(p.cai_codigo)}"
+													pt:data-target="#fechamento" pt:data-toggle="modal" update="formExcluir"
+													styleClass="btn btn-info" icon="fa fa-fw fa-lock" />
 											</center>
 										</p:column>
 
-										<p:column headerText="Inativar" style="width:10%">
-											<center>
-												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#excluir" pt:data-toggle="modal"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
-											</center>
-										</p:column>
 									</p:dataTable>
 								</h:form>
 							</div>
@@ -116,7 +123,7 @@
 		</div>
 		<!-- Button trigger modal -->
 		
-		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+		<div class="modal" id="fechamento" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel">
 			<div class="modal-dialog modal-sm " role="document">
 				<div class="modal-content">
@@ -125,23 +132,37 @@
 							aria-label="Close" data-backdrop="false" id="fechar">
 							<span aria-hidden="true">x</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Excluir Paciente</h4>
+						<h4 class="modal-title" id="myModalLabel">Fechar Caixa</h4>
 					</div>
 					<h:form prependId="false" id="formExcluir"
 						styleClass="form-horizontal form-label-left">
 						<p:growl showDetail="false" redisplay="true" />
 						<p:tooltip />
 						<div class="modal-body">
-							<p align="center">Você realmente deseja excluir este
-								registro?</p>
+							<p align="center">Você realmente deseja fechar este Caixa?</p>
+							
+							<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Valor de Fechamento"/>
+									<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
+												pt:data-tooltip="Valor de Fechamento"
+												value="#{caixaController.caixa.cai_valorFechamento}"
+												required="true" requiredMessage="Valor de Fechamento">
+											</p:inputNumber>
+									
+								</div>
+							</div>
+						</div>
+							
 						</div>
 
 						<div class="modal-footer">
 							<p:commandButton type="button" value="Cancelar"
 								pt:data-dismiss="modal" styleClass="btn btn-primary" />
-							<p:commandButton value="Excluir"
+							<p:commandButton value="Fechar Caixa"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{usuarioController.remover}"
+								actionListener="#{caixaController.fecharCaixa}"
 								styleClass="btn btn-danger" update="@form lista" />
 						</div>
 
@@ -160,7 +181,7 @@
 							aria-label="Close" data-backdrop="false" id="fecharInserir">
 							<span aria-hidden="true">x</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
+						<h4 class="modal-title" id="myModalLabel">Adicionar Caixa</h4>
 					</div>
 					<h:form prependId="false"  id="formIncluir">
 						<p:growl showDetail="false" redisplay="true"/>
@@ -170,74 +191,30 @@
 						<div class="row">
 							<div class="col-md-6 col-sm-12 col-xs-12">
 								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Nome"/>
-									<p:inputText styleClass="form-control" pt:data-tooltip="Tooltip for an input"
-									value="#{pacienteController.paciente.pac_nome}" required="true"
-									requiredMessage="Digite Seu Nome" />
+									<p:outputLabel styleClass="control-label" value="Descrição"/>
+									<p:inputText styleClass="form-control" pt:data-tooltip="Descrição do Caixa"
+									value="#{caixaController.caixa.cai_descricao}" required="true"
+									requiredMessage="Digite a descrição do Caixa" />
 								</div>
 							</div>
 							<div class="col-md-6 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Sexo"/>
-									<h:selectOneMenu label="Sexo" id="editarSexo" styleClass="form-control"
-										required="true" requiredMessage="Por Favor selecione o sexo"
-										value="#{pacienteController.paciente.pac_sexo}">
-										<f:selectItem itemLabel="Masculino" itemValue="M"/>
-										<f:selectItem itemLabel="Feminino" itemValue="F"/>
-									</h:selectOneMenu>
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label" value="Valor de Abertura" />
+											<p:inputNumber decimalPlaces="2" symbol="R$" style="width:100%"
+												pt:data-tooltip="Valor de Abertura do Caixa"
+												value="#{caixaController.caixa.cai_valorAbertura}"
+												required="true" requiredMessage="Valor de abertura do Caixa">
+											</p:inputNumber>
+									</div>
 								</div>
-							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Data Nascimento"/>
-									<p:inputMask id="editarDataNascimento" styleClass="form-control"
-										requiredMessage="Digite a data de Nascimento" mask="99/99/9999"
-										value="#{pacienteController.paciente.pac_dataNascimento}">
-										<f:ajax event="blur"
-											listener="#{pacienteController.calculaIdade()}"
-											render="editarMostraIdade editarDadosResponsavel" execute="@this" />
-										<f:convertDateTime pattern="dd/MM/yyyy" />
-									</p:inputMask>
-									<p:outputLabel style="color:red;text-align:right;display:inherit"
-										value="O Paciente tem #{pacienteController.diferencaAnos} anos"
-										id="editarMostraIdade" />
-								</div>
-							</div>
-							
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="CPF"/>
-									<p:inputMask id="editarCpf" styleClass="form-control " required="true"  value="#{pacienteController.paciente.pac_cpf}"
-										requiredMessage="Digite do seu CPF" mask="999.999.999-99"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="RG"/>
-									<h:inputText id="editarRG" required="true" value="#{pacienteController.paciente.pac_rg}" requiredMessage="Digite o número do seu RG" 
-										styleClass="form-control"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Celular"/>
-										<h:inputText id="editarCelular" styleClass="form-control" value="#{pacienteController.paciente.pac_celular}"
-											 />
-								</div>
-							</div>
-					</div>
-						
 								
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger"
 								data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{pacienteController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								actionListener="#{caixaController.gravar}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
 								styleClass="btn btn-primary" update="@form lista" />
 						</div>
 					</h:form>

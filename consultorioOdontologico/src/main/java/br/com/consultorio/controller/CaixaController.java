@@ -1,6 +1,7 @@
 package br.com.consultorio.controller;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +24,6 @@ public class CaixaController implements Serializable{
 	
 	private Caixa caixa;
 	
-	private Caixa caixaEditar;
-	
 	@Inject
 	private CaixaDAO dao;
 
@@ -35,64 +34,46 @@ public class CaixaController implements Serializable{
 	@PostConstruct
 	 void init() {
 		this.caixa = new Caixa();
-		this.caixaEditar = new Caixa();
 		this.listaCaixa = dao.listaTodos();
 	}
 	
-	public void buscaEditarPorId(Long id){
-		caixaEditar = dao.buscaPorId(id);
+	public void buscarPorId(Long id){
+		caixa = dao.buscaPorId(id);
 	}
 	
 	@Transacional
-	public String editar(){
-		this.dao.atualiza(this.caixaEditar);
-		FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
-		this.caixaEditar = new Caixa();
-		init();
+	public void fecharCaixa(){
+		this.caixa.setCai_dtFechamento(new Date());
+		this.dao.atualiza(this.caixa);
 		this.listaCaixa = dao.listaTodos();
-		return null;
+		FacesUtil.addSuccessMessage("Caixa Fechado!!");
 	}
 	
 	@Transacional
 	public String gravar(){
 		this.caixa.setUsuario(usuario);
-		this.dao.adiciona(this.caixa);
-		FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+		if(this.caixa.getCai_codigo() != null && this.caixa.getCai_codigo() > 0){
+			this.dao.atualiza(this.caixa);
+			FacesUtil.addSuccessMessage("Alterado Com Sucesso!!");
+		}else{
+			this.dao.adiciona(this.caixa);
+			FacesUtil.addSuccessMessage("Adicionado Com Sucesso!!");
+		}
 		this.caixa = new Caixa();
 		init();
 		return null;
-	}
-	
-	@Transacional
-	public void remover(){
-		System.out.println("Chamando Remover()");
-		this.dao.remove(caixaEditar);
-		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
 	}
 	
 	public void limparCaixa(){
 		this.caixa = new Caixa();
 	}
 	
-	public void buscarPorId(Long id){
-		caixa = dao.buscaPorId(id);
-	}
-
 	public Caixa getCaixa() {
 		return caixa;
 	}
 
 	public void setCaixa(Caixa caixa) {
 		this.caixa = caixa;
-	}
-
-	public Caixa getCaixaEditar() {
-		return caixaEditar;
-	}
-
-	public void setCaixaEditar(Caixa caixaEditar) {
-		this.caixaEditar = caixaEditar;
 	}
 
 	public List<Caixa> getListaCaixa() {

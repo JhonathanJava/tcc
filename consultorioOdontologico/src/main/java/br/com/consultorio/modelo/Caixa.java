@@ -3,6 +3,7 @@ package br.com.consultorio.modelo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,8 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Caixa implements Serializable{
@@ -30,18 +29,16 @@ public class Caixa implements Serializable{
 	private String cai_status = "A";// A - Aberto , F - Fechado
 	
 	@Column
-	private BigDecimal cai_valorAbertura;
+	private BigDecimal cai_valorAbertura = BigDecimal.ZERO;
 	
 	@Column
-	private BigDecimal cai_valorFechamento;
+	private BigDecimal cai_valorFechamento = BigDecimal.ZERO;;
 	
 	@Column
-	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar cai_dtAbertura = Calendar.getInstance();
+	private Date cai_dtAbertura = new Date();
 	
 	@Column(nullable = true)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Calendar cai_dtFechamento;
+	private Date cai_dtFechamento;
 	
 	@ManyToOne
 	@JoinColumn(name="usu_codigo")
@@ -75,19 +72,19 @@ public class Caixa implements Serializable{
 		this.cai_status = cai_status;
 	}
 
-	public Calendar getCai_dtAbertura() {
+	public Date getCai_dtAbertura() {
 		return cai_dtAbertura;
 	}
 
-	public void setCai_dtAbertura(Calendar cai_dtAbertura) {
+	public void setCai_dtAbertura(Date cai_dtAbertura) {
 		this.cai_dtAbertura = cai_dtAbertura;
 	}
 
-	public Calendar getCai_dtFechamento() {
+	public Date getCai_dtFechamento() {
 		return cai_dtFechamento;
 	}
 
-	public void setCai_dtFechamento(Calendar cai_dtFechamento) {
+	public void setCai_dtFechamento(Date cai_dtFechamento) {
 		this.cai_dtFechamento = cai_dtFechamento;
 	}
 

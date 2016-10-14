@@ -3,7 +3,8 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+	xmlns:o="http://omnifaces.org/ui" xmlns:p="http://primefaces.org/ui"
+	template="/template.xhtml">
 
 	<ui:define name="conteudo">
 		<!-- page content -->
@@ -14,7 +15,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Cadastro de Paciente</h2>
+								<h2>Agendamento de Paciente</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -31,149 +32,127 @@
 								<div class="clearfix"></div>
 							</div>
 							<div class="x_content">
-								<h:form>
 
-									<p:commandButton class="btn btn-primary" actionListener="#{pacienteController.limpar}"
-										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
-
-								</h:form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12">
-						<div class="x_panel">
-							<div class="x_title">
-								<h2>Listagem de Pacientes</h2>
-								<ul class="nav navbar-right panel_toolbox">
-									<li><a class="collapse-link"><i
-											class="fa fa-chevron-up"></i></a></li>
-									<li class="dropdown"><a href="#" class="dropdown-toggle"
-										data-toggle="dropdown" role="button" aria-expanded="false"><i
-											class="fa fa-wrench"></i></a>
-										<ul class="dropdown-menu" role="menu">
-											<li><a href="#">Settings 1</a></li>
-											<li><a href="#">Settings 2</a></li>
-										</ul></li>
-									<li><a class="close-link"><i class="fa fa-close"></i></a>
-									</li>
-								</ul>
-								<div class="clearfix"></div>
-							</div>
-							<div class="x_content">
-								
-								<h:form  prependId="false">
+								<h:form prependId="false">
 
 									<p:growl id="messages" showDetail="true" />
- 
-    <h:panelGrid columnClasses="value">
-        <h3 style="margin-top: 0">Editable Schedule</h3>
-        <p:schedule id="schedule" value="#{scheduleView.eventModel}" widgetVar="myschedule" timeZone="GMT+2">
- 
-            <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-            <p:ajax event="eventSelect" listener="#{scheduleView.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-            <p:ajax event="eventMove" listener="#{scheduleView.onEventMove}" update="messages" />
-            <p:ajax event="eventResize" listener="#{scheduleView.onEventResize}" update="messages" />
- 
-        </p:schedule>
- 
-        <h3>Locale Support ( Example: Turkish )</h3>
-        <p:schedule id="scheduleLocale" value="#{scheduleView.eventModel}" locale="tr" />
- 
-        <h3>Lazy Schedule</h3>
-        <p:schedule value="#{scheduleView.lazyEventModel}" />
-    </h:panelGrid>
- 
-    <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
-        <h:panelGrid id="eventDetails" columns="2">
-            <p:outputLabel for="title" value="Titles:" />
-            <p:inputText id="title" value="#{scheduleView.event.title}" required="true" />
- 
-            <p:outputLabel for="from" value="From:" />
-            <p:calendar id="from" value="#{scheduleView.event.startDate}" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm"/>
- 
-            <p:outputLabel for="to" value="To:" />
-            <p:calendar id="to" value="#{scheduleView.event.endDate}" timeZone="GMT+2" pattern="dd/MM/yyyy HH:mm"/>
- 
-            <p:outputLabel for="allDay" value="All Day:" />
-            <h:selectBooleanCheckbox id="allDay" value="#{scheduleView.event.allDay}" />
- 
-            <p:commandButton type="reset" value="Reset" />
-            <p:commandButton id="addButton" value="Save" actionListener="#{scheduleView.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
-        </h:panelGrid>
-    </p:dialog>    
- 
-<script type="text/javascript">
-    PrimeFaces.locales['tr'] = {
-        closeText: 'kapat',
-        prevText: 'geri',
-        nextText: 'ileri',
-        currentText: 'bugün',
-        monthNames: ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran',
-            'Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'],
-        monthNamesShort: ['Oca','Şub','Mar','Nis','May','Haz',
-            'Tem','Ağu','Eyl','Eki','Kas','Ara'],
-        dayNames: ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'],
-        dayNamesShort: ['Pz','Pt','Sa','Ça','Pe','Cu','Ct'],
-        dayNamesMin: ['Pz','Pt','Sa','Ça','Pe','Cu','Ct'],
-        weekHeader: 'Hf',
-        firstDay: 1,
-        isRTL: false,
-        showMonthAfterYear: false,
-        yearSuffix: '',
-        month: 'Ay',
-        week: 'Hafta',
-        day: 'Gün',
-        allDayText : 'Tüm Gün'
-    };
-</script>
-<style type="text/css">
-    .value {
-        width: 1000px;
-    }
-</style>
+
+									<div class="row">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<p:schedule id="myschedule" value="#{agendaController.eventModel}"
+												locale="pt" widgetVar="myschedule" timeZone="America/Sao_Paulo">
+												<p:ajax event="dateSelect" update="@form"
+													oncomplete="PF('eventDialog').show()"
+													listener="#{agendaController.onDateSelect}" />
+												<p:ajax event="eventSelect" update="@form"
+													listener="#{agendaController.onEventSelect}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													oncomplete="PF('eventDialog').show();" />
+											</p:schedule>
+										</div>
+									</div>
+
+									<p:dialog widgetVar="eventDialog"
+										header="ADICIONAR AGENDAMENTO" closable="true"
+										closeOnEscape="true" showEffect="clip" hideEffect="clip"
+										style="background-color:#73879C" modal="true"
+										responsive="true">
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label white"
+														value="Paciente (Digite o nome para buscar)" />
+													<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+														value="#{agendaController.agenda.paciente}" 
+														completeMethod="#{agendaController.buscaPaciente}" resultsMessage="Nenhum Paciente Encontrado"
+														var="f" itemLabel="#{f.pac_nome}" minQueryLength="3"
+														maxResults="5" itemValue="#{f}" forceSelection="true">
+
+														<o:converter converterId="omnifaces.ListConverter"
+															list="#{agendaController.resultsPaciente}" />
+
+														<p:column headerText="Código">
+															<h:outputText value="#{f.pac_codigo}" />
+														</p:column>
+
+														<p:column headerText="Nome">
+															<h:outputText value="#{f.pac_nome}" />
+														</p:column>
+
+														<p:column headerText="Telefone">
+															<h:outputText value="#{f.pac_telefone}" />
+														</p:column>
+													</p:autoComplete>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-8 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label  white"
+														value="Médico / Dentista (Digite o nome para buscar)" />
+													<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+														value="#{agendaController.agenda.usuario}"
+														forceSelection="true" 
+														completeMethod="#{agendaController.buscaProfissional}"
+														var="f" itemLabel="#{f.usu_nome}" itemValue="#{f}"
+														minQueryLength="3" maxResults="5">
+
+														<o:converter converterId="omnifaces.ListConverter"
+															list="#{agendaController.resultUsuario}" />
+
+														<p:column headerText="Nome">
+															<h:outputText value="#{f.usu_nome}" />
+														</p:column>
+
+														<p:column headerText="Cargo">
+															<h:outputText value="#{f.cargo.car_descricao}" />
+														</p:column>
+													</p:autoComplete>
+
+												</div>
+											</div>
+
+											<div class="col-md-4">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label white"
+														value="Data da Consulta" />
+													<p:inputMask styleClass="form-control"
+														requiredMessage="Data da Consulta"
+														value="#{agendaController.event.startDate}">
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm"  timeZone="America/Sao_Paulo"/>
+													</p:inputMask>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label white"
+														value="Motivo da Consulta" />
+													<p:inputText styleClass="form-control"
+														pt:data-tooltip="Motivo da Consulta"
+														value="#{agendaController.agenda.age_motivo}" />
+												</div>
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<p:commandButton class="btn btn-danger"
+												oncomplete="PF('eventDialog').hide()" value="Voltar" />
+											<p:commandButton value="Salvar" update="@form" actionListener="#{agendaController.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" 
+												styleClass="btn btn-primary" />
+										</div>
+
+									</p:dialog>
+
 								</h:form>
 							</div>
 						</div>
 					</div>
 				</div>
 
-			</div>
-		</div>
-		<!-- Button trigger modal -->
-
-		<!-- Modal -->
-		<div class="modal" id="myModal" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-sm " role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close" data-backdrop="false" id="fecharInserir">
-							<span aria-hidden="true">X</span>
-						</button>
-						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
-					</div>
-					<h:form prependId="false">
-						<p:growl showDetail="false" redisplay="true"/>
-						<p:tooltip/>
-						<div class="modal-body">
-						
-    
-						
-								
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger"
-								data-dismiss="modal">Cancelar</button>
-							<p:commandButton value="Salvar"
-								actionListener="#{pacienteController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="@form" />
-						</div>
-					</h:form>
-				</div>
 			</div>
 		</div>
 	</ui:define>

@@ -37,7 +37,7 @@ public class Agenda implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="pac_codigo", nullable = true)
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	private Paciente paciente;
+	private Paciente paciente = new Paciente();
 	
 	@Column
 	private String age_motivo;
