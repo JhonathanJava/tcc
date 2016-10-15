@@ -43,7 +43,7 @@ public class Agenda implements Serializable{
 	private String age_motivo;
 	
 	@Column
-	private String age_status = "Ativo";
+	private String age_status = "Ativo"; //Consulta //Ausente
 	
 	@Column  
 	private String age_retorno = "N";

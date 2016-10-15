@@ -39,14 +39,14 @@
 
 									<div class="row">
 										<div class="col-md-12 col-sm-12 col-xs-12">
-											<p:schedule id="myschedule" value="#{agendaController.eventModel}"
-												locale="pt" widgetVar="myschedule" timeZone="America/Sao_Paulo">
+											<p:schedule id="myschedule"
+												value="#{agendaController.eventModel}" locale="pt"
+												widgetVar="myschedule" timeZone="America/Sao_Paulo">
 												<p:ajax event="dateSelect" update="@form"
 													oncomplete="PF('eventDialog').show()"
 													listener="#{agendaController.onDateSelect}" />
 												<p:ajax event="eventSelect" update="@form"
 													listener="#{agendaController.onEventSelect}"
-													pt:data-target="#excluir" pt:data-toggle="modal"
 													oncomplete="PF('eventDialog').show();" />
 											</p:schedule>
 										</div>
@@ -63,9 +63,10 @@
 													<p:outputLabel styleClass="control-label white"
 														value="Paciente (Digite o nome para buscar)" />
 													<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
-														value="#{agendaController.agenda.paciente}" 
-														completeMethod="#{agendaController.buscaPaciente}" resultsMessage="Nenhum Paciente Encontrado"
-														var="f" itemLabel="#{f.pac_nome}" minQueryLength="3"
+														value="#{agendaController.agenda.paciente}"
+														completeMethod="#{agendaController.buscaPaciente}"
+														resultsMessage="Nenhum Paciente Encontrado" var="f"
+														itemLabel="#{f.pac_nome}" minQueryLength="3"
 														maxResults="5" itemValue="#{f}" forceSelection="true">
 
 														<o:converter converterId="omnifaces.ListConverter"
@@ -93,7 +94,7 @@
 														value="Médico / Dentista (Digite o nome para buscar)" />
 													<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
 														value="#{agendaController.agenda.usuario}"
-														forceSelection="true" 
+														forceSelection="true"
 														completeMethod="#{agendaController.buscaProfissional}"
 														var="f" itemLabel="#{f.usu_nome}" itemValue="#{f}"
 														minQueryLength="3" maxResults="5">
@@ -120,7 +121,8 @@
 													<p:inputMask styleClass="form-control"
 														requiredMessage="Data da Consulta"
 														value="#{agendaController.event.startDate}">
-														<f:convertDateTime pattern="dd/MM/yyyy HH:mm"  timeZone="America/Sao_Paulo"/>
+														<f:convertDateTime pattern="dd/MM/yyyy HH:mm"
+															timeZone="America/Sao_Paulo" />
 													</p:inputMask>
 												</div>
 											</div>
@@ -138,13 +140,143 @@
 											</div>
 										</div>
 
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label  white"
+														value="Tratamento" />
+													<p:autoComplete pt:data-tooltip="Digite o nome para buscar"
+														value="#{agendaController.agendaTratamento.tratamento}"
+														completeMethod="#{agendaController.buscaTratamento}"
+														var="f" itemLabel="#{f.tra_descricao}" minQueryLength="3"
+														maxResults="5" itemValue="#{f}" forceSelection="true">
+
+														<o:converter converterId="omnifaces.ListConverter"
+															list="#{agendaController.resultsTratamento}" />
+
+														<p:ajax event="itemSelect" update="valorUnitario" />
+
+														<p:column headerText="Código">
+															<h:outputText value="#{f.tra_codigo}" />
+														</p:column>
+
+														<p:column headerText="Nome">
+															<h:outputText value="#{f.tra_descricao}" />
+														</p:column>
+
+														<p:column headerText="Valor">
+															<h:outputText value="#{f.tra_valor}">
+																<f:convertNumber pattern="R$ #,##0.00"
+																	currencySymbol="R$" type="currency" />
+															</h:outputText>
+														</p:column>
+													</p:autoComplete>
+												</div>
+											</div>
+										</div>
+										<h:panelGroup id="itemInfo">
+										<div class="row">
+											<div class="col-md-4 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label  white"
+														value="Valor Unitário" />
+													<p:inputNumber decimalPlaces="2" symbol="R$"
+														readonly="true" id="valorUnitario"
+														pt:data-tooltip="Valor Unitário" styleClass="readonly"
+														value="#{agendaController.agendaTratamento.tratamento.tra_valor}">
+													</p:inputNumber>
+												</div>
+											</div>
+											<div class="col-md-3 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label  white"
+														value="Dente/Região" />
+													<h:outputLink id="odontograma" value="#" styleClass="  white">
+														<h:outputText value=" - Odontograma" styleClass="  white"/>
+													</h:outputLink>
+													<p:tooltip for="odontograma" position="top">
+														<p:graphicImage name="images/odontograma.jpg" width="400"
+															height="200" />
+													</p:tooltip>
+													<p:inputText styleClass="form-control"
+														pt:data-tooltip="Região do dente para Tratamento"
+														value="#{agendaController.agendaTratamento.agt_denteRegiao}" />
+												</div>
+											</div>
+											<div class="col-md-2 col-sm-12 col-xs-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label  white"
+														value="Quantidade" />
+													<p:inputNumber pt:data-tooltip="Quantidade  white"
+														value="#{agendaController.agendaTratamento.agt_quantidade}">
+													</p:inputNumber>
+												</div>
+											</div> 
+											<div class="col-md-3 col-sm-12 col-xs-12">
+												<p:commandButton value="Adicionar" style="margin-top:7%"
+													actionListener="#{agendaController.adicionaItem}" update="itemInfo"
+													styleClass="btn btn-primary" icon="fa fa-fw fa-plus" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<p:dataTable
+													value="#{agendaController.tratamentoAgendamento}"
+													id="lista2" rowIndexVar="rowIx"
+													rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+													var="p" paginator="false" rows="10"
+													rowsPerPageTemplate="5,10,15"
+													paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+													currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+													styleClass="table table-striped table-bordered"
+													style="width:100%" responsive="true"
+													emptyMessage="Nenhum registro no banco de dados">
+
+													<p:column headerText="Tratamento"  styleClass="white"
+														filterBy="#{p.tratamento.tra_descricao}"
+														sortBy="#{p.tratamento.tra_descricao}" style="width:46%"
+														filterStyle="width:95%">
+														<h:outputText value="#{p.tratamento.tra_descricao}" style="color:black" />
+													</p:column>
+
+													<p:column headerText="valor" style="width:10%"  styleClass="white">
+														<h:outputText value="#{p.tratamento.tra_valor}"  style="color:black" >
+															<f:convertNumber pattern="R$ #,##0.00"
+																currencySymbol="R$" type="currency" />
+														</h:outputText>
+													</p:column>
+
+													<p:column headerText="Tratamento" style="width:10%"  styleClass="white">
+														<h:outputText value="#{p.agt_quantidade}"  style="color:black" />
+													</p:column>
+
+													<p:column headerText="valor Total" style="width:10%"  styleClass="white">
+														<h:outputText   style="color:black" 
+															value="#{p.tratamento.tra_valor * p.agt_quantidade}">
+															<f:convertNumber pattern="R$ #,##0.00"
+																currencySymbol="R$" type="currency" />
+														</h:outputText>
+													</p:column>
+
+													<p:column headerText="Remover" style="width:10%"  styleClass="white">
+														<center>
+															<p:commandButton actionListener="#{agendaController.removerItem(p)}" update="itemInfo" process="@this"
+																styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+														</center>
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+
 										<div class="modal-footer">
 											<p:commandButton class="btn btn-danger"
 												oncomplete="PF('eventDialog').hide()" value="Voltar" />
-											<p:commandButton value="Salvar" update="@form" actionListener="#{agendaController.addEvent}" oncomplete="PF('myschedule').update();PF('eventDialog').hide();" 
+											<p:commandButton value="Salvar" update="@form"
+												actionListener="#{agendaController.addEvent}"
+												oncomplete="PF('myschedule').update();PF('eventDialog').hide();"
 												styleClass="btn btn-primary" />
 										</div>
-
+									</h:panelGroup>
 									</p:dialog>
 
 								</h:form>

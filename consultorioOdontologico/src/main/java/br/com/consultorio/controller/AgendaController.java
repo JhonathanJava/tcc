@@ -19,10 +19,14 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
 import br.com.consultorio.dao.AgendaDAO;
+import br.com.consultorio.dao.AgendaTratamentoDAO;
 import br.com.consultorio.dao.PacienteDAO;
+import br.com.consultorio.dao.TratamentoDAO;
 import br.com.consultorio.dao.UsuarioDAO;
 import br.com.consultorio.modelo.Agenda;
+import br.com.consultorio.modelo.AgendamentoTratamento;
 import br.com.consultorio.modelo.Paciente;
+import br.com.consultorio.modelo.Tratamento;
 import br.com.consultorio.modelo.Usuario;
 import br.com.consultorio.tx.Transacional;
 import br.com.consultorio.util.jsf.FacesUtil;
@@ -35,6 +39,8 @@ public class AgendaController implements Serializable {
 
 	private Agenda agenda;
 
+	private AgendamentoTratamento agendaTratamento;
+	
 	private ScheduleModel eventModel;
 	
 	private Paciente paciente;
@@ -44,17 +50,25 @@ public class AgendaController implements Serializable {
 	@Inject
 	private AgendaDAO dao;
 
+	@Inject
+	private TratamentoDAO tratamentoDAO;
+
 	private ScheduleEvent event = new DefaultScheduleEvent();
 
 	@Inject
 	private PacienteDAO pacienteDAO;
 
 	@Inject
+	private AgendaTratamentoDAO agtDAO;
+	
+	@Inject
 	private UsuarioDAO usuarioDAO;
 
 	private List<Agenda> listaAgenda;
 	private List<Paciente> resultsPaciente = new ArrayList<Paciente>();
 	private List<Usuario> resultUsuario = new ArrayList<Usuario>();
+	private List<Tratamento> resultsTratamento = new ArrayList<Tratamento>();
+	private List<AgendamentoTratamento> tratamentoAgendamento = new ArrayList<AgendamentoTratamento>();
 
 	private Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 
@@ -64,6 +78,7 @@ public class AgendaController implements Serializable {
 		 this.paciente = new Paciente();
 		 this.usuario = new Usuario();
 		this.agenda = new Agenda();
+		this.agendaTratamento = new AgendamentoTratamento();
 		this.listaAgenda = dao.listaTodos();
 		for (Agenda agenda : listaAgenda) {
 			eventModel.addEvent(new DefaultScheduleEvent("Paciente:"+agenda.getPaciente().getPac_nome()+"\n Médico:"+agenda.getUsuario().getUsu_nome()+"\n Motivo: "+agenda.getAge_motivo(),agenda.getAge_dataConsulta(),agenda.getAge_dataConsulta(),agenda));
@@ -84,6 +99,8 @@ public class AgendaController implements Serializable {
 		this.agenda = (Agenda) event.getData();
 		this.paciente = this.getAgenda().getPaciente();
 		this.usuario = this.agenda.getUsuario();
+		this.tratamentoAgendamento = agtDAO.buscarPorAgenda(agenda.getAge_codigo());
+		this.agenda.setPaciente(this.paciente);
 	}
 	
 	@Transacional
@@ -107,12 +124,31 @@ public class AgendaController implements Serializable {
 		}
         event = new DefaultScheduleEvent();
         
+        for (AgendamentoTratamento t : tratamentoAgendamento) {
+        	t.setAgendamento(agenda);
+			agtDAO.adiciona(t);
+		}
+        
         FacesUtil.addSuccessMessage("Paciente Agendado");
     }
+	
+	public void adicionaItem(){
+		this.tratamentoAgendamento.add(this.agendaTratamento);
+		this.agendaTratamento = new AgendamentoTratamento();
+	}
+	
+	public void removerItem(AgendamentoTratamento t){
+		this.tratamentoAgendamento.remove(t);
+	}
 
 	public List<Paciente> buscaPaciente(String query) {
 		resultsPaciente = pacienteDAO.buscarPorNome(query);
 		return resultsPaciente;
+	}
+	
+	public List<Tratamento> buscaTratamento(String query) {
+		resultsTratamento = tratamentoDAO.buscarPorNome(query);
+		return resultsTratamento;
 	}
 
 	public List<Usuario> buscaProfissional(String query) {
@@ -167,4 +203,29 @@ public class AgendaController implements Serializable {
 	public void setEventModel(ScheduleModel eventModel) {
 		this.eventModel = eventModel;
 	}
+	
+	public AgendamentoTratamento getAgendaTratamento() {
+		return agendaTratamento;
+	}
+	
+	public void setAgendaTratamento(AgendamentoTratamento agendaTratamento) {
+		this.agendaTratamento = agendaTratamento;
+	}
+	
+	public List<Tratamento> getResultsTratamento() {
+		return resultsTratamento;
+	}
+	
+	public void setResultsTratamento(List<Tratamento> resultsTratamento) {
+		this.resultsTratamento = resultsTratamento;
+	}
+	
+	public List<AgendamentoTratamento> getTratamentoAgendamento() {
+		return tratamentoAgendamento;
+	}
+	
+	public void setTratamentoAgendamento(List<AgendamentoTratamento> tratamentoAgendamento) {
+		this.tratamentoAgendamento = tratamentoAgendamento;
+	}
+	
 }

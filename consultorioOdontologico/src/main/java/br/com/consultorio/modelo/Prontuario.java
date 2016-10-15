@@ -1,7 +1,6 @@
 package br.com.consultorio.modelo;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -24,26 +23,12 @@ public class Prontuario implements Serializable{
 	private Long pro_codigo;
 	
 	@ManyToOne
-	@JoinColumn(name="tra_codigo")
-	private Tratamento tra_codigo;
-	
-	@ManyToOne
-	@JoinColumn(name="pra_codigo")
-	private ProntuarioAnamnese prontuarioAnamnese;
-	
-	@ManyToOne
 	@JoinColumn(name="pac_codigo")
 	private Paciente pac_codigo;
 	
 	@Column
 	@Temporal(TemporalType.DATE)
 	private Calendar pro_data = Calendar.getInstance();
-	
-	@Column
-	private Integer pro_quantidade;
-	
-	@Column
-	private BigDecimal pro_valor;
 	
 	@Column
 	private String pro_observacao;
@@ -71,36 +56,12 @@ public class Prontuario implements Serializable{
 		this.pac_codigo = pac_codigo;
 	}
 	
-	public Tratamento getTra_codigo() {
-		return tra_codigo;
-	}
-	
-	public void setTra_codigo(Tratamento tra_codigo) {
-		this.tra_codigo = tra_codigo;
-	}
-	
 	public Calendar getPro_data() {
 		return pro_data;
 	}
 
 	public void setPro_data(Calendar pro_data) {
 		this.pro_data = pro_data;
-	}
-
-	public Integer getPro_quantidade() {
-		return pro_quantidade;
-	}
-
-	public void setPro_quantidade(Integer pro_quantidade) {
-		this.pro_quantidade = pro_quantidade;
-	}
-
-	public BigDecimal getPro_valor() {
-		return pro_valor;
-	}
-
-	public void setPro_valor(BigDecimal pro_valor) {
-		this.pro_valor = pro_valor;
 	}
 
 	public String getPro_observacao() {
@@ -119,14 +80,6 @@ public class Prontuario implements Serializable{
 		this.pro_status = pro_status;
 	}
 
-	public ProntuarioAnamnese getProntuarioAnamnese() {
-		return prontuarioAnamnese;
-	}
-	
-	public void setProntuarioAnamnese(ProntuarioAnamnese prontuarioAnamnese) {
-		this.prontuarioAnamnese = prontuarioAnamnese;
-	}
-	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -152,11 +105,4 @@ public class Prontuario implements Serializable{
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Prontuario [pro_codigo=" + pro_codigo + ", tra_codigo=" + tra_codigo + ", pac_codigo=" + pac_codigo
-				+ ", pro_data=" + pro_data + ", pro_quantidade=" + pro_quantidade + ", pro_valor=" + pro_valor
-				+ ", pro_observacao=" + pro_observacao + ", pro_status=" + pro_status + "]";
-	}
-	
 }

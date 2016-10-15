@@ -1,0 +1,184 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Pacientes Agendados</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+
+								<h:form prependId="false">
+
+									<p:dataTable value="#{atendimentoController.listaAgenda}"
+										id="lista" paginatorPosition="bottom" rowIndexVar="rowIx"
+										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10"
+										rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true"
+										emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.pac_codigo}"
+											sortBy="#{p.pac_codigo}" style="width:10%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.age_codigo}" />
+										</p:column>
+
+										<p:column headerText="Nome" filterBy="#{p.pac_nome}"
+											sortBy="#{p.pac_nome}" style="width:50%"
+											filterStyle="width:95%">
+											<h:outputText value="#{p.paciente.pac_nome}" />
+										</p:column>
+
+										<p:column headerText="Data da Consulta"
+											sortBy="#{p.age_dataConsulta}" style="width:20%">
+											<h:outputText value="#{p.age_dataConsulta}">
+												<f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+											</h:outputText>
+										</p:column>
+
+										<p:column headerText="Consultar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{atendimentoController.buscarPorId(p.age_codigo)}"
+													pt:data-target="#myModal" pt:data-toggle="modal"
+													update="formIncluir" styleClass="btn btn-info"
+													icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+										<p:column headerText="Ausente" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{atendimentoController.buscarPorId(p.age_codigo)}"
+													pt:data-target="#excluir" pt:data-toggle="modal"
+													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
+											</center>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Button trigger modal -->
+
+		<div class="modal" id="excluir" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fechar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Cancelar
+							Agendamento</h4>
+					</div>
+					<h:form prependId="false" id="formExcluir"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<p align="center">O Paciente não compareceu ao atendimento,
+								deseja cancelar a consulta?</p>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Não"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Sim"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
+								actionListener="#{atendimentoController.cancelarConsulta}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Prontuário</h4>
+					</div>
+					<h:form prependId="false" id="formIncluir">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+							<div>
+
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" class="active"><a href="#home"
+										aria-controls="home" role="tab" data-toggle="tab">Dados do Paciente</a></li>
+									<li role="presentation"><a href="#profile"
+										aria-controls="profile" role="tab" data-toggle="tab">Anamnese</a></li>
+									<li role="presentation"><a href="#messages"
+										aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+									<li role="presentation"><a href="#settings"
+										aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+								</ul>
+
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" class="tab-pane active" id="home">...</div>
+									<div role="tabpanel" class="tab-pane" id="profile">...</div>
+									<div role="tabpanel" class="tab-pane" id="messages">...</div>
+									<div role="tabpanel" class="tab-pane" id="settings">...</div>
+								</div>
+
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Salvar"
+								actionListener="#{atendimentoController.teste}"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
