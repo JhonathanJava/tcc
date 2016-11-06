@@ -14,39 +14,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Prontuário</h2>
-								<ul class="nav navbar-right panel_toolbox">
-									<li><a class="collapse-link"><i
-											class="fa fa-chevron-up"></i></a></li>
-									<li class="dropdown"><a href="#" class="dropdown-toggle"
-										data-toggle="dropdown" role="button" aria-expanded="false"><i
-											class="fa fa-wrench"></i></a>
-										<ul class="dropdown-menu" role="menu">
-											<li><a href="#">Settings 1</a></li>
-											<li><a href="#">Settings 2</a></li>
-										</ul></li>
-									<li><a class="close-link"><i class="fa fa-close"></i></a>
-									</li>
-								</ul>
-								<div class="clearfix"></div>
-							</div>
-							<div class="x_content">
-								<h:form>
-
-									<p:commandButton class="btn btn-primary"
-										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
-
-								</h:form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-				<div class="row">
-					<div class="col-md-12 col-sm-12 col-xs-12">
-						<div class="x_panel">
-							<div class="x_title">
-								<h2>Listagem dos </h2>
+								<h2>Listagem dos Prontuário</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -66,7 +34,7 @@
 								
 								<h:form  prependId="false">
 
-									<p:dataTable value="#{pacienteController.listaPacientes}" id="lista"   paginatorPosition="bottom"
+									<p:dataTable value="#{prontuarioController.listaProntuario}" id="lista"   paginatorPosition="bottom"
 										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
 										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
@@ -74,37 +42,29 @@
 										styleClass="table table-striped table-bordered"
 										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
 
-										<p:column headerText="Código" filterBy="#{p.pac_codigo}" sortBy="#{p.pac_codigo}" style="width:10%" filterStyle="width:95%">
-											<h:outputText value="#{p.pac_codigo}" />
+										<p:column headerText="Código" filterBy="#{p.pro_codigo}" sortBy="#{p.pro_codigo}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="#{p.pro_codigo}" />
 										</p:column>
 
-										<p:column headerText="Nome" filterBy="#{p.pac_nome}" sortBy="#{p.pac_nome}" style="width:50%" filterStyle="width:95%">
-											<h:outputText value="#{p.pac_nome}" />
+										<p:column headerText="Nome" filterBy="#{p.pac_codigo.pac_nome}" sortBy="#{p.pac_codigo.pac_nome}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.pac_codigo.pac_nome}" />
 										</p:column>
-
-										<p:column headerText="Data Nascimento" sortBy="#{p.pac_dataNascimento}" style="width:20%">
-											<h:outputText value="#{p.pac_dataNascimento}">
+										
+										<p:column headerText="Data do Prontuário" filterBy="#{p.pro_data}"  sortBy="#{p.pro_data}" styleClass="col-md-2 col-sm-2">
+											<h:outputText value="#{p.pro_data}">
 												<f:convertDateTime pattern="dd/MM/yyyy" />
 											</h:outputText>
 										</p:column>
 
-										<p:column headerText="Editar" style="width:10%">
+										<p:column headerText="Visualizar" style="width:10%">
 											<center>
 												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
+													actionListener="#{prontuarioController.buscaPorId(p.pro_codigo)}"
 													pt:data-target="#myModal" pt:data-toggle="modal" update="formIncluir"
 													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
 											</center>
 										</p:column>
 
-										<p:column headerText="Inativar" style="width:10%">
-											<center>
-												<p:commandButton
-													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
-													pt:data-target="#excluir" pt:data-toggle="modal"
-													styleClass="btn btn-danger" icon="fa fa-fw fa-trash-o" />
-											</center>
-										</p:column>
 									</p:dataTable>
 								</h:form>
 							</div>
@@ -116,39 +76,6 @@
 		</div>
 		<!-- Button trigger modal -->
 		
-		<div class="modal" id="excluir" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-sm " role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-label="Close" data-backdrop="false" id="fechar">
-							<span aria-hidden="true">x</span>
-						</button>
-						<h4 class="modal-title" id="myModalLabel">Excluir Paciente</h4>
-					</div>
-					<h:form prependId="false" id="formExcluir"
-						styleClass="form-horizontal form-label-left">
-						<p:growl showDetail="false" redisplay="true" />
-						<p:tooltip />
-						<div class="modal-body">
-							<p align="center">Você realmente deseja excluir este
-								registro?</p>
-						</div>
-
-						<div class="modal-footer">
-							<p:commandButton type="button" value="Cancelar"
-								pt:data-dismiss="modal" styleClass="btn btn-primary" />
-							<p:commandButton value="Excluir"
-								oncomplete="handleDialogSubmit(xhr, status, args,'fechar')"
-								actionListener="#{usuarioController.remover}"
-								styleClass="btn btn-danger" update="@form lista" />
-						</div>
-
-					</h:form>
-				</div>
-			</div>
-		</div>
 		
 		<!-- Modal -->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog"
@@ -160,76 +87,12 @@
 							aria-label="Close" data-backdrop="false" id="fecharInserir">
 							<span aria-hidden="true">x</span>
 						</button>
-						<h4 class="modal-title" id="myModalLabel">Adicionar Paciente</h4>
+						<h4 class="modal-title" id="myModalLabel">Prontuário</h4>
 					</div>
 					<h:form prependId="false"  id="formIncluir">
 						<p:growl showDetail="false" redisplay="true"/>
 						<p:tooltip/>
 						<div class="modal-body">
-						
-						<div class="row">
-							<div class="col-md-6 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Nome"/>
-									<p:inputText styleClass="form-control" pt:data-tooltip="Tooltip for an input"
-									value="#{pacienteController.paciente.pac_nome}" required="true"
-									requiredMessage="Digite Seu Nome" />
-								</div>
-							</div>
-							<div class="col-md-6 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Sexo"/>
-									<h:selectOneMenu label="Sexo" id="editarSexo" styleClass="form-control"
-										required="true" requiredMessage="Por Favor selecione o sexo"
-										value="#{pacienteController.paciente.pac_sexo}">
-										<f:selectItem itemLabel="Masculino" itemValue="M"/>
-										<f:selectItem itemLabel="Feminino" itemValue="F"/>
-									</h:selectOneMenu>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Data Nascimento"/>
-									<p:inputMask id="editarDataNascimento" styleClass="form-control"
-										requiredMessage="Digite a data de Nascimento" mask="99/99/9999"
-										value="#{pacienteController.paciente.pac_dataNascimento}">
-										<f:ajax event="blur"
-											listener="#{pacienteController.calculaIdade()}"
-											render="editarMostraIdade editarDadosResponsavel" execute="@this" />
-										<f:convertDateTime pattern="dd/MM/yyyy" />
-									</p:inputMask>
-									<p:outputLabel style="color:red;text-align:right;display:inherit"
-										value="O Paciente tem #{pacienteController.diferencaAnos} anos"
-										id="editarMostraIdade" />
-								</div>
-							</div>
-							
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="CPF"/>
-									<p:inputMask id="editarCpf" styleClass="form-control " required="true"  value="#{pacienteController.paciente.pac_cpf}"
-										requiredMessage="Digite do seu CPF" mask="999.999.999-99"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="RG"/>
-									<h:inputText id="editarRG" required="true" value="#{pacienteController.paciente.pac_rg}" requiredMessage="Digite o número do seu RG" 
-										styleClass="form-control"/>
-								</div>
-							</div>
-	
-							<div class="col-md-3 col-sm-12 col-xs-12">
-								<div class="form-group">
-									<p:outputLabel styleClass="control-label" value="Celular"/>
-										<h:inputText id="editarCelular" styleClass="form-control" value="#{pacienteController.paciente.pac_celular}"
-											 />
-								</div>
-							</div>
-					</div>
 						
 								
 						</div>
@@ -237,7 +100,7 @@
 							<button type="button" class="btn btn-danger"
 								data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{pacienteController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								actionListener="#{prontuarioController.teste}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
 								styleClass="btn btn-primary" update="@form lista" />
 						</div>
 					</h:form>

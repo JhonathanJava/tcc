@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 public class OrcamentoItem implements Serializable{
 
@@ -27,10 +30,12 @@ public class OrcamentoItem implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="orc_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Orcamento orcamento;
 	
 	@ManyToOne
 	@JoinColumn(name="tra_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Tratamento tratamento;
 	
 	public Long getOri_codigo() {

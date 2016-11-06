@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 @Entity
 public class ProntuarioTratamento implements Serializable{
 
@@ -22,10 +25,17 @@ public class ProntuarioTratamento implements Serializable{
 	
 	@ManyToOne
 	@JoinColumn(name="tra_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Tratamento tratamento;
 	
 	@ManyToOne
+	@JoinColumn(name="pac_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private Paciente paciente;
+	
+	@ManyToOne
 	@JoinColumn(name="pro_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Prontuario prontuario;
 	
 	@ManyToOne
@@ -40,6 +50,12 @@ public class ProntuarioTratamento implements Serializable{
 	
 	@Column
 	private BigDecimal prt_desconto;
+	
+	@Column
+	private String prt_observacao;
+	
+	@Column
+	private String prt_status = "Aguardando"; //Aguardando: Estado de Espera para atendimento - Efetivado: Estado quando for atendido
 	
 	public ProntuarioTratamento() {
 		
@@ -99,6 +115,30 @@ public class ProntuarioTratamento implements Serializable{
 	
 	public void setPrt_desconto(BigDecimal prt_desconto) {
 		this.prt_desconto = prt_desconto;
+	}
+	
+	public Paciente getPaciente() {
+		return paciente;
+	}
+	
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
+	}
+	
+	public String getPrt_observacao() {
+		return prt_observacao;
+	}
+	
+	public void setPrt_observacao(String prt_observacao) {
+		this.prt_observacao = prt_observacao;
+	}
+	
+	public String getPrt_status() {
+		return prt_status;
+	}
+	
+	public void setPrt_status(String prt_status) {
+		this.prt_status = prt_status;
 	}
 
 	@Override

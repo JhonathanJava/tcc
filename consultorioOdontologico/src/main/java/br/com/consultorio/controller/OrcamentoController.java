@@ -21,6 +21,7 @@ import br.com.consultorio.dao.FormaPagamentoDAO;
 import br.com.consultorio.dao.OrcamentoDAO;
 import br.com.consultorio.dao.OrcamentoItemDAO;
 import br.com.consultorio.dao.PacienteDAO;
+import br.com.consultorio.dao.ProntuarioTratamentoDAO;
 import br.com.consultorio.dao.TituloDAO;
 import br.com.consultorio.dao.TratamentoDAO;
 import br.com.consultorio.dao.UsuarioDAO;
@@ -30,6 +31,7 @@ import br.com.consultorio.modelo.FormaPagamento;
 import br.com.consultorio.modelo.Orcamento;
 import br.com.consultorio.modelo.OrcamentoItem;
 import br.com.consultorio.modelo.Paciente;
+import br.com.consultorio.modelo.ProntuarioTratamento;
 import br.com.consultorio.modelo.Titulo;
 import br.com.consultorio.modelo.Tratamento;
 import br.com.consultorio.modelo.Usuario;
@@ -84,6 +86,10 @@ public class OrcamentoController implements Serializable {
 	@Inject
 	private UsuarioDAO usuarioDAO;
 	
+	@Inject
+	private ProntuarioTratamentoDAO prontuarioTratamentoDAO;
+
+
 	@Inject
 	private AgendaDAO agendaDAO;
 
@@ -166,7 +172,6 @@ public class OrcamentoController implements Serializable {
 	@Transacional
 	public void alteraStatus(String status) {
 		if(validaGeraAtendimento(status)){
-			
 			for (Titulo t : parcelas) {
 				t.setPaciente(this.orcamento.getPaciente());
 				t.setTit_favorecido(this.orcamento.getPaciente().getPac_nome());
@@ -182,6 +187,19 @@ public class OrcamentoController implements Serializable {
 			
 			agendaDAO.adiciona(this.agenda);
 			
+			for (OrcamentoItem orcamentoItem : listaItens) {
+				
+				System.out.println(orcamentoItem);
+				ProntuarioTratamento t = new ProntuarioTratamento();
+				t.setPlanoPai(this.orcamento.getPlano());
+				t.setPrt_desconto(this.orcamento.getPlano().getPla_desconto());
+				
+				t.setPrt_quantidade(orcamentoItem.getOri_quantidade());
+				t.setPrt_valor(orcamentoItem.getTratamento().getTra_valor());
+				t.setTratamento(orcamentoItem.getTratamento());
+				t.setPaciente(orcamentoItem.getOrcamento().getPaciente());
+				prontuarioTratamentoDAO.adiciona(t);
+			}
 			
 			FacesUtil.addSuccessMessage("Orçamento Alterado com Sucesso!!");
 			init();

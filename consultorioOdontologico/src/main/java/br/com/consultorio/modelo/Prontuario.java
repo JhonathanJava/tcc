@@ -2,6 +2,7 @@ package br.com.consultorio.modelo;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 public class Prontuario implements Serializable{
@@ -26,9 +25,12 @@ public class Prontuario implements Serializable{
 	@JoinColumn(name="pac_codigo")
 	private Paciente pac_codigo;
 	
+	@ManyToOne
+	@JoinColumn(name="usu_codigo")
+	private Usuario usu_codigo;
+	
 	@Column
-	@Temporal(TemporalType.DATE)
-	private Calendar pro_data = Calendar.getInstance();
+	private Date pro_data = new Date();
 	
 	@Column
 	private String pro_observacao;
@@ -56,11 +58,11 @@ public class Prontuario implements Serializable{
 		this.pac_codigo = pac_codigo;
 	}
 	
-	public Calendar getPro_data() {
+	public Date getPro_data() {
 		return pro_data;
 	}
 
-	public void setPro_data(Calendar pro_data) {
+	public void setPro_data(Date pro_data) {
 		this.pro_data = pro_data;
 	}
 
@@ -78,6 +80,22 @@ public class Prontuario implements Serializable{
 
 	public void setPro_status(Character pro_status) {
 		this.pro_status = pro_status;
+	}
+	
+	public Usuario getUsu_codigo() {
+		return usu_codigo;
+	}
+	
+	public void setUsu_codigo(Usuario usu_codigo) {
+		this.usu_codigo = usu_codigo;
+	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "Prontuario [pro_codigo=" + pro_codigo + ", pac_codigo=" + pac_codigo + ", usu_codigo=" + usu_codigo
+				+ ", pro_data=" + pro_data + ", pro_observacao=" + pro_observacao + ", pro_status=" + pro_status + "]";
 	}
 
 	@Override

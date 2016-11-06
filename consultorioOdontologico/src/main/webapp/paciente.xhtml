@@ -73,12 +73,25 @@
 										rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
 										var="p" paginator="true" rows="10"
 										rowsPerPageTemplate="5,10,15" reflow="true"
-										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink} {Exporters}"
 										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
 										styleClass="table table-striped table-bordered"
 										style="width:100%">
-
-										<p:column headerText="Código" filterBy="#{p.pac_codigo}"
+										
+										<f:facet name="{Exporters}">
+							            <h:commandLink>
+							                <p:graphicImage name="/demo/images/excel.png" width="24"/>
+							                <p:dataExporter type="xls" target="listaPacientes" fileName="Lista de Pacientes" />
+							            </h:commandLink>
+							 
+							            <h:commandLink>
+							                <p:graphicImage name="/demo/images/pdf.png" width="24"/>
+							                <p:dataExporter type="pdf" target="listaPacientes" fileName="Lista de Pacientes" preProcessor="#{pacienteController.preProcessPDF}"/>
+							            </h:commandLink>
+							 
+							        </f:facet>
+										
+										<p:column headerText="Codigo" filterBy="#{p.pac_codigo}"
 											sortBy="#{p.pac_codigo}" styleClass="col-md-3 col-sm-3"
 											filterStyle="width:95%">
 											<h:outputText value="#{p.pac_codigo}" />
@@ -98,7 +111,7 @@
 											</h:outputText>
 										</p:column>
 
-										<p:column headerText="Editar" styleClass="col-md-1 col-sm-1">
+										<p:column headerText="Editar" styleClass="col-md-1 col-sm-1" exportable="false">
 											<center>
 												<p:commandButton
 													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"
@@ -107,7 +120,7 @@
 											</center>
 										</p:column>
 
-										<p:column headerText="Excluir" styleClass="col-md-1 col-sm-1">
+										<p:column headerText="Excluir" styleClass="col-md-1 col-sm-1" exportable="false">
 											<center>
 												<p:commandButton
 													actionListener="#{pacienteController.buscaPorId(p.pac_codigo)}"

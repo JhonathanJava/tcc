@@ -1,0 +1,166 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"  xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui" template="/template.xhtml">
+
+	<ui:define name="conteudo">
+		<!-- page content -->
+		<div class="right_col" role="main">
+			<div class="">
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Envio de E-mail</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content"> 
+								<h:form>
+									<p:commandButton class="btn btn-primary" actionListener="#{campanhaController.limpar}"
+										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
+							<div class="x_title">
+								<h2>Listagem de E-mail Enviados</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li><a class="collapse-link"><i
+											class="fa fa-chevron-up"></i></a></li>
+									<li class="dropdown"><a href="#" class="dropdown-toggle"
+										data-toggle="dropdown" role="button" aria-expanded="false"><i
+											class="fa fa-wrench"></i></a>
+										<ul class="dropdown-menu" role="menu">
+											<li><a href="#">Settings 1</a></li>
+											<li><a href="#">Settings 2</a></li>
+										</ul></li>
+									<li><a class="close-link"><i class="fa fa-close"></i></a>
+									</li>
+								</ul>
+								<div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								
+								<h:form  prependId="false">
+ 
+									<p:dataTable value="#{campanhaController.listaCampanhas}" id="lista"   paginatorPosition="bottom"
+										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Código" filterBy="#{p.cae_codigo}" sortBy="#{p.cae_codigo}" style="width:10%" filterStyle="width:95%">
+											<h:outputText value="#{p.cae_codigo}" />
+										</p:column>
+
+										<p:column headerText="Título" filterBy="#{p.cae_titulo}" sortBy="#{p.cae_titulo}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.cae_titulo}" />
+										</p:column>
+										
+										<p:column headerText="Descrição" filterBy="#{p.cae_descricao}" sortBy="#{p.cae_descricao}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.cae_descricao}" />
+										</p:column>
+										
+											<p:column headerText="Destinatário" filterBy="#{p.cae_destinatario}" sortBy="#{p.cae_destinatario}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="#{p.cae_destinatario}" />
+										</p:column>
+
+										<p:column headerText="Data de Envio" sortBy="#{p.cae_dtCadastro.time}" style="width:20%">
+											<h:outputText value="#{p.cae_dtCadastro.time}">
+												<f:convertDateTime pattern="dd/MM/yyyy" />
+											</h:outputText>
+										</p:column>
+									</p:dataTable>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharInserir">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Enviar E-mail</h4>
+					</div>
+					<h:form prependId="false"  id="formIncluir">
+						<p:growl showDetail="false" redisplay="true"/>
+						<p:tooltip/>
+						<div class="modal-body">
+						
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Título"/>
+									<p:inputText styleClass="form-control" pt:data-tooltip="Título do E-mail"
+									value="#{campanhaController.campanha.cae_titulo}" required="true"
+									requiredMessage="Título do E-mail" />
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Descrição"/>
+    							<p:inputTextarea rows="6" id="editor" 
+    							 styleClass="form-control" pt:data-tooltip="Descrição do E-mail"
+    							 value="#{campanhaController.campanha.cae_descricao}"  />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+						<div class="col-md-12 col-sm-12 col-xs-12">
+											<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Destinatario"/>
+									<p:inputText styleClass="form-control" pt:data-tooltip="Destinatario do E-mail"
+									value="#{campanhaController.campanha.cae_destinatario}" required="true"
+									requiredMessage="Destinatario do E-mail" />
+								</div>
+										</div>
+						</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger"
+								data-dismiss="modal">Cancelar</button>
+							<p:commandButton value="Enviar"
+								actionListener="#{campanhaController.salvar}" oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
+								styleClass="btn btn-primary" update="@form lista" />
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

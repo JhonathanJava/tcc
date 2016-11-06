@@ -142,7 +142,7 @@
 						<h4 class="modal-title" id="myModalLabel">Prontuário</h4>
 					</div>
 					<h:form prependId="false" id="formIncluir">
-						<p:growl showDetail="false" redisplay="true" />
+						<p:growl showDetail="false" redisplay="true" id="teste" />
 						<p:tooltip />
 						<div class="modal-body">
 							<div>
@@ -150,21 +150,464 @@
 								<!-- Nav tabs -->
 								<ul class="nav nav-tabs" role="tablist">
 									<li role="presentation" class="active"><a href="#home"
-										aria-controls="home" role="tab" data-toggle="tab">Dados do Paciente</a></li>
-									<li role="presentation"><a href="#profile"
-										aria-controls="profile" role="tab" data-toggle="tab">Anamnese</a></li>
-									<li role="presentation"><a href="#messages"
-										aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-									<li role="presentation"><a href="#settings"
-										aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+										aria-controls="home" role="tab" data-toggle="tab">Dados do
+											Paciente</a></li>
+									<li role="presentation"><a href="#anamnese"
+										aria-controls="anamnese" role="tab" data-toggle="tab">Anamnese</a></li>
+									<li role="presentation"><a href="#tratamento"
+										aria-controls="tratamento" role="tab" data-toggle="tab">Tratamentos</a></li>
+									<li role="presentation"><a href="#observacao"
+										aria-controls="observacao" role="tab" data-toggle="tab">Observação</a></li>
 								</ul>
 
 								<!-- Tab panes -->
 								<div class="tab-content">
-									<div role="tabpanel" class="tab-pane active" id="home">...</div>
-									<div role="tabpanel" class="tab-pane" id="profile">...</div>
-									<div role="tabpanel" class="tab-pane" id="messages">...</div>
-									<div role="tabpanel" class="tab-pane" id="settings">...</div>
+									<div role="tabpanel" class="tab-pane active" id="home">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label" value="Nome" />
+													<p:inputText styleClass="form-control" readonly="true"
+														pt:data-tooltip="Tooltip for an input"
+														value="#{atendimentoController.paciente.pac_nome}"
+														required="true" requiredMessage="Digite Seu Nome" />
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label" value="Sexo" />
+													<h:selectOneMenu label="Sexo" id="editarSexo"
+														readonly="true" styleClass="form-control" required="true"
+														requiredMessage="Por Favor selecione o sexo"
+														value="#{atendimentoController.paciente.pac_sexo}">
+														<f:selectItem itemLabel="Masculino" itemValue="M" />
+														<f:selectItem itemLabel="Feminino" itemValue="F" />
+													</h:selectOneMenu>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label"
+														value="Data Nascimento" />
+													<p:inputMask id="editarDataNascimento"
+														styleClass="form-control" readonly="true"
+														requiredMessage="Digite a data de Nascimento"
+														mask="99/99/9999"
+														value="#{atendimentoController.paciente.pac_dataNascimento}">
+														<f:convertDateTime pattern="dd/MM/yyyy" />
+													</p:inputMask>
+													<p:outputLabel
+														style="color:red;text-align:right;display:inherit"
+														value="O Paciente tem #{atendimentoController.diferencaAnos} anos"
+														id="editarMostraIdade" />
+												</div>
+											</div>
+
+											<div class="col-md-3">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label" value="CPF" />
+													<p:inputMask id="editarCpf" styleClass="form-control "
+														required="true" readonly="true"
+														value="#{atendimentoController.paciente.pac_cpf}"
+														requiredMessage="Digite do seu CPF" mask="999.999.999-99" />
+												</div>
+											</div>
+
+											<div class="col-md-3">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label" value="RG" />
+													<h:inputText id="editarRG" required="true" readonly="true"
+														value="#{atendimentoController.paciente.pac_rg}"
+														requiredMessage="Digite o número do seu RG"
+														styleClass="form-control" />
+												</div>
+											</div>
+
+											<div class="col-md-3">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label" value="Celular" />
+													<p:inputMask id="editarCelular" styleClass="form-control"
+														value="#{atendimentoController.paciente.pac_celular}"
+														mask="(99) 9999-9999?9" readonly="true" />
+												</div>
+											</div>
+										</div>
+
+										<h:panelGroup id="editarDadosResponsavel">
+											<h:panelGroup
+												rendered="#{atendimentoController.diferencaAnosBoolean}">
+												<div class="row">
+													<div class="col-md-4">
+														<div class="form-group">
+															<p:outputLabel styleClass="control-label"
+																value="Nome Responsável" />
+															<p:inputText styleClass="form-control" readonly="true"
+																value="#{atendimentoController.paciente.pac_nomeResponsavel}" />
+														</div>
+													</div>
+													<div class="col-md-4">
+														<div class="form-group">
+															<p:outputLabel styleClass="control-label"
+																value="Data Nascimento Responsável" />
+															<p:inputText styleClass="form-control" readonly="true"
+																value="#{atendimentoController.paciente.pac_dataNascimentoResponsavel}">
+																<f:convertDateTime pattern="dd/MM/yyyy" />
+															</p:inputText>
+														</div>
+													</div>
+
+													<div class="col-md-4">
+														<div class="form-group">
+															<p:outputLabel styleClass="control-label"
+																value="CPF Responsável" />
+															<p:inputMask id="editarCpfResponsavel"
+																styleClass="form-control" readonly="true"
+																value="#{atendimentoController.paciente.pac_cpfResponsavel}"
+																mask="999.999.999-99" />
+														</div>
+													</div>
+												</div>
+											</h:panelGroup>
+										</h:panelGroup>
+
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<p:outputLabel styleClass="control-label"
+														value="Observação" />
+													<p:inputTextarea rows="2" readonly="true"
+														value="#{atendimentoController.paciente.pac_obs}"
+														styleClass="form-control" />
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12">
+												<div>
+
+													<!-- Nav tabs -->
+													<ul class="nav nav-tabs" role="tablist">
+														<li role="presentation" class="active"><a
+															href="#home" aria-controls="home" role="tab"
+															data-toggle="tab">Informações Adicionais</a></li>
+														<li role="presentation"><a href="#profile"
+															aria-controls="profile" role="tab" data-toggle="tab">Plano</a></li>
+														<li role="presentation"><a href="#messages"
+															aria-controls="messages" role="tab" data-toggle="tab">Endereço</a></li>
+													</ul>
+
+													<!-- Tab panes -->
+													<div class="tab-content">
+														<div role="tabpanel" class="tab-pane active" id="home">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Email" />
+																		<p:inputText styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.pac_email}" />
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Telefone" />
+																		<p:inputMask styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.pac_telefone}"
+																			mask="(99) 9999-9999?9" />
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Como o paciente chegou na clínica" />
+																		<h:selectOneMenu styleClass="form-control"
+																			readonly="true"
+																			value="#{atendimentoController.paciente.pac_indicacao}">
+																			<f:selectItem itemLabel="Facebook" itemValue="F" />
+																			<f:selectItem itemLabel="Google" itemValue="G" />
+																			<f:selectItem itemLabel="Indicação de amigo"
+																				itemValue="I" />
+																			<f:selectItem itemLabel="Indicação de outro dentista"
+																				itemValue="D" />
+																			<f:selectItem itemLabel="Jornal" itemValue="J" />
+																			<f:selectItem itemLabel="Outdoor" itemValue="O" />
+																			<f:selectItem itemLabel="Rádio" itemValue="R" />
+																			<f:selectItem itemLabel="TV" itemValue="T" />
+																			<f:selectItem itemLabel="Outro" itemValue="U" />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Número de prontuário" />
+																		<p:inputText styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.pac_prontuario}" />
+																	</div>
+																</div>
+															</div>
+														</div>
+														<div role="tabpanel" class="tab-pane fade" id="profile">
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Plano de Saúde" />
+																		<h:selectOneMenu styleClass="form-control"
+																			readonly="true"
+																			converter="omnifaces.SelectItemsConverter"
+																			value="#{atendimentoController.paciente.plano.planoPai}">
+																			<f:selectItems
+																				value="#{atendimentoController.listaPlanos}" var="p"
+																				itemValue="#{p}" itemLabel="#{p.plp_descricao}" />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Número de carterinha" />
+																		<p:inputText styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.plano.pla_numeroCartera}" />
+																	</div>
+																</div>
+															</div>
+
+
+															<div class="row">
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Titular do Plano" />
+																		<p:inputText styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.plano.pla_responsavel}" />
+																	</div>
+																</div>
+																<div class="col-md-6">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="CPF do Responsável" />
+																		<p:inputMask styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.plano.pla_cpfResponsavel}"
+																			mask="999.999.999-99" />
+																	</div>
+																</div>
+															</div>
+
+														</div>
+														<div role="tabpanel" class="tab-pane fade" id="messages">
+															<div class="row">
+																<div class="col-md-4">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label" value="CEP" />
+																		<p:inputMask styleClass="form-control" readonly="true"
+																			value="#{atendimentoController.paciente.pac_cep}"
+																			mask="99999-999" />
+																	</div>
+																</div>
+																<div class="col-md-8">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label" value="Rua" />
+																		<p:inputText readonly="true"
+																			value="#{atendimentoController.paciente.pac_endereco}"
+																			styleClass="form-control" />
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-4">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Bairro" />
+																		<p:inputText readonly="true"
+																			value="#{atendimentoController.paciente.pac_bairro}"
+																			styleClass="form-control" />
+																	</div>
+																</div>
+																<div class="col-md-4">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Cidade" />
+																		<p:inputText readonly="true"
+																			value="#{atendimentoController.paciente.pac_cidade}"
+																			styleClass="form-control" />
+																	</div>
+																</div>
+																<div class="col-md-4">
+																	<div class="form-group">
+																		<p:outputLabel styleClass="control-label"
+																			value="Estado" />
+																		<h:selectOneMenu styleClass="form-control"
+																			readonly="true"
+																			value="#{atendimentoController.paciente.pac_estado}">
+																			<f:selectItem itemLabel="Paraná" itemValue="Paraná" />
+																			<f:selectItem itemLabel="São Paulo"
+																				itemValue="São Paulo" />
+																		</h:selectOneMenu>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<div role="tabpanel" class="tab-pane" id="anamnese">
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<h:outputLabel value="Modelo de Anamnese"
+													styleClass="control-label" />
+												<h:selectOneMenu styleClass="form-control"
+													converter="omnifaces.SelectItemsConverter"
+													value="#{atendimentoController.modeloAnamnese}">
+													<f:selectItems
+														value="#{atendimentoController.lstModeloAnamneses}"
+														var="p" itemValue="#{p}" itemLabel="#{p.moa_descricao}" />
+													<f:ajax event="change"
+														listener="#{atendimentoController.buscarAnamnese}"
+														execute="@this" render="teste perguntas" />
+												</h:selectOneMenu>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+												<p:dataList value="#{atendimentoController.anamneses}"
+													var="a" type="ordered" id="perguntas"
+													emptyMessage="Escola o modelo acima para carregar as perguntas"
+													itemStyleClass="margin-left-10 margin-top-15">
+
+													<ui:fragment rendered="#{a.anm_tipoPergunta eq 'S'}">
+														<h:outputText value="#{a.anm_descricao.toUpperCase()}"
+															style="font-size:12px; font-weight:700; color:f7f7f7f" />
+														<h:selectOneRadio layout="grid" columns="1"
+															value="#{atendimentoController.prontuarioAnamnese.pra_resp1}">
+															<f:selectItem itemLabel="Sim" itemValue="S" />
+															<f:selectItem itemLabel="Não" itemValue="N" />
+															<f:selectItem itemLabel="Não Sei" itemValue="O" />
+															<f:ajax event="click"
+																listener="#{atendimentoController.testeSalvar(a)}"
+																execute="@this" render="@none" />
+														</h:selectOneRadio>
+													</ui:fragment>
+
+													<ui:fragment rendered="#{a.anm_tipoPergunta eq 'E'}">
+														<h:outputText value="#{a.anm_descricao.toUpperCase()}"
+															style="font-size:12px; font-weight:700; color:f7f7f7f" />
+														<h:selectOneRadio layout="grid" columns="1"
+															value="#{atendimentoController.prontuarioAnamnese.pra_resp1}">
+															<f:selectItem itemLabel="Sim" itemValue="S" />
+															<f:selectItem itemLabel="Não" itemValue="N" />
+															<f:selectItem itemLabel="Não Sei" itemValue="O" />
+															<p:ajax event="click"
+																listener="#{atendimentoController.testeSalvar(a)}"
+																process="@this" update="@none" />
+														</h:selectOneRadio>
+
+														<h:outputLabel value="#{a.anm_descricaoAuxiliar}" />
+														<h:inputText styleClass="form-control"
+															value="#{atendimentoController.prontuarioAnamnese.pra_resp2}">
+															<f:ajax event="blur"
+																listener="#{atendimentoController.testeSalvar(a)}"
+																execute="@this" render="@none" />
+														</h:inputText>
+
+													</ui:fragment>
+
+													<ui:fragment rendered="#{a.anm_tipoPergunta eq 'T'}">
+														<h:outputText value="#{a.anm_descricao.toUpperCase()}"
+															style="font-size:12px; font-weight:700; color:f7f7f7f" />
+														<h:inputText styleClass="form-control"
+															value="#{atendimentoController.prontuarioAnamnese.pra_resp1}">
+															<f:ajax event="blur"
+																listener="#{atendimentoController.testeSalvar(a)}"
+																execute="@this" render="@none" />
+														</h:inputText>
+													</ui:fragment>
+
+													<ui:fragment rendered="#{a.anm_tipoPergunta eq 'D'}">
+														<h:outputText value="#{a.anm_descricao.toUpperCase()}"
+															style="font-size:12px; font-weight:700; color:f7f7f7f" />
+														<h:selectOneRadio layout="grid" columns="1"
+															value="#{atendimentoController.prontuarioAnamnese.pra_resp1}">
+															<f:selectItem itemLabel="Direita" />
+															<f:selectItem itemLabel="Esquerda" />
+															<f:selectItem itemLabel="Não Sei" />
+															<p:ajax event="click"
+																listener="#{atendimentoController.testeSalvar(a)}"
+																process="@this" update="@none" />
+														</h:selectOneRadio>
+													</ui:fragment>
+
+
+												</p:dataList>
+											</div>
+										</div>
+									</div>
+									<div role="tabpanel" class="tab-pane" id="tratamento">
+										<div class="col-md-12 col-sm-12 col-xs-12">
+											<p:dataTable
+												value="#{atendimentoController.lstProntuarioTratamento}"
+												id="lista3" rowIndexVar="rowIx"
+												rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+												var="p" paginator="true" rows="10"
+												rowsPerPageTemplate="5,10,15"
+												paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+												currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+												styleClass="table table-striped table-bordered"
+												style="width:100%" responsive="true"
+												emptyMessage="Nenhum registro no banco de dados">
+
+												<p:column headerText="Nome"
+													filterBy="#{p.tratamento.tra_descricao}"
+													sortBy="#{p.tratamento.tra_descricao}" style="width:70%"
+													filterStyle="width:95%">
+													<h:outputText value="#{p.tratamento.tra_descricao}" />
+												</p:column>
+
+												<p:column headerText="Status" style="width:20%">
+													<h:outputText rendered="#{p.prt_status eq 'Aguardando'}"
+														value="Aguardando" styleClass="red" />
+													<h:outputText rendered="#{p.prt_status eq 'Efetivado'}"
+														value="Efetivado" styleClass="green" />
+												</p:column>
+
+												<p:column headerText="Efetivado" style="width:10%">
+													<center>
+														<p:commandButton
+															rendered="#{p.prt_status eq 'Aguardando'}"
+															actionListener="#{atendimentoController.buscarProntuarioTratamentoPorId(p.prt_codigo)}"
+															pt:data-target="#efetivaTratamento"
+															pt:data-toggle="modal" update="formEfetiva"
+															styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+													</center>
+												</p:column>
+
+											</p:dataTable>
+										</div>
+									</div>
+
+									<div role="tabpanel" class="tab-pane" id="observacao">
+										<div class="row">
+											<div class="col-md-12 col-sm-12 col-xs-12">
+											<h:outputLabel value="Observação"
+													styleClass="control-label" />
+												<p:inputTextarea rows="5"
+													value="#{atendimentoController.prontuario.pro_observacao}"
+													styleClass="form-control" />
+											</div>
+										</div>
+									</div>
+
 								</div>
 
 							</div>
@@ -172,13 +615,59 @@
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 							<p:commandButton value="Salvar"
-								actionListener="#{atendimentoController.teste}"
+								actionListener="#{atendimentoController.salvarProntuario}"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="@form lista" />
+								styleClass="btn btn-primary" update="teste @form lista" />
 						</div>
 					</h:form>
 				</div>
 			</div>
 		</div>
+
+		<div class="modal" id="efetivaTratamento" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel">
+			<div class="modal-dialog modal-sm " role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close" data-backdrop="false" id="fecharEfetivar">
+							<span aria-hidden="true">x</span>
+						</button>
+						<h4 class="modal-title" id="myModalLabel">Observação do
+							Tratamento Feito</h4>
+					</div>
+					<h:form prependId="false" id="formEfetiva"
+						styleClass="form-horizontal form-label-left">
+						<p:growl showDetail="false" redisplay="true" />
+						<p:tooltip />
+						<div class="modal-body">
+
+							<div class="row">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<div class="form-group">
+										<p:outputLabel styleClass="control-label"
+											value="Observação do Tratamento" />
+										<p:inputTextarea rows="2"
+											value="#{atendimentoController.prontuarioTratamento.prt_observacao}"
+											styleClass="form-control" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal-footer">
+							<p:commandButton type="button" value="Voltar"
+								pt:data-dismiss="modal" styleClass="btn btn-primary" />
+							<p:commandButton value="Efetivar"
+								oncomplete="handleDialogSubmit(xhr, status, args,'fecharEfetivar')"
+								actionListener="#{atendimentoController.efetivarTratamento}"
+								styleClass="btn btn-danger" update="@form lista" />
+						</div>
+
+					</h:form>
+				</div>
+			</div>
+		</div>
+
 	</ui:define>
 </ui:composition>

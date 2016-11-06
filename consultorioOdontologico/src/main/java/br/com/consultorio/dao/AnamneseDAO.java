@@ -45,6 +45,7 @@ public class AnamneseDAO implements Serializable{
 	
 	public List<Anamnese> listaAnamnesePorModelo(Long codigo){
 		String hql = "from Anamnese a where a.modeloAnamnese.moa_codigo = "+codigo;
+		System.out.println(hql);
 		return dao.createQuery(hql);
 	}
 

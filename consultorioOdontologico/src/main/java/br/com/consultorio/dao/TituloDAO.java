@@ -2,6 +2,7 @@ package br.com.consultorio.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -12,7 +13,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.consultorio.modelo.Estoque;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
+
 import br.com.consultorio.modelo.Titulo;
 
 public class TituloDAO implements Serializable{
@@ -62,6 +66,12 @@ public class TituloDAO implements Serializable{
 		List<Titulo> titulos = typedQuery.getResultList();
 		
 		return titulos;
+	}
+	
+	public List<Map<Object,Object>> getSqlListMap(final String sql){
+		Session sess = em.unwrap(Session.class); 
+		SQLQuery query = sess.createSQLQuery(sql);
+		return (List<Map<Object,Object>>) query.setResultTransformer(AliasToEntityMapResultTransformer.INSTANCE).list();
 	}
 	
 

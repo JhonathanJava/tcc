@@ -2,6 +2,7 @@ package br.com.consultorio.controller;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -105,10 +106,34 @@ public class PagamentoController implements Serializable{
 			FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
 		}
 	
+	public Boolean validaAdicionaPagamento(){
+		
+		if(caixaPagamento.getFormaPagamento() == null){
+			FacesUtil.addErrorMessage("Deve ser selecionado a forma de pagamento");
+			return Boolean.FALSE;
+		}
+		
+		if(caixaPagamento.getCap_valor().equals(BigDecimal.ZERO)){
+			FacesUtil.addErrorMessage("O Valor Não pode ser R$ 0.00 ");
+			return Boolean.FALSE;
+		}
+		
+		if(caixaPagamento.getCap_valor().compareTo(getTxtValorRestante()) == 1){
+			FacesUtil.addErrorMessage("O Valor Pago não pode ser maior que o valor Restante R$ "+getTxtValorRestante());
+			return Boolean.FALSE;
+		}
+		
+		return Boolean.TRUE;
+				
+	}
+	
+	
 	public void adicionaPagamento(){
-		this.txtValorRestante = this.txtValorRestante.subtract(caixaPagamento.getCap_valor());
-		pagamentos.add(caixaPagamento);
-		this.caixaPagamento = new CaixaPagamento();
+		if(validaAdicionaPagamento()){
+			this.txtValorRestante = this.txtValorRestante.subtract(caixaPagamento.getCap_valor());
+			pagamentos.add(caixaPagamento);
+			this.caixaPagamento = new CaixaPagamento();
+		}
 	}
 	
 	public void removerPagamento(CaixaPagamento c){
@@ -207,10 +232,12 @@ public class PagamentoController implements Serializable{
 	
 	public void geraTitulo(){
 		if(valida()){
+			this.parcelas.clear();
 			Integer numeroParcela = titulo.getCondicaoPagamento().getCon_numeroParcela();
 			BigDecimal t = titulo.getTit_valor().add(titulo.getTit_juros()).subtract(titulo.getTit_desconto());
-			BigDecimal valorTemp = t.divide(new BigDecimal(numeroParcela));
+			BigDecimal valorTemp = t.divide(new BigDecimal(numeroParcela),RoundingMode.HALF_UP);
 			Calendar c = Calendar.getInstance(TimeZone.getTimeZone("America/Sao_Paulo"));
+			BigDecimal tempX = t;
 			for(int i = 1; i <= numeroParcela; i++){
 				Titulo temp = new Titulo();
 				temp.setCondicaoPagamento(titulo.getCondicaoPagamento());
@@ -219,7 +246,12 @@ public class PagamentoController implements Serializable{
 				temp.setTit_favorecido(titulo.getTit_favorecido());
 				temp.setTit_tipo("D");
 				temp.setTit_status("Aguardando");
-				temp.setTit_valor(valorTemp);
+				tempX = tempX.subtract(valorTemp);
+				if(i+1 == numeroParcela){
+					temp.setTit_valor(tempX);
+				}else{
+					temp.setTit_valor(valorTemp);
+				}
 				temp.setUsuario(usuario);
 				c.setTime(titulo.getTit_vencimento());
 				c.add(Calendar.DAY_OF_MONTH, (i*30));
