@@ -33,7 +33,7 @@
 							<div class="x_content">
 								<h:form> 
 
-									<p:commandButton class="btn btn-primary" actionListener="#{perfilController.limpar}"
+									<p:commandButton class="btn btn-primary" actionListener="#{perfilController.limpar}" update="formIncluir"
 										pt:data-toggle="modal" pt:data-target="#myModal" pt:data-backdrop="static" value="Adicionar Novo"/>
 
 								</h:form>
@@ -46,7 +46,7 @@
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
 							<div class="x_title">
-								<h2>Listagem de Pacientes</h2>
+								<h2>Listagem de Perfil</h2>
 								<ul class="nav navbar-right panel_toolbox">
 									<li><a class="collapse-link"><i
 											class="fa fa-chevron-up"></i></a></li>
@@ -105,7 +105,7 @@
 		<!-- Modal -->
 		<div class="modal" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel">
-			<div class="modal-dialog modal-md" role="document">
+			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal"
@@ -123,12 +123,127 @@
 							<div class="col-md-12 col-sm-12 col-xs-12">
 								<div class="form-group">
 									<p:outputLabel styleClass="control-label" value="Nome do Perfil"/>
-									<p:inputText styleClass="form-control" pt:data-tooltip="Nome do Perfil"
+									<p:inputText styleClass="form-control" pt:data-tooltip="Nome do Perfil" rendered="#{perfilController.perfil.per_codigo eq null}"
 									value="#{perfilController.perfil.per_descricao}" required="true"
+									requiredMessage="Digite o Nome do Perfil" />
+									<p:inputText styleClass="form-control" pt:data-tooltip="Nome do Perfil"  rendered="#{perfilController.perfil.per_codigo ne null}"
+									value="#{perfilController.perfil.per_descricao}" required="true" readonly="true"
 									requiredMessage="Digite o Nome do Perfil" />
 								</div>
 							</div>
 						</div>
+						
+						<div class="row">
+							<div class="col-md-9 col-sm-9 col-xs-9">
+								<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Tela"/>
+									<h:selectOneMenu label="Tela" id="tela"
+											styleClass="form-control" required="true"
+											value="#{perfilController.permissao.programa}">
+											<f:selectItem itemLabel="Paciente" itemValue="PA" />
+											<f:selectItem itemLabel="Prontuário" itemValue="PR" />
+											<f:selectItem itemLabel="Atendimento" itemValue="AT" />
+											<f:selectItem itemLabel="Cargo" itemValue="CA" />
+											<f:selectItem itemLabel="Equipe" itemValue="EQ" />
+											<f:selectItem itemLabel="Fornecedor" itemValue="FO" />
+											<f:selectItem itemLabel="Planos" itemValue="PL" />
+											<f:selectItem itemLabel="Anamnese" itemValue="AN" />
+											<f:selectItem itemLabel="Tratamentos" itemValue="TR" />
+											<f:selectItem itemLabel="Agendamento" itemValue="AG" />
+											<f:selectItem itemLabel="Recebimentos" itemValue="RE" />
+											<f:selectItem itemLabel="Pagamentos" itemValue="PG" />
+											<f:selectItem itemLabel="Caixas" itemValue="CI" />
+											<f:selectItem itemLabel="Formas de Pagamento" itemValue="FP" />
+											<f:selectItem itemLabel="Condição de Pagamento" itemValue="CP" />
+											<f:selectItem itemLabel="Produto" itemValue="PO" />
+											<f:selectItem itemLabel="Entrada" itemValue="EN" />
+											<f:selectItem itemLabel="Saída" itemValue="SA" />
+											<f:selectItem itemLabel="Ajuste de Estoque" itemValue="AE" />
+											<f:selectItem itemLabel="Destino de Saída Produto" itemValue="DS" />
+											<f:selectItem itemLabel="Enviar E-mail" itemValue="EE" />
+										</h:selectOneMenu>
+								</div>
+							</div>
+							<div class="col-md-3 col-sm-3 col-xs-3">
+								<div class="form-group">
+									<p:outputLabel styleClass="control-label" value="Permissão"/>
+									<h:selectOneMenu label="Permissão" id="permissao"
+											styleClass="form-control" required="true"
+											requiredMessage="Por Favor selecione a permissão"
+											value="#{perfilController.txtPermissao}">
+											<f:selectItem itemLabel="Todos" itemValue="T" />
+											<f:selectItem itemLabel="Incluir" itemValue="I" />
+											<f:selectItem itemLabel="Alterar" itemValue="A" />
+											<f:selectItem itemLabel="Excluir" itemValue="E" />
+											<f:selectItem itemLabel="Ver" itemValue="V" />
+											<f:selectItem itemLabel="Imprimir" itemValue="M" />
+										</h:selectOneMenu>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-md-12 col-sm-12 col-xs-12">
+								<p:commandButton class="btn btn-primary" update="lista2"  
+									actionListener="#{perfilController.adicionarPermissao}"  value="Adicionar" />
+							</div>
+						</div>
+							
+						
+						<div class="row">
+							<p:dataTable value="#{perfilController.lstPermissao}" id="lista2" 
+										rowIndexVar="rowIx" rowStyleClass="#{rowIx mod 2 eq 0 ? 'even-row' : 'odd-row'}"
+										var="p" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+										paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {JumpToPageDropdown} {NextPageLink} {LastPageLink}"
+										currentPageReportTemplate="[ Exibindo de {startRecord} a {endRecord} no total de {totalRecords} - Página: {currentPage}/{totalPages} ]"
+										styleClass="table table-striped table-bordered"
+										style="width:100%" responsive="true" emptyMessage="Nenhum registro no banco de dados">
+
+										<p:column headerText="Tela" filterBy="#{p.programa}" sortBy="#{p.programa}" style="width:50%" filterStyle="width:95%">
+											<h:outputText value="Paciente" rendered="#{p.programa eq 'PA'}"/>
+											<h:outputText value="Prontuário" rendered="#{p.programa eq 'PR'}"/>
+											<h:outputText value="Atendimento" rendered="#{p.programa eq 'AT'}"/>
+											<h:outputText value="Cargo" rendered="#{p.programa eq 'CA'}"/>
+											<h:outputText value="Equipe" rendered="#{p.programa eq 'EQ'}"/>
+											<h:outputText value="Fornecedor" rendered="#{p.programa eq 'FO'}"/>
+											<h:outputText value="Planos" rendered="#{p.programa eq 'PL'}"/>
+											<h:outputText value="Anamnese" rendered="#{p.programa eq 'AN'}"/>
+											<h:outputText value="Tratamentos" rendered="#{p.programa eq 'TR'}"/>
+											<h:outputText value="Agendamento" rendered="#{p.programa eq 'AG'}"/>
+											<h:outputText value="Recebimentos" rendered="#{p.programa eq 'RE'}"/>
+											<h:outputText value="Pagamentos" rendered="#{p.programa eq 'PG'}"/>
+											<h:outputText value="Caixas" rendered="#{p.programa eq 'CI'}"/>
+											<h:outputText value="Formas de Pagamento" rendered="#{p.programa eq 'FP'}"/>
+											<h:outputText value="Condição de Pagamento" rendered="#{p.programa eq 'CP'}"/>
+											<h:outputText value="Produto" rendered="#{p.programa eq 'PO'}"/>
+											<h:outputText value="Entrada" rendered="#{p.programa eq 'EN'}"/>
+											<h:outputText value="Saída" rendered="#{p.programa eq 'SA'}"/>
+											<h:outputText value="Ajuste de Estoque" rendered="#{p.programa eq 'AE'}"/>
+											<h:outputText value="Destino de Saída Produto" rendered="#{p.programa eq 'DS'}"/>
+											<h:outputText value="Enviar E-mail" rendered="#{p.programa eq 'EE'}"/>
+										</p:column>
+										
+										<p:column headerText="Ação" style="width:50%">
+											<h:outputText value="Incluir , " rendered="#{p.per_inserir}"/>
+											<h:outputText value="Alterar , " rendered="#{p.per_alterar}"/>
+											<h:outputText value="Excluir , " rendered="#{p.per_excluir}"/>
+											<h:outputText value="Imprimir , " rendered="#{p.per_imprimir}"/>
+											<h:outputText value="Ver , " rendered="#{p.per_ver}"/>
+										</p:column>
+
+										<p:column headerText="Editar" style="width:10%">
+											<center>
+												<p:commandButton
+													actionListener="#{perfilController.carregaPeloId(p)}"
+													pt:data-target="#myModal" pt:data-toggle="modal" update="formIncluir"
+													styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
+											</center>
+										</p:column>
+
+									</p:dataTable>
+						</div>
+						
+						
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-danger"

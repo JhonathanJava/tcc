@@ -48,6 +48,55 @@
 				<div class="row">
 					<div class="col-md-12 col-sm-12 col-xs-12">
 						<div class="x_panel">
+						<h:form>
+							<div class="x_title">
+							
+								<h2>Gráfico á Receber</h2>
+								<ul class="nav navbar-right panel_toolbox">
+									<li>
+									<p:outputLabel 
+											value="Data Inicial" />
+									<p:inputMask id="editarDataNascimento2"
+											styleClass="form-control"
+											requiredMessage="Digite a data de Nascimento"
+											mask="99/99/9999"
+											value="#{recebimentoController.primeiroDia.time}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:inputMask>
+											
+											
+									</li>
+									<li style="margin-left:15px">
+									<p:outputLabel 
+											value="Data Final" />
+									<p:inputMask id="editarDataNascimento"
+											styleClass="form-control" 
+											requiredMessage="Digite a data de Nascimento"
+											mask="99/99/9999"
+											value="#{recebimentoController.ultimoDia.time}">
+											<f:convertDateTime pattern="dd/MM/yyyy" />
+									</p:inputMask>
+											
+											
+									</li>
+									<li  style="margin-left:15px;margin-top:20px">
+										<p:commandButton class="btn btn-primary" update="@form"
+										actionListener="#{recebimentoController.createLineModels}" value="Gerar Gráfico" /></li>
+								</ul>
+								<div class="clearfix"></div>
+							
+							</div>
+							<div class="x_content">
+								<p:chart type="line" model="#{recebimentoController.lineModel3}" style="height:300px;" responsive="true"/>
+							</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12 col-xs-12">
+						<div class="x_panel">
 							<div class="x_title">
 								<h2>Listagem de Títulos á Receber</h2>
 								<ul class="nav navbar-right panel_toolbox">

@@ -575,17 +575,17 @@
 												</p:column>
 
 												<p:column headerText="Status" style="width:20%">
-													<h:outputText rendered="#{p.prt_status eq 'Aguardando'}"
+													<h:outputText rendered="#{p.agt_status eq 'Aguardando'}"
 														value="Aguardando" styleClass="red" />
-													<h:outputText rendered="#{p.prt_status eq 'Efetivado'}"
+													<h:outputText rendered="#{p.agt_status eq 'Efetivado'}"
 														value="Efetivado" styleClass="green" />
 												</p:column>
 
 												<p:column headerText="Efetivado" style="width:10%">
 													<center>
 														<p:commandButton
-															rendered="#{p.prt_status eq 'Aguardando'}"
-															actionListener="#{atendimentoController.buscarProntuarioTratamentoPorId(p.prt_codigo)}"
+															rendered="#{p.agt_status eq 'Aguardando'}"
+															actionListener="#{atendimentoController.buscarProntuarioTratamentoPorId(p.agt_codigo)}"
 															pt:data-target="#efetivaTratamento"
 															pt:data-toggle="modal" update="formEfetiva"
 															styleClass="btn btn-info" icon="fa fa-fw fa-edit" />
@@ -617,7 +617,7 @@
 							<p:commandButton value="Salvar"
 								actionListener="#{atendimentoController.salvarProntuario}"
 								oncomplete="handleDialogSubmit(xhr, status, args,'fecharInserir')"
-								styleClass="btn btn-primary" update="teste @form lista" />
+								styleClass="btn btn-primary" update="teste @form lista lista3" />
 						</div>
 					</h:form>
 				</div>
@@ -648,7 +648,7 @@
 										<p:outputLabel styleClass="control-label"
 											value="Observação do Tratamento" />
 										<p:inputTextarea rows="2"
-											value="#{atendimentoController.prontuarioTratamento.prt_observacao}"
+											value="#{atendimentoController.prontuarioTratamento.agt_observacao}"
 											styleClass="form-control" />
 									</div>
 								</div>

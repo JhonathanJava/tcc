@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import br.com.consultorio.dao.AgendaDAO;
+import br.com.consultorio.dao.AgendaTratamentoDAO;
 import br.com.consultorio.dao.AnamneseDAO;
 import br.com.consultorio.dao.ModeloAnamneseDAO;
 import br.com.consultorio.dao.PacienteDAO;
@@ -23,6 +24,7 @@ import br.com.consultorio.dao.ProntuarioAnamneseDAO;
 import br.com.consultorio.dao.ProntuarioDAO;
 import br.com.consultorio.dao.ProntuarioTratamentoDAO;
 import br.com.consultorio.modelo.Agenda;
+import br.com.consultorio.modelo.AgendamentoTratamento;
 import br.com.consultorio.modelo.Anamnese;
 import br.com.consultorio.modelo.ModeloAnamnese;
 import br.com.consultorio.modelo.Paciente;
@@ -62,7 +64,7 @@ public class AtendimentoController implements Serializable{
 	private ProntuarioAnamnese prontuarioAnamnese;
 	
 	@Inject
-	private ProntuarioTratamento prontuarioTratamento;
+	private AgendamentoTratamento prontuarioTratamento;
 	
 	@Inject
 	private AgendaDAO agendaDAO;
@@ -80,6 +82,9 @@ public class AtendimentoController implements Serializable{
 	private PacienteDAO pacienteDAO;
 	
 	@Inject
+	private AgendaTratamentoDAO agtDAO;
+	
+	@Inject
 	private ProntuarioDAO prontuarioDAO;
 	
 	private List<Agenda> listaAgenda;
@@ -90,7 +95,7 @@ public class AtendimentoController implements Serializable{
 	
 	private List<ProntuarioAnamnese> lstProntuarioAnamnese = new ArrayList<ProntuarioAnamnese>();
 	
-	private List<ProntuarioTratamento> lstProntuarioTratamento = new ArrayList<ProntuarioTratamento>();
+	private List<AgendamentoTratamento> lstProntuarioTratamento = new ArrayList<AgendamentoTratamento>();
 	
 	private List<Anamnese> anamneses;
 	
@@ -114,14 +119,14 @@ public class AtendimentoController implements Serializable{
 		this.agenda = agendaDAO.buscaPorId(id);
 		this.paciente = pacienteDAO.buscaPorId(this.agenda.getPaciente().getPac_codigo());
 		this.lstModeloAnamneses = modeloDAO.listaTodos();
-		this.lstProntuarioTratamento = prontuarioTratamentoDAO.buscaTratatamentoPorPaciente(paciente.getPac_codigo());
+		this.lstProntuarioTratamento = agtDAO.buscarPorAgenda(this.agenda.getAge_codigo());
 		modeloAnamnese = this.lstModeloAnamneses.get(0);
 		calculaIdade();
 		buscarAnamnese();
 	}
 	
 	public void buscarProntuarioTratamentoPorId(Long id){
-		this.prontuarioTratamento = prontuarioTratamentoDAO.buscaPorId(id);
+		this.prontuarioTratamento = agtDAO.buscaPorId(id);
 	}
 	
 	public void buscarAnamnese(){
@@ -137,21 +142,21 @@ public class AtendimentoController implements Serializable{
 		prontuarioDAO.adiciona(prontuario);
 		System.out.println(prontuario);
 		// Salva Anamnese
-		for (ProntuarioAnamnese pa : lstProntuarioAnamnese) {
-			pa.setProntuario(prontuario);
-			prontuarioAnamneseDAO.adiciona(pa);
-		}
+//		for (ProntuarioAnamnese pa : lstProntuarioAnamnese) {
+//			pa.setProntuario(prontuario);
+//			prontuarioAnamneseDAO.adiciona(pa);
+//		}
 		
-		for (ProntuarioTratamento pt : lstProntuarioTratamento) {
-			pt.setProntuario(prontuario);
-			prontuarioTratamentoDAO.atualiza(pt);
-		}
+//		for (AgendamentoTratamento pt : lstProntuarioTratamento) {
+//			pt.setProntuario(prontuario);
+//			agtDAO.atualiza(pt);
+//		}
 		
 		this.agenda.setAge_status("Consultado");
 		agendaDAO.atualiza(agenda);
 		init();
 		
-		FacesUtil.addSuccessMessage("Atendimento Finaliado e Prontuário Criado");
+		FacesUtil.addSuccessMessage("Atendimento Finalizado");
 	}
 	
 	public void calculaIdade(){
@@ -170,9 +175,9 @@ public class AtendimentoController implements Serializable{
 	
 	@Transacional
 	public void efetivarTratamento(){
-		this.prontuarioTratamento.setPrt_status("Efetivado");
-		this.prontuarioTratamentoDAO.atualiza(prontuarioTratamento);
-		this.prontuarioTratamento = new ProntuarioTratamento();
+		this.prontuarioTratamento.setAgt_status("Efetivado");
+		this.agtDAO.atualiza(prontuarioTratamento);
+		this.prontuarioTratamento = new AgendamentoTratamento();
 		FacesUtil.addSuccessMessage("Tratamento Efetivado!");
 	}
 	
@@ -281,19 +286,19 @@ public class AtendimentoController implements Serializable{
 		this.lstProntuarioAnamnese = lstProntuarioAnamnese;
 	}
 	
-	public List<ProntuarioTratamento> getLstProntuarioTratamento() {
+	public List<AgendamentoTratamento> getLstProntuarioTratamento() {
 		return lstProntuarioTratamento;
 	}
 	
-	public void setLstProntuarioTratamento(List<ProntuarioTratamento> lstProntuarioTratamento) {
+	public void setLstProntuarioTratamento(List<AgendamentoTratamento> lstProntuarioTratamento) {
 		this.lstProntuarioTratamento = lstProntuarioTratamento;
 	}
 	
-	public ProntuarioTratamento getProntuarioTratamento() {
+	public AgendamentoTratamento getProntuarioTratamento() {
 		return prontuarioTratamento;
 	}
 	
-	public void setProntuarioTratamento(ProntuarioTratamento prontuarioTratamento) {
+	public void setProntuarioTratamento(AgendamentoTratamento prontuarioTratamento) {
 		this.prontuarioTratamento = prontuarioTratamento;
 	}
 

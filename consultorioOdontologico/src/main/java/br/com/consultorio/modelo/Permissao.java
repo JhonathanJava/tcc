@@ -48,12 +48,8 @@ public class Permissao implements Serializable{
 	@ManyToOne
 	private Perfil perfil;
 	
-	@JoinColumn(name = "perfilPermissao")
-	@ManyToOne
-	private PerfilPermissao perfilPermissao;
-	
-	@ManyToOne
-	private Programa programa;
+	@Column
+	private String programa;
 
 	public Long getPer_codigo() {
 		return per_codigo;
@@ -127,20 +123,12 @@ public class Permissao implements Serializable{
 		this.perfil = perfil;
 	}
 	
-	public Programa getPrograma() {
+	public String getPrograma() {
 		return programa;
 	}
-	
-	public void setPrograma(Programa programa) {
+
+	public void setPrograma(String programa) {
 		this.programa = programa;
-	}
-	
-	public PerfilPermissao getPerfilPermissao() {
-		return perfilPermissao;
-	}
-	
-	public void setPerfilPermissao(PerfilPermissao perfilPermissao) {
-		this.perfilPermissao = perfilPermissao;
 	}
 
 	@Override

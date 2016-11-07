@@ -3,10 +3,12 @@ package br.com.consultorio.controller;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LineChartModel;
 
 import br.com.consultorio.dao.CaixaPagamentoDAO;
 import br.com.consultorio.dao.CondicaoPagamentoDAO;
@@ -73,6 +81,11 @@ public class PagamentoController implements Serializable{
 	private BigDecimal txtValorRestante = BigDecimal.ZERO;
 	private Usuario usuario = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioLogado");
 	
+	private Calendar primeiroDia;
+	private Calendar ultimoDia;
+	private LineChartModel lineModel3;
+	private List<Map<Object, Object>> titulosPagar;
+	
 	@PostConstruct
 	 void init() {
 		this.titulo = new Titulo();
@@ -80,7 +93,53 @@ public class PagamentoController implements Serializable{
 		this.parcelas = new ArrayList<>();
 		this.caixaPagamento = new CaixaPagamento();
 		this.pagamentos = new ArrayList<>();
+		createLineModels();
 	}
+	
+	 public void createLineModels() {		
+		 lineModel3 = initPagamento();
+         lineModel3.setTitle("Gráfico Pagamento");
+         lineModel3.setLegendPosition("e");
+         lineModel3.setShowPointLabels(true);
+         lineModel3.getAxes().put(AxisType.X, new CategoryAxis("Mês"));
+         lineModel3.setAnimate(true);
+         lineModel3.setSeriesColors("FF0000");
+         Axis yAxis = lineModel3.getAxis(AxisType.Y);
+         yAxis.setLabel("Valor Total do Dia");
+         	
+	}
+	
+	 private LineChartModel initPagamento() {
+	        LineChartModel model = new LineChartModel();
+	 
+	        ChartSeries boys = new ChartSeries();
+	        boys.setLabel("Á Pagar");
+	        
+	        Calendar dataAtual = Calendar.getInstance();
+			//1º dia do mês atual
+			if(primeiroDia == null){
+				primeiroDia = Calendar.getInstance();
+			primeiroDia.add(Calendar.DAY_OF_MONTH, -dataAtual.get(Calendar.DAY_OF_MONTH));
+			primeiroDia.add(Calendar.DAY_OF_YEAR, 1);
+			System.out.println(primeiroDia.getTime());
+			//Ultimo dia do mês atual
+			ultimoDia = Calendar.getInstance();
+			ultimoDia.add(Calendar.MONTH, 1);
+			ultimoDia.add(Calendar.DAY_OF_MONTH, -dataAtual.get(Calendar.DAY_OF_MONTH));
+			}
+			System.out.println(ultimoDia.getTime());
+			SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+
+	        this.titulosPagar = dao.getSqlListMap("select sum(tit_valor) valor , Month(tit_vencimento) dia from Titulo where tit_tipo = 'D' and tit_vencimento >= '"+formatador.format(primeiroDia.getTime())+"' and tit_vencimento <= '"+formatador.format(ultimoDia.getTime())+"' group by 2 ");
+
+	        for (Map<Object, Object> titulo : titulosPagar) {
+	        	boys.set(titulo.get("dia").toString(), Double.parseDouble(titulo.get("valor").toString()));
+	        	System.out.println(titulo);
+			}
+	        model.addSeries(boys);
+	         
+	        return model;
+	    }
 	
 	public void limpar(){
 		this.titulo = new Titulo();
@@ -384,12 +443,44 @@ public class PagamentoController implements Serializable{
 		this.txtValorTitulo = txtValorTitulo;
 	}
 	
+	public Calendar getPrimeiroDia() {
+		return primeiroDia;
+	}
+
+	public void setPrimeiroDia(Calendar primeiroDia) {
+		this.primeiroDia = primeiroDia;
+	}
+
+	public Calendar getUltimoDia() {
+		return ultimoDia;
+	}
+
+	public void setUltimoDia(Calendar ultimoDia) {
+		this.ultimoDia = ultimoDia;
+	}
+
+	public LineChartModel getLineModel3() {
+		return lineModel3;
+	}
+
+	public void setLineModel3(LineChartModel lineModel3) {
+		this.lineModel3 = lineModel3;
+	}
+
 	public BigDecimal getTxtValorRestante() {
 		return txtValorRestante;
 	}
 	
 	public void setTxtValorRestante(BigDecimal txtValorRestante) {
 		this.txtValorRestante = txtValorRestante;
+	}
+	
+	public List<Map<Object, Object>> getTitulosPagar() {
+		return titulosPagar;
+	}
+	
+	public void setTitulosPagar(List<Map<Object, Object>> titulosPagar) {
+		this.titulosPagar = titulosPagar;
 	}
 	
 	public BigDecimal getTxtValorTotal() {

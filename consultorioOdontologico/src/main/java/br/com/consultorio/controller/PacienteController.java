@@ -1,6 +1,5 @@
 package br.com.consultorio.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,8 +10,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,8 +17,6 @@ import javax.inject.Named;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Image;
 import com.lowagie.text.PageSize;
 import com.lowagie.text.Paragraph;
 
@@ -83,13 +78,13 @@ public class PacienteController implements Serializable{
         Document pdf = (Document) document;
         pdf.open();
         pdf.setPageSize(PageSize.A4);
-        //ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        //String logo = externalContext.getRealPath("") + File.separator + "resources" + File.separator + "images" + File.separator + "img.jpg";
+//        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+//        String logo = externalContext.getRealPath("") + File.separator + "resources" + File.separator + "images" + File.separator + "DENTE.png";
         Paragraph titulo = new Paragraph("LISTAGEM DE PACIENTE");
         titulo.setAlignment(Paragraph.ALIGN_CENTER);
         titulo.setSpacingAfter(50);
         pdf.add(titulo);
-        //pdf.add(Image.getInstance(logo));
+//        pdf.add(Image.getInstance(logo));
     }
 	
 	public void limpar(){

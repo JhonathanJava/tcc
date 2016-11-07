@@ -49,13 +49,16 @@ public class AjusteEstoqueController implements Serializable{
 		this.listaEstoque = dao.buscarProdutoAtivo();
 		this.listaAjusteEstoque = ajusteEstoqueDAO.listaTodos();
 		this.ajusteEstoque = new AjusteEstoque();
+		this.listaEstoque = dao.listaTodos();
 		verificaEstoque();
 	}
 	
 	public void verificaEstoque(){
 		for (Estoque estoque : listaEstoque) {
-			if(estoque.getEst_quantidade() < estoque.getEst_quantidadeMinima()){
-				this.listaEstoqueNegativo.add(estoque);
+			if(estoque.getEst_quantidade() != null){
+				if(estoque.getEst_quantidade() < estoque.getEst_quantidadeMinima()){
+					this.listaEstoqueNegativo.add(estoque);
+				}
 			}
 		}
 	}

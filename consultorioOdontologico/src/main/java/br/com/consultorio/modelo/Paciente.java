@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Past;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -43,9 +44,11 @@ public class Paciente implements Serializable{
 	private String pac_cpf;
 	
 	@Column
+	@Past(message="A Data não pode ser maior que a data Atual")
 	private Date pac_dataNascimento;
 	
 	@Column
+	@Past(message="A Data não pode ser maior que a data Atual")
 	private Date pac_dataNascimentoResponsavel;
 	
 	@Column

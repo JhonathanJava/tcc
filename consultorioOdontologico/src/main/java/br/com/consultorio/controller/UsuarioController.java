@@ -13,9 +13,11 @@ import javax.inject.Named;
 
 import br.com.consultorio.dao.CargoDAO;
 import br.com.consultorio.dao.PerfilDAO;
+import br.com.consultorio.dao.PermissaoDAO;
 import br.com.consultorio.dao.UsuarioDAO;
 import br.com.consultorio.modelo.Cargo;
 import br.com.consultorio.modelo.Perfil;
+import br.com.consultorio.modelo.Permissao;
 import br.com.consultorio.modelo.Usuario;
 import br.com.consultorio.tx.Transacional;
 import br.com.consultorio.util.jsf.FacesUtil;
@@ -50,6 +52,9 @@ public class UsuarioController implements Serializable{
 	
 	@Inject
 	private PerfilDAO perfilDAO;
+	
+	@Inject
+	private PermissaoDAO permissaoDAO;
 	
 	@Inject
 	private CargoDAO cargoDao;
@@ -113,6 +118,10 @@ public class UsuarioController implements Serializable{
 		if(existe != null){
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.getExternalContext().getSessionMap().put("usuarioLogado", existe);
+			
+			List<Permissao> lstPermissao = this.permissaoDAO.carregaPermissaoPorPerfil(existe.getPerfil().getPer_codigo());
+			context.getExternalContext().getSessionMap().put("permissao", lstPermissao);
+			
 			return "home?faces-redirect=true";
 		}
 		return null;

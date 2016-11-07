@@ -126,6 +126,7 @@ public class AgendaController implements Serializable {
         
         for (AgendamentoTratamento t : tratamentoAgendamento) {
         	t.setAgendamento(agenda);
+        	t.setAgt_status("Aguardando");
 			agtDAO.adiciona(t);
 		}
         

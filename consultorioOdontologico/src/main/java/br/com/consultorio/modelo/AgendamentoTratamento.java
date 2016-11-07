@@ -35,11 +35,27 @@ public class AgendamentoTratamento implements Serializable{
 	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	private Tratamento tratamento;
 	
+	@ManyToOne
+	@JoinColumn(name="pac_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private Paciente paciente;
+	
+	@ManyToOne
+	@JoinColumn(name="pro_codigo")
+	@Cascade({CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	private Prontuario prontuario;
+	
 	@Column
 	private String agt_denteRegiao;
 	
 	@Column
 	private Integer agt_quantidade;
+	
+	@Column
+	private String agt_status;
+	
+	@Column
+	private String agt_observacao;
 
 	public AgendamentoTratamento() {
 	
@@ -83,5 +99,37 @@ public class AgendamentoTratamento implements Serializable{
 	
 	public void setAgt_quantidade(Integer agt_quantidade) {
 		this.agt_quantidade = agt_quantidade;
+	}
+	
+	public Paciente getPaciente() {
+		return paciente;
+	}
+	
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
+	}
+	
+	public Prontuario getProntuario() {
+		return prontuario;
+	}
+	
+	public void setProntuario(Prontuario prontuario) {
+		this.prontuario = prontuario;
+	}
+	
+	public String getAgt_status() {
+		return agt_status;
+	}
+	
+	public void setAgt_status(String agt_status) {
+		this.agt_status = agt_status;
+	}
+	
+	public String getAgt_observacao() {
+		return agt_observacao;
+	}
+	
+	public void setAgt_observacao(String agt_observacao) {
+		this.agt_observacao = agt_observacao;
 	}
 }

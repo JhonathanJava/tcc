@@ -3,10 +3,12 @@ package br.com.consultorio.controller;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.LineChartModel;
 
 import br.com.consultorio.dao.CaixaPagamentoDAO;
 import br.com.consultorio.dao.CondicaoPagamentoDAO;
@@ -38,7 +46,8 @@ public class RecebimentoController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private Titulo titulo;
-	
+	private LineChartModel lineModel3;
+
 	private CaixaPagamento caixaPagamento;
 	
 	@Inject
@@ -58,7 +67,7 @@ public class RecebimentoController implements Serializable{
 	
 	@Inject
 	private CaixaPagamentoDAO pagamentoDAO;
-	
+	  private List<Map<Object, Object>> titulosReceber;
 	private List<Titulo> titulos;
 	private List<CaixaPagamento> pagamentos;
 	private List<Titulo> parcelas;
@@ -66,7 +75,8 @@ public class RecebimentoController implements Serializable{
 	private List<Paciente> resultsPaciente = new ArrayList<Paciente>();
 	private List<CondicaoPagamento> resultsPagamento = new ArrayList<CondicaoPagamento>();
 	private List<FormaPagamento> resultsFormaPagamento = new ArrayList<FormaPagamento>();
-	
+	private Calendar primeiroDia;
+	private Calendar ultimoDia;
 	private String txtTipoFavorecido = "O";
 	private BigDecimal txtValorTitulo = BigDecimal.ZERO;
 	private BigDecimal txtValorTotal = BigDecimal.ZERO;
@@ -80,8 +90,53 @@ public class RecebimentoController implements Serializable{
 		this.parcelas = new ArrayList<>();
 		this.caixaPagamento = new CaixaPagamento();
 		this.pagamentos = new ArrayList<>();
+		createLineModels();
 	}
 	
+	 public void createLineModels() {		
+		lineModel3 = initCategoryModel();
+	    lineModel3.setTitle("Recebimento");
+	    lineModel3.setLegendPosition("e");
+	    lineModel3.setShowPointLabels(true);
+	    lineModel3.getAxes().put(AxisType.X, new CategoryAxis("Mês"));
+	    lineModel3.setAnimate(true);
+	    lineModel3.setSeriesColors("00FF00,FF0000");
+	    Axis yAxis = lineModel3.getAxis(AxisType.Y);
+	    yAxis.setLabel("Valor Total do Dia");		
+	 }
+	 
+	 public LineChartModel initCategoryModel() {
+	        LineChartModel model = new LineChartModel();
+	 
+	        ChartSeries boys = new ChartSeries();
+	        boys.setLabel("Á Receber");
+	        
+	        Calendar dataAtual = Calendar.getInstance();
+			//1º dia do mês atual
+			if(primeiroDia == null){
+				primeiroDia = Calendar.getInstance();
+				primeiroDia.add(Calendar.DAY_OF_MONTH, -dataAtual.get(Calendar.DAY_OF_MONTH));
+				primeiroDia.add(Calendar.DAY_OF_YEAR, 1);
+				System.out.println(primeiroDia.getTime());
+				//Ultimo dia do mês atual
+				ultimoDia = Calendar.getInstance();
+				ultimoDia.add(Calendar.MONTH, 1);
+				ultimoDia.add(Calendar.DAY_OF_MONTH, -dataAtual.get(Calendar.DAY_OF_MONTH));
+			}
+			System.out.println(ultimoDia.getTime());
+			SimpleDateFormat formatador = new SimpleDateFormat("yyyy-MM-dd");
+
+	        this.titulosReceber = dao.getSqlListMap("select sum(tit_valor) valor , Month(tit_vencimento) dia from Titulo where tit_tipo = 'C' and tit_vencimento >= '"+formatador.format(primeiroDia.getTime())+"' and tit_vencimento <= '"+formatador.format(ultimoDia.getTime())+"' group by 2 ");
+
+	        for (Map<Object, Object> titulo : titulosReceber) {
+	        	boys.set(titulo.get("dia").toString(), Double.parseDouble(titulo.get("valor").toString()));
+	        	System.out.println(titulo);
+			}
+	        model.addSeries(boys);
+	         
+	        return model;
+	    }
+	 
 	public void limpar(){
 		this.titulo = new Titulo();
 		this.parcelas.clear();
@@ -106,10 +161,33 @@ public class RecebimentoController implements Serializable{
 			FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
 		}
 	
+	public Boolean validaAdicionaPagamento(){
+		
+		if(caixaPagamento.getFormaPagamento() == null){
+			FacesUtil.addErrorMessage("Deve ser selecionado a forma de pagamento");
+			return Boolean.FALSE;
+		}
+		
+		if(caixaPagamento.getCap_valor().equals(BigDecimal.ZERO)){
+			FacesUtil.addErrorMessage("O Valor Não pode ser R$ 0.00 ");
+			return Boolean.FALSE;
+		}
+		
+		if(caixaPagamento.getCap_valor().compareTo(getTxtValorRestante()) == 1){
+			FacesUtil.addErrorMessage("O Valor Pago não pode ser maior que o valor Restante R$ "+getTxtValorRestante());
+			return Boolean.FALSE;
+		}
+		
+		return Boolean.TRUE;
+				
+	}
+	
 	public void adicionaPagamento(){
-		this.txtValorRestante = this.txtValorRestante.subtract(caixaPagamento.getCap_valor());
-		pagamentos.add(caixaPagamento);
-		this.caixaPagamento = new CaixaPagamento();
+		if(validaAdicionaPagamento()){
+			this.txtValorRestante = this.txtValorRestante.subtract(caixaPagamento.getCap_valor());
+			pagamentos.add(caixaPagamento);
+			this.caixaPagamento = new CaixaPagamento();
+		}
 	}
 	
 	public void removerPagamento(CaixaPagamento c){
@@ -284,6 +362,22 @@ public class RecebimentoController implements Serializable{
         return resultsPaciente;
 	}
 	
+	public LineChartModel getLineModel3() {
+		return lineModel3;
+	}
+	
+	public void setLineModel3(LineChartModel lineModel3) {
+		this.lineModel3 = lineModel3;
+	}
+	
+	public List<Map<Object, Object>> getTitulosReceber() {
+		return titulosReceber;
+	}
+	
+	public void setTitulosReceber(List<Map<Object, Object>> titulosReceber) {
+		this.titulosReceber = titulosReceber;
+	}
+	
 	public void limparTitulo(){
 		this.titulo = new Titulo();
 	}
@@ -308,6 +402,18 @@ public class RecebimentoController implements Serializable{
 		return resultsPaciente;
 	}
 
+	public Calendar getPrimeiroDia() {
+		return primeiroDia;
+	}
+	public void setPrimeiroDia(Calendar primeiroDia) {
+		this.primeiroDia = primeiroDia;
+	}
+	public Calendar getUltimoDia() {
+		return ultimoDia;
+	}
+	public void setUltimoDia(Calendar ultimoDia) {
+		this.ultimoDia = ultimoDia;
+	}
 	public void setResultsPaciente(List<Paciente> resultsPaciente) {
 		this.resultsPaciente = resultsPaciente;
 	}

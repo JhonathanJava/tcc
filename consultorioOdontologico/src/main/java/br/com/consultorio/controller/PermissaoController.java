@@ -87,15 +87,15 @@ public class PermissaoController implements Serializable{
 	}
 
 
-	public void carregaPermissoesPeloPerfilPermissaoId(PerfilPermissao perfilPermissao){
-		this.permissoesAddPerfil = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
-		this.perfilPermissao = perfilPermissaoDAO.buscaPorId(perfilPermissao.getPerfilPermissaoCodigo());
-		this.listaPerfis =  new ArrayList<>(); 
-		this.listaPerfis.add(this.permissoesAddPerfil.get(0).getPerfil());
-		this.perfil =  this.permissoesAddPerfil.get(0).getPerfil();
-		this.perfilId = this.perfil.getPer_codigo();
-		System.out.println(permissao);
-	}
+//	public void carregaPermissoesPeloPerfilPermissaoId(PerfilPermissao perfilPermissao){
+//		this.permissoesAddPerfil = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
+//		this.perfilPermissao = perfilPermissaoDAO.buscaPorId(perfilPermissao.getPerfilPermissaoCodigo());
+//		this.listaPerfis =  new ArrayList<>(); 
+//		this.listaPerfis.add(this.permissoesAddPerfil.get(0).getPerfil());
+//		this.perfil =  this.permissoesAddPerfil.get(0).getPerfil();
+//		this.perfilId = this.perfil.getPer_codigo();
+//		System.out.println(permissao);
+//	}
 	
 	@Transacional
 	public void inativarSelecionados(Permissao permissao){
@@ -109,103 +109,103 @@ public class PermissaoController implements Serializable{
 			FacesUtil.addSuccessMessage("Status Alterado Com Sucesso!!");
 		}
 	
-	@Transacional
-	public String gravar() {
-		perfilPermissao.setPerfil(getPerfil());
-		System.out.println("PerfilPermissaooo = "+perfilPermissao);
-		if(perfilPermissao.getPerfilPermissaoCodigo() != null){
-			perfilPermissaoDAO.atualiza(perfilPermissao);
-		}else{
-			perfilPermissaoDAO.adiciona(perfilPermissao);
-		}
-		System.out.println("Chegou3");
-		List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
-		System.out.println("Chegou");
-		for (Permissao pp : permissaoTemp) {
-			System.out.println("PermissaoTemp = "+pp.toString());
-			dao.atualiza(pp);
-			dao.remove(pp);
-		}
-		
-		for (Permissao p : permissoesAddPerfil) {
-			System.out.println("P = "+p);
-			System.out.println("Perfldldldl = "+perfilPermissao);
-			p.setPerfilPermissao(perfilPermissao);
-			dao.atualiza(p);
-		}
-		
-		FacesUtil.addSuccessMessage("Salvo Com Sucesso!!");
-		
-		init();
-		return null;
-	}
-	
-	@Transacional
-	public void excluirSelecionados(){
-		
-		for (PerfilPermissao permissao : permissoesSelecionados) {
-			
-			List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(permissao);
-			for (Permissao pp : permissaoTemp) {
-				System.out.println("Removeu = "+ pp);
-				dao.remove(pp);
-			}
-		}
-		
-		for (PerfilPermissao permissao : permissoesSelecionados) {
-			this.perfilPermissaoDAO.remove(permissao);
-			this.permissao = new Permissao();
-		}
-		
-		init();
-		FacesUtil.addSuccessMessage("Registros Excluidos Com Sucesso!!");
-	}
-	
-	@Transacional
-	public void remover(Long codigo){
-		this.perfilPermissao = this.perfilPermissaoDAO.buscaPorId(codigo);
-		
-		List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
-		for (Permissao permissao : permissaoTemp) {
-			dao.remove(permissao);
-		}
-		this.perfilPermissaoDAO.remove(this.perfilPermissao);
-		init();
-		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
-	}
-	
-	public void adicionarPermissao(){
-		
-		permissao.setPerfil(getPerfil());
-		
-		if(getPerfilId() == null || getPerfilId() == 0){
-			setPerfilId(getPerfil().getPer_codigo());
-			System.out.println("PerfilId = "+getPerfilId());
-		}
-		
-		if(permissao.getPerfil() == null){
-			this.perfil = perfilDAO.buscaPorId(getPerfilId());
-			this.permissao.setPerfil(perfil);
-		}
-		
-		this.permissao.setPrograma(getPrograma());
-		
-		for (Permissao pp : permissoesAddPerfil) {
-			if(pp.getPrograma().getPro_codigo() == this.permissao.getPrograma().getPro_codigo() ){
-				FacesUtil.addErrorMessage("Programa Já adicionado neste Perfil!");
-				return;
-			}
-		}
-		
-		permissoesAddPerfil.add(this.permissao);
-		
-		for (Permissao permissao : permissoesAddPerfil) {
-			System.out.println("Permissão = "+permissao.toString());
-		}
-		permissao = new Permissao();
-		permissao.setPerfil(getPerfil());
-	}
-	
+//	@Transacional
+//	public String gravar() {
+//		perfilPermissao.setPerfil(getPerfil());
+//		System.out.println("PerfilPermissaooo = "+perfilPermissao);
+//		if(perfilPermissao.getPerfilPermissaoCodigo() != null){
+//			perfilPermissaoDAO.atualiza(perfilPermissao);
+//		}else{
+//			perfilPermissaoDAO.adiciona(perfilPermissao);
+//		}
+//		System.out.println("Chegou3");
+//		List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
+//		System.out.println("Chegou");
+//		for (Permissao pp : permissaoTemp) {
+//			System.out.println("PermissaoTemp = "+pp.toString());
+//			dao.atualiza(pp);
+//			dao.remove(pp);
+//		}
+//		
+//		for (Permissao p : permissoesAddPerfil) {
+//			System.out.println("P = "+p);
+//			System.out.println("Perfldldldl = "+perfilPermissao);
+//			p.setPerfilPermissao(perfilPermissao);
+//			dao.atualiza(p);
+//		}
+//		
+//		FacesUtil.addSuccessMessage("Salvo Com Sucesso!!");
+//		
+//		init();
+//		return null;
+//	}
+//	
+//	@Transacional
+//	public void excluirSelecionados(){
+//		
+//		for (PerfilPermissao permissao : permissoesSelecionados) {
+//			
+//			List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(permissao);
+//			for (Permissao pp : permissaoTemp) {
+//				System.out.println("Removeu = "+ pp);
+//				dao.remove(pp);
+//			}
+//		}
+//		
+//		for (PerfilPermissao permissao : permissoesSelecionados) {
+//			this.perfilPermissaoDAO.remove(permissao);
+//			this.permissao = new Permissao();
+//		}
+//		
+//		init();
+//		FacesUtil.addSuccessMessage("Registros Excluidos Com Sucesso!!");
+//	}
+//	
+//	@Transacional
+//	public void remover(Long codigo){
+//		this.perfilPermissao = this.perfilPermissaoDAO.buscaPorId(codigo);
+//		
+//		List<Permissao> permissaoTemp = dao.carregaPermissoesPeloPerfilPermissaoId(perfilPermissao);
+//		for (Permissao permissao : permissaoTemp) {
+//			dao.remove(permissao);
+//		}
+//		this.perfilPermissaoDAO.remove(this.perfilPermissao);
+//		init();
+//		FacesUtil.addSuccessMessage("Registro Excluido Com Sucesso!!");
+//	}
+//	
+//	public void adicionarPermissao(){
+//		
+//		permissao.setPerfil(getPerfil());
+//		
+//		if(getPerfilId() == null || getPerfilId() == 0){
+//			setPerfilId(getPerfil().getPer_codigo());
+//			System.out.println("PerfilId = "+getPerfilId());
+//		}
+//		
+//		if(permissao.getPerfil() == null){
+//			this.perfil = perfilDAO.buscaPorId(getPerfilId());
+//			this.permissao.setPerfil(perfil);
+//		}
+//		
+//		this.permissao.setPrograma(getPrograma());
+//		
+//		for (Permissao pp : permissoesAddPerfil) {
+//			if(pp.getPrograma().getPro_codigo() == this.permissao.getPrograma().getPro_codigo() ){
+//				FacesUtil.addErrorMessage("Programa Já adicionado neste Perfil!");
+//				return;
+//			}
+//		}
+//		
+//		permissoesAddPerfil.add(this.permissao);
+//		
+//		for (Permissao permissao : permissoesAddPerfil) {
+//			System.out.println("Permissão = "+permissao.toString());
+//		}
+//		permissao = new Permissao();
+//		permissao.setPerfil(getPerfil());
+//	}
+//	
 	public void removePermissao(Permissao p){
 		permissoesAddPerfil.remove(p);
 	}
